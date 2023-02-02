@@ -1,0 +1,653 @@
+﻿<!doctype html>
+
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	
+	
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+			    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+	<title>Monitoring RabbitMQ | Loosely Coupled Labs</title>
+    
+    <!--[if lte IE 9]>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/html5shiv.js"></script>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/selectivizr-min.js"></script>
+    <![endif]-->
+	
+		
+	<meta name='robots' content='max-image-preview:large'>
+<link rel='dns-prefetch' href='//fonts.googleapis.com'>
+<link rel='dns-prefetch' href='//s.w.org'>
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Feed" href="../../../feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Comments Feed" href="../../../comments/feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Monitoring RabbitMQ Comments Feed" href="feed/index.htm">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/looselycoupledlabs.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.8.6"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([10084,65039,8205,55357,56613],[10084,65039,8203,55357,56613])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='../../../wp-includes/css/dist/block-library/style.min.css?ver=5.8.6' type='text/css' media='all'>
+<link rel='stylesheet' id='unifrakturmaguntia-css' href='../../../css?family=UnifrakturMaguntia&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='coustard-css' href='../../../css-1?family=Coustard&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='lora-css' href='../../../css-2?family=Lora:400,700,400italic,700italic&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='print-css' href='../../../wp-content/themes/read-v4-2-4/css/print.css' type='text/css' media='print'>
+<link rel='stylesheet' id='grid-css' href='../../../wp-content/themes/read-v4-2-4/css/grid.css' type='text/css' media='all'>
+<link rel='stylesheet' id='normalize-css' href='../../../wp-content/themes/read-v4-2-4/css/normalize.css' type='text/css' media='all'>
+<link rel='stylesheet' id='font-awesome-css' href='../../../wp-content/themes/read-v4-2-4/css/font-awesome.css' type='text/css' media='all'>
+<link rel='stylesheet' id='google-code-prettify-css' href='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.css' type='text/css' media='all'>
+<link rel='stylesheet' id='uniform-css' href='../../../wp-content/themes/read-v4-2-4/css/uniform.default.css' type='text/css' media='all'>
+<link rel='stylesheet' id='flexslider-css' href='../../../wp-content/themes/read-v4-2-4/css/flexslider.css' type='text/css' media='all'>
+<link rel='stylesheet' id='mediaelementplayer-css' href='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelementplayer.css' type='text/css' media='all'>
+<link rel='stylesheet' id='gamma-gallery-css' href='../../../wp-content/themes/read-v4-2-4/css/gamma-gallery.css' type='text/css' media='all'>
+<link rel='stylesheet' id='main-css' href='../../../wp-content/themes/read-v4-2-4/css/main.css' type='text/css' media='all'>
+<link rel='stylesheet' id='fancybox-css' href='../../../wp-content/themes/read-v4-2-4/css/jquery.fancybox-1.3.4.css' type='text/css' media='all'>
+<link rel='stylesheet' id='wp-fix-css' href='../../../wp-content/themes/read-v4-2-4/css/wp-fix.css' type='text/css' media='all'>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery.min.js?ver=3.6.0' id='jquery-core-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
+<link rel="https://api.w.org/" href="../../../wp-json/index.htm"><link rel="alternate" type="application/json" href="../../../wp-json/wp/v2/posts/158"><link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../../xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../../wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.8.6">
+<link rel="canonical" href="index.htm">
+<link rel='shortlink' href='index.htm?p=158'>
+<link rel="alternate" type="application/json+oembed" href="../../../wp-json/oembed/1.0/embed-14?url=https%3A%2F%2Flooselycoupledlabs.com%2F2014%2F08%2Fmonitoring-rabbitmq%2F">
+<link rel="alternate" type="text/xml+oembed" href="../../../wp-json/oembed/1.0/embed-15?url=https%3A%2F%2Flooselycoupledlabs.com%2F2014%2F08%2Fmonitoring-rabbitmq%2F&#038;format=xml">
+
+<link rel="stylesheet" type="text/css" href="../../../wp-content/themes/read-v4-2-4/style.css">
+
+		
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-3?family=Lora&subset=latin">
+<style type="text/css">
+a { color: #4488ff; }
+
+a:hover { color: #3377ee; }
+
+.main-navigation ul .current_page_item > a, .main-navigation ul .current-menu-item > a { color: #69be28; }
+
+h1.site-title, h1.site-title a { font-family: "Coustard", Georgia, serif; }
+
+h1, h2, h3, h4, h5, h6 { font-family: "Coustard", Georgia, serif; }
+
+.main-navigation ul li { font-family: "Coustard", Georgia, serif; }
+
+html { font-family: "Lora", Georgia, serif; }
+</style>
+		<style type="text/css">
+.site-header hgroup {
+  padding: 0;
+}
+
+h1.site-title {
+  font-size: 2.20em;
+}
+
+.site-header {
+  padding-bottom: 0;
+}
+
+table {
+  border-collapse: collapse;     
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+}
+
+code {
+  box-shadow: none;
+}
+</style>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPowerShell.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<link href="../../../syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css">
+<link href="../../../syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="post-template-default single single-post postid-158 single-format-standard">
+
+    <div id="page" class="hfeed site"> 
+        <header class="site-header wrapper" role="banner">
+			<div class="row">
+			    <hgroup>
+					<h1 class="site-title">
+															<a rel="home" href="../../../index.htm">
+										<img alt="Loosely Coupled Labs" src="../../../wp-content/uploads/2014/06/loosely600-300x105.png">
+									</a>
+													</h1>
+					<!-- end .site-title -->
+					
+					<h2 class="site-description">
+						**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**					</h2>
+					<!-- end .site-description -->
+			    </hgroup>
+				
+								
+			    <nav id="site-navigation" class="main-navigation" role="navigation">
+					<ul class="menu-default"><li class="page_item page-item-39"><a href="../../../about-me/index.htm">About Me</a></li><li class="page_item page-item-226"><a href="../../../subscribe/index.htm">Subscribe</a></li></ul>
+			    </nav>
+			    <!-- end #site-navigation -->
+			</div>
+			<!-- end .row -->
+        </header>
+        <!-- end .site-header -->
+		
+				
+        <section id="main" class="middle wrapper">
+			<div class="row row-fluid ">
+<div id="primary" class="site-content">
+	<div id="content" role="main">
+		<div class="readable-content blog-single">
+										<article id="post-158" class="clearfix post-158 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-rabbitmq">
+								<header class="entry-header">
+																		<h1 class="entry-title">Monitoring RabbitMQ</h1>
+								</header>
+								<!-- end .entry-header -->
+								
+								<div class="entry-meta">
+									<span class="post-category">
+										posted in <a href="../../../category/tutorial/index.htm" rel="category tag">Tutorial</a>									</span>
+									<!-- end .post-category -->
+									
+									<span class="post-date">
+										on <a rel="bookmark" title="3:52 am" href="index.htm"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">August 20, 2014</time></a>
+									</span>
+									<!-- end .post-date -->
+									
+									<span class="by-author"> by										<span class="author vcard">
+											<a class="url fn n" rel="author" title="View all posts by david@prothero.com" href="../../../author/davidprothero-com/index.htm">david@prothero.com</a>
+										</span>
+										<!-- end .author -->
+									</span>
+									<!-- end .by-author -->
+									
+									<div class="share-links">
+	<a>SHARE</a>
+	
+	<div class="share-wrap">
+		<div class="facebook-wrap">
+			<div id="fb-root"></div>
+			
+			<script>
+				(function(d, s, id)
+				{
+					var js, fjs = d.getElementsByTagName(s)[0];
+					if (d.getElementById(id)) return;
+					js = d.createElement(s); js.id = id;
+					js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+					fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));
+			</script>
+			
+			<div class="fb-like" data-send="false" data-layout="button_count" data-width="400" data-show-faces="false" data-colorscheme="light" data-action="like"></div>
+		</div>
+		<!-- end .facebook-wrap -->
+		
+		<div class="twitter-wrap">
+						<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+			
+			<script>
+				!function(d, s, id)
+				{
+					var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}
+				}(document, "script", "twitter-wjs");
+			</script>
+		</div>
+		<!-- end .twitter-wrap -->
+		
+		<div class="google-wrap">
+			<!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium"></div>
+			
+			<!-- Place this tag after the last +1 button tag. -->
+			<script type="text/javascript">
+			  (function()
+			  {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			  })();
+			</script>
+		</div>
+		<!-- end .google-wrap -->
+		
+		<div class="pinterest-wrap">
+						
+			<a href="http://pinterest.com/pin/create/button/?url=https://looselycoupledlabs.com/2014/08/monitoring-rabbitmq/&media=https://looselycoupledlabs.com/wp-content/uploads/2014/08/rabbit-monitor.jpg&description=Monitoring RabbitMQ" class="pin-it-button" count-layout="horizontal"><img src="../../../images/PinExt.png" alt="Pin It" title="Pin It"></a>
+			
+			<script type="text/javascript" src="../../../js/pinit.js"></script>
+		</div>
+		<!-- end .pinterest-wrap -->
+	</div>
+	<!-- end .share-wrap -->
+</div>	
+<!-- end .share-links -->									
+																	</div>
+								<!-- end .entry-meta -->
+								
+																			<div class="featured-image">
+												<img width="300" height="180" src="../../../wp-content/uploads/2014/08/rabbit-monitor.jpg" class="attachment-full size-full wp-post-image" alt="Monitoring RabbitMQ" loading="lazy" title="" srcset="../../../wp-content/uploads/2014/08/rabbit-monitor.jpg 300w, ../../../wp-content/uploads/2014/08/rabbit-monitor-150x90.jpg 150w, ../../../wp-content/uploads/2014/08/rabbit-monitor-200x120.jpg 200w" sizes="(max-width: 300px) 100vw, 300px">											</div>
+											<!-- end .featured-image -->
+																		
+								<div class="entry-content clearfix">
+									<p>We’ve talked a lot about using <a href="http://masstransit-project.com/" target="_blank">MassTransit</a> with <a href="http://www.rabbitmq.com/" target="_blank">RabbitMQ</a> in a variety of scenarios on this blog. We talked about <a href="../../07/error-handling-in-masstransit-consumers/index.htm">error handling</a>, which is something you need to know how to implement in a real world MassTransit + RabbitMQ deployment. Another important aspect to a production deployment is monitoring. Lets take a look at how we can leverage the <a href="http://hg.rabbitmq.com/rabbitmq-management/raw-file/3646dee55e02/priv/www-api/help.html" target="_blank">RabbitMQ Management HTTP API</a> (installed with the <a href="http://www.rabbitmq.com/management.html" target="_blank">RabbitMQ Management Plugin</a>) to query our queues so we can monitor the health of our service bus.</p>
+<h1>Enabling the RabbitMQ Management Plugin</h1>
+<p>In <a href="../../06/masstransit-publish-subscribe-example/index.htm">A Simple MassTransit Publish/Subscribe Example</a>, I detailed how to install RabbitMQ on Windows along with the RabbitMQ Management Plugin. You can refer to that post for the full details, but it’s important to know the RabbitMQ Management Plugin isn’t installed out of the box. One simple command will install it:</p>
+<pre class="brush: ps; toolbar: false;">&gt; rabbitmq-plugins enable rabbitmq_management
+</pre>
+<p>After a restart of the RabbitMQ service, visiting <a href="http://localhost:15672/" target="_blank">http://localhost:15672/</a> should bring you to the management GUI (default credentials are guest/guest). The HTTP API is available at <a title="http://localhost:15672/api/" href="http://localhost:15672/api/" target="_blank">http://localhost:15672/api/</a>.</p>
+<h2></h2>
+<h2>Simple REST API Call</h2>
+<p>Type the following URL into your browser to get a list of queues in your RabbitMQ instance:</p>
+<p><a title="http://localhost:15672/api/queues" href="http://localhost:15672/api/queues" target="_blank">http://localhost:15672/api/queues</a></p>
+<p>You will need to supply the guest/guest credentials to access the API method. You should see the list of queues returned as JSON. If you want to get data for a single, specific queue, use the url format /api/queues/<em>vhost</em>/<em>queue-name</em>. The default vhost in RabbitMQ is “/” which URL encoded is %2F, so the the URL to retrieve info for the queue named MtPubSubExample_TestSubscriber would be <a title="http://localhost:15672/api/queues/%2F/MtPubSubExample_TestSubscriber" href="http://localhost:15672/api/queues/%2F/MtPubSubExample_TestSubscriber" target="_blank">http://localhost:15672/api/queues/%2F/MtPubSubExample_TestSubscriber</a> and that would return the following JSON:</p>
+<pre class="brush: js; toolbar: false;">{
+   "memory":21856,
+   "messages":1,
+   "messages_details":{
+      "rate":0.0
+   },
+   "messages_ready":1,
+   "messages_ready_details":{
+      "rate":0.0
+   },
+   "messages_unacknowledged":0,
+   "messages_unacknowledged_details":{
+      "rate":0.0
+   },
+   "idle_since":"2014-08-16 9:30:50",
+   "consumer_utilisation":"",
+   "policy":"",
+   "exclusive_consumer_tag":"",
+   "consumers":0,
+   "backing_queue_status":{
+      "q1":0,
+      "q2":0,
+      "delta":[
+         "delta",
+         "undefined",
+         0,
+         "undefined"
+      ],
+      "q3":1,
+      "q4":0,
+      "len":1,
+      "pending_acks":0,
+      "target_ram_count":"infinity",
+      "ram_msg_count":0,
+      "ram_ack_count":0,
+      "next_seq_id":180224,
+      "persistent_count":1,
+      "avg_ingress_rate":0.0,
+      "avg_egress_rate":0.0,
+      "avg_ack_ingress_rate":0.0,
+      "avg_ack_egress_rate":0.0
+   },
+   "state":"running",
+   "incoming":[
+
+   ],
+   "deliveries":[
+
+   ],
+   "consumer_details":[
+
+   ],
+   "name":"MtPubSubExample_TestSubscriber",
+   "vhost":"/",
+   "durable":true,
+   "auto_delete":false,
+   "arguments":{
+
+   },
+   "node":"rabbit@PROWIN1"
+}
+</pre>
+<p>In this snippet of JSON you can see the queue has a single message in it. Now, let’s see what we can do with this new knowledge to keep tabs on our queues.</p>
+<h1>What to Monitor</h1>
+<p>At a minimum, I would monitor the number of ready messages in your queues. What constitutes an alerting threshold obviously will depend on your application. If you expect to have fairly real-time processing of your messages, and have the necessary horsepower in your consumer(s) to keep up, then you might alert if the queue goes over 10 unprocessed messages. You just need to decide how sensitive you need it to be. I’ll show you how to get the data out.</p>
+<p>Which queues should you monitor? Any queue you expect to receive messages likely warrants monitoring. This means, for example, in our <a href="../../06/masstransit-publish-subscribe-example/index.htm">simple publish/subscribe example</a>, we would monitor the MtPubSubExample_TestSubscriber queue. We also will want to monitor the corresponding error queue (e.g. MtPubSubExample_TestSubscriber_error). In our <a href="../../07/a-real-world-masstransit-customer-portal-example/index.htm">customer portal example</a>, we would monitor Loosely_CustomerPortal_Backend and Loosely_CustomerPortal_Backend_error.</p>
+<h1>How to Monitor</h1>
+<p>This is largely up to you and what monitoring tools you already have in place. Most monitoring tools such as Nagios, NewRelic, AlertSite, and System Center will have some notion of a custom counter or metric that you can have the system monitor and send alerts when they reach a certain threshold. If your selected monitoring tool has a RabbitMQ plugin, you’re in luck. Otherwise, you will need to write a small script to supply the data points to your monitoring system. Let’s take a look at how to do this in C#.</p>
+<h2>Checking Your RabbitMQ Queues in C#</h2>
+<p>The code for this sample is available on github at <a href="https://github.com/dprothero/Loosely.RabbitMq.Monitor" target="_blank">https://github.com/dprothero/Loosely.RabbitMq.Monitor</a>. Clone that repository or follow along here to build the project from scratch. I am using Visual Studio 2013.</p>
+<p>First, create a new C# Console project. We can call it Loosely.RabbitMq.Monitor and name the solution something like Loosely.RabbitMq.Utilities. Install the NuGet package Json.NET to your project. That will help us read the JSON response from the web service.</p>
+<p>Add a new class file to your project and name it QueueInfo.cs. Delete the QueueInfo class declaration (leaving just the namespace declaration). Copy the JSON code above to your clipboard and then position your cursor within the namespace declaration in QueueInfo.cs. From the Edit menu, select Paste Special, and then Paste JSON as Classes. This will create C# class declarations that will follow your expected JSON. Rename the newly pasted class named Rootobject to QueueInfo. You should end up with the classes below in QueueInfo.cs:</p>
+<pre class="brush: csharp; toolbar: false;">namespace Loosely.RabbitMq.Monitor
+{
+  public class QueueInfo
+  {
+    public int memory { get; set; }
+    public int messages { get; set; }
+    public Messages_Details messages_details { get; set; }
+    public int messages_ready { get; set; }
+    public Messages_Ready_Details messages_ready_details { get; set; }
+    public int messages_unacknowledged { get; set; }
+    public Messages_Unacknowledged_Details messages_unacknowledged_details { get; set; }
+    public string idle_since { get; set; }
+    public string consumer_utilisation { get; set; }
+    public string policy { get; set; }
+    public string exclusive_consumer_tag { get; set; }
+    public int consumers { get; set; }
+    public Backing_Queue_Status backing_queue_status { get; set; }
+    public string state { get; set; }
+    public object[] incoming { get; set; }
+    public object[] deliveries { get; set; }
+    public object[] consumer_details { get; set; }
+    public string name { get; set; }
+    public string vhost { get; set; }
+    public bool durable { get; set; }
+    public bool auto_delete { get; set; }
+    public Arguments arguments { get; set; }
+    public string node { get; set; }
+  }
+
+  public class Messages_Details
+  {
+    public float rate { get; set; }
+  }
+
+  public class Messages_Ready_Details
+  {
+    public float rate { get; set; }
+  }
+
+  public class Messages_Unacknowledged_Details
+  {
+    public float rate { get; set; }
+  }
+
+  public class Backing_Queue_Status
+  {
+    public int q1 { get; set; }
+    public int q2 { get; set; }
+    public object[] delta { get; set; }
+    public int q3 { get; set; }
+    public int q4 { get; set; }
+    public int len { get; set; }
+    public int pending_acks { get; set; }
+    public string target_ram_count { get; set; }
+    public int ram_msg_count { get; set; }
+    public int ram_ack_count { get; set; }
+    public int next_seq_id { get; set; }
+    public int persistent_count { get; set; }
+    public float avg_ingress_rate { get; set; }
+    public float avg_egress_rate { get; set; }
+    public float avg_ack_ingress_rate { get; set; }
+    public float avg_ack_egress_rate { get; set; }
+  }
+
+  public class Arguments
+  {
+  }
+
+}
+</pre>
+<p>If you wanted, you could clean up the property and class names to better match C# naming conventions. Just be sure to add the necessary JsonProperty attribute so JSON.NET can deserialize the JSON into the correct object properties. For example:</p>
+<pre class="brush: csharp; toolbar: false;">[JsonProperty("avg_ack_egress_rate")]
+public float AvgAckEgressRate { get; set; }
+</pre>
+<p>Note that JSON.NET is case insensitive when deserializing, so you don’t need these attributes if you are only adjusting the case of the identifier (e.g. “name” to “Name”).</p>
+<p>Next, we could just hard-code the following in Program.cs to get the message count for the MtPubSubExample_TestSubscriber queue:</p>
+<pre class="brush: csharp; toolbar: false;">using Newtonsoft.Json;
+using System;
+using System.Net;
+
+namespace Loosely.RabbitMq.Monitor
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      var client = new WebClient();
+      client.Credentials = new NetworkCredential("guest", "guest");
+      var data = client.DownloadString("http://localhost:15672/api/queues/%2F/MtPubSubExample_TestSubscriber");
+      var queueInfo = JsonConvert.DeserializeObject&lt;QueueInfo&gt;(data);
+
+      Console.WriteLine("Queue: " + queueInfo.Name);
+      Console.WriteLine("Queue Depth: " + queueInfo.MessagesReady.ToString());
+
+      Console.Write("\r\nPress any key to continue.");
+      Console.ReadKey();
+    }
+  }
+}
+</pre>
+<p>The code should be pretty straight forward. We make a request to the HTTP API, deserialize the JSON data into a plain old C# object (POCO), and then output the properties we are interested in. However, to make this really useful, we should refactor this code so it can be command line driven. Then, we can simply pass parameters on the command line to tell the program the instance of RabbitMQ to monitor (base URL for the API), the credentials to connect to the server, and the queue we want to interrogate.</p>
+<p>For command line argument parsing to a console application, I like to use the <a href="http://www.ndesk.org/Options" target="_blank">NDesk.Options</a> NuGet package. It makes supporting command line parameters (-x or &#8211;xxxx or /XXXX) super easy. Add the NDesk.Options package to your project. With that added, we can modify our Program.cs file to the following:</p>
+<pre class="brush: csharp; toolbar: false;">using NDesk.Options;
+using Newtonsoft.Json;
+using System;
+using System.Net;
+
+namespace Loosely.RabbitMq.Monitor
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      string baseUrl = "http://localhost:15672/api",
+             userName = "guest",
+             password = "guest",
+             queueName = null,
+             vhost = "/";
+
+      var p = new OptionSet () {
+        { "u|baseUrl=",  v =&gt; baseUrl = v },
+        { "U|user=",     v =&gt; userName = v },
+        { "p|password=", v =&gt; password = v },
+        { "q|queue=",    v =&gt; queueName = v },
+        { "v|vhost=",    v =&gt; vhost = v }
+      };
+      p.Parse(args);
+      
+      var client = new WebClient();
+      if(userName != null)
+        client.Credentials = new NetworkCredential(userName, password);
+
+      var url = baseUrl + "/queues/" + Uri.EscapeDataString(vhost) + "/" + Uri.EscapeDataString(queueName);
+      var data = client.DownloadString(url);
+      var queueInfo = JsonConvert.DeserializeObject&lt;QueueInfo&gt;(data);
+
+      // Here is where we report the message count to our monitoring system.
+      // Replace the console output/wait with your code.
+      Console.WriteLine("Queue: " + queueInfo.Name);
+      Console.WriteLine("Queue Depth: " + queueInfo.MessagesReady.ToString());
+
+      Console.Write("\r\nPress any key to continue.");
+      Console.ReadKey();
+    }
+  }
+}
+</pre>
+<p>To be able to run from within Visual Studio, you can try out different command line arguments by going to the Debug project properties page:</p>
+<p><a href="../../../wp-content/uploads/2014/08/image8.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/08/image_thumb8.png" alt="image" width="456" height="109" border="0"></a></p>
+<h1>Conclusion</h1>
+<p>As you can see, it is fairly easy to interrogate RabbitMQ to get information about the status of its queues (as well as any number of other objects). If you want to make extensive use of the HTTP API, I would suggest taking a look at Mike Hadlow’s <a href="https://github.com/mikehadlow/EasyNetQ/wiki/Management-API-Introduction" target="_blank">EasyNetQ.Client.Management</a> library, available on NuGet. This is a complete C# wrapper around the HTTP API, making it trivial to work with the API from C#.</p>
+<p>I hope you found value in this blog post. Please don’t hesitate to contact me if you have any questions or suggestions for future blog posts. Until then…</p>
+									
+																	</div>
+								<!-- end .entry-content -->
+								
+																			<footer class="entry-meta post-tags">
+												<a href="../../../tag/rabbitmq/index.htm" rel="tag">RabbitMQ</a>											</footer>
+											<!-- end .entry-meta -->
+																	</article>
+							<!-- end .hentry -->
+							
+							<aside class="about-author">
+	<h3>ABOUT THE AUTHOR</h3>
+	
+	<div class="row-fluid author-bio">
+		<div class="span2 author-img">
+			<a href="../../../author/davidprothero-com/index.htm">
+				<img alt='david@prothero.com' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b.jpeg?s=226&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-1.jpeg 2x?s=452&#038;d=mm&#038;r=g 2x' class='avatar avatar-226 photo' height='226' width='226' loading='lazy'>			</a>
+		</div>
+		<!-- end .author-img -->
+		
+		<div class="span10 author-info">
+			<h4 class="author-name">david@prothero.com</h4>
+			
+			<p>
+				I have been providing technical leadership for companies for over 15 years. However, my software engineering experience extends back over 25 years. Currently, I am a Developer Educator for Twilio. Prior to that, I served as both IT Director and Software Engineering Director for Therapeutic Research Center (TRC). I guided the company from a print-based newsletter company to an online information services company.			</p>
+		</div>
+		<!-- end .author-info -->
+	</div>
+	<!-- end .author-bio -->
+</aside>
+<!-- end .about-author -->							
+							<nav class="row-fluid nav-single">
+								<div class="span6 nav-previous">
+									<h4>PREVIOUS POST</h4><a href="../scaling-out-subscribers-with-masstransit/index.htm" rel="prev"><span class="meta-nav">&#8592;</span> Scaling Out Subscribers With MassTransit</a>								</div>
+								<!-- end .nav-previous -->
+								
+								<div class="span6 nav-next">
+									<h4>NEXT POST</h4><a href="../../09/masstransit-on-microsoft-azure-2/index.htm" rel="next">MassTransit on Microsoft Azure <span class="meta-nav">&#8594;</span></a>								</div>
+								<!-- end .nav-next -->
+							</nav>
+							<!-- end .nav-single -->
+							
+							
+<div id="comments" class="comments-area">
+					<h2 class="comments-title">
+					2 Comments <span class="on">&#8594;</span> <span>Monitoring RabbitMQ</span>				</h2>
+				<!-- end .comments-title -->
+				
+				<ol class="commentlist">
+										
+					<li class="comment even thread-even depth-1" id="li-comment-143">
+						<article id="comment-143" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/7872f8c10e09bc265a56eb78c05f30ef.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/7872f8c10e09bc265a56eb78c05f30ef-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Barry </cite><a href="index.htm#comment-143"><time datetime="2017-01-16T07:27:00+00:00">January 16, 2017 at 7:27 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Can the queue depth be obtained using MassTransit instead of the RabbitMQ api http call?</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					<ol class="children">
+					
+					<li class="comment odd alt depth-2" id="li-comment-144">
+						<article id="comment-144" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-2.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-3.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">dprothero </cite><a href="index.htm#comment-144"><time datetime="2017-01-17T03:50:00+00:00">January 17, 2017 at 3:50 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>I do not believe so, no.</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+				</ol>
+				<!-- end .commentlist -->
+				
+								
+											<p class="nocomments">Comments are closed.</p>
+										
+	</div>
+<!-- end #comments -->								</div>
+		<!-- end .blog-single -->
+	</div>
+	<!-- end #content -->
+</div>
+<!-- end #primary -->
+
+			</div>
+			<!-- end .row .row-fluid -->
+        </section>
+        <!-- end #main -->
+		
+        <footer class="site-footer wrapper" role="contentinfo">
+			<div class="row">
+				<div id="supplementary" class="row-fluid">
+									</div>
+				<!-- end #supplementary -->
+				
+				<div class="site-info">
+					Copyright © 2014 by David Prothero
+All rights reserved.				</div>
+				<!-- end .site-info -->
+			</div>
+			<!-- end .row -->
+        </footer>
+        <!-- end .site-footer -->
+    </div>
+    <!-- end #PAGE -->
+	
+	<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1922425-8', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script type="text/javascript">
+  SyntaxHighlighter.all();
+</script><script type='text/javascript' src='../../../wp-includes/js/comment-reply.min.js?ver=5.8.6' id='comment-reply-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/detectmobilebrowser.js' id='detectmobilebrowser-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/modernizr.js' id='modernizr-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/imagesloaded.min.js?ver=4.1.4' id='imagesloaded-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fitvids.js' id='fitvids-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.js' id='google-code-prettify-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.uniform.min.js' id='uniform-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.flexslider-min.js' id='flexslider-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelement-and-player.min.js' id='mediaelement-and-player-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.isotope.min.js' id='isotope-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fancybox-1.3.4.pack.js' id='fancybox-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.masonry.min.js' id='masonry-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.history.js' id='history-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/js-url.min.js' id='js-url-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquerypp.custom.js' id='jquerypp-custom-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/gamma.js' id='gamma-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/main.js' id='main-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.validate.min.js' id='validate-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/send-mail.js' id='send-mail-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/wp-embed.min.js?ver=5.8.6' id='wp-embed-js'></script>
+</body>
+</html>

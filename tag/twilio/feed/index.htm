@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Twilio &#8211; Loosely Coupled Labs</title>
+	<atom:link href="https://looselycoupledlabs.com/tag/twilio/feed/" rel="self" type="application/rss+xml" />
+	<link>https://looselycoupledlabs.com</link>
+	<description>**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**</description>
+	<lastBuildDate>Mon, 21 Mar 2016 17:17:56 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.8.6</generator>
+	<item>
+		<title>Meet Your Friendly, Neighborhood .NET Twilion</title>
+		<link>https://looselycoupledlabs.com/2016/03/meet-your-friendly-neighborhood-net-twilion/</link>
+		
+		<dc:creator><![CDATA[david@prothero.com]]></dc:creator>
+		<pubDate>Mon, 21 Mar 2016 17:17:56 +0000</pubDate>
+				<category><![CDATA[Commentary]]></category>
+		<category><![CDATA[Twilio]]></category>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=284</guid>
+
+					<description><![CDATA[I have a new role and I&#8217;m very excited about it. I am now a Developer Educator for Twilio. Twilio takes care of the messy telecom hardware and exposes a globally available cloud API that developers can interact with to build intelligent and complex communications systems. To get this role, one of the things I... <a class="more-link" href="https://looselycoupledlabs.com/2016/03/meet-your-friendly-neighborhood-net-twilion/">Continue reading <span class="meta-nav">&#8594;</span></a>]]></description>
+										<content:encoded><![CDATA[<p>I have a new role and I&#8217;m very excited about it. I am now a Developer Educator for <a href="https://twilio.com" target="_blank">Twilio</a>. Twilio takes care of the messy telecom hardware and exposes a globally available cloud API that developers can interact with to build intelligent and complex communications systems. To get this role, one of the things I had to do was give a live demo of <em>something</em> (anything really). To illustrate how easy it was to work with the Twilio API, I utilized the SMS API to enable two-factor authentication in an ASP.NET MVC web app. The process of walking a bunch of developers (used to writing Python and JavaScript code on their MacBooks) through using Visual Studio was a lot of fun and I must have impressed because I got the job!</p>
+<p><a href="http://bit.ly/twuts-social" target="_blank"><img loading="lazy" class="size-full wp-image-285 alignleft" src="http://looselycoupledlabs.com/wp-content/uploads/2016/03/Google_Profile.jpg" alt="Google_Profile" width="270" height="270" srcset="https://looselycoupledlabs.com/wp-content/uploads/2016/03/Google_Profile.jpg 270w, https://looselycoupledlabs.com/wp-content/uploads/2016/03/Google_Profile-150x150.jpg 150w, https://looselycoupledlabs.com/wp-content/uploads/2016/03/Google_Profile-200x200.jpg 200w, https://looselycoupledlabs.com/wp-content/uploads/2016/03/Google_Profile-57x57.jpg 57w, https://looselycoupledlabs.com/wp-content/uploads/2016/03/Google_Profile-72x72.jpg 72w, https://looselycoupledlabs.com/wp-content/uploads/2016/03/Google_Profile-114x114.jpg 114w, https://looselycoupledlabs.com/wp-content/uploads/2016/03/Google_Profile-144x144.jpg 144w" sizes="(max-width: 270px) 100vw, 270px" /></a>On my first day, I got introduced to a novel new approach to technical and API documentation. Today, they are being officially announced. They&#8217;re called <a href="http://bit.ly/twuts-social" target="_blank">Tutorials </a>which sounds simple enough, but instead of putting the narrative first, they put the code first because, let&#8217;s face it, that&#8217;s what us developers are the most interested in seeing anyway. Rather than try to describe it to you, I encourage you to go check it out. Here&#8217;s a great tutorial on how to <a href="http://bit.ly/twuts-cs" target="_blank">automate an SMS-based workflow</a> using C# and ASP.NET MVC. And here&#8217;s another one on how to use <a href="http://bit.ly/1UxNllQ" target="_blank">masked phone numbers</a> (just like they do at Airbnb).</p>
+<p><img loading="lazy" class="wp-image-288 alignright" src="http://looselycoupledlabs.com/wp-content/uploads/2016/03/sms-emp-dir.png" alt="sms-emp-dir" width="259" height="460" srcset="https://looselycoupledlabs.com/wp-content/uploads/2016/03/sms-emp-dir.png 562w, https://looselycoupledlabs.com/wp-content/uploads/2016/03/sms-emp-dir-169x300.png 169w, https://looselycoupledlabs.com/wp-content/uploads/2016/03/sms-emp-dir-150x267.png 150w, https://looselycoupledlabs.com/wp-content/uploads/2016/03/sms-emp-dir-400x712.png 400w, https://looselycoupledlabs.com/wp-content/uploads/2016/03/sms-emp-dir-200x356.png 200w" sizes="(max-width: 259px) 100vw, 259px" />I am excited to be joining the team that puts these excellent tutorials together. I&#8217;m currently working on a company directory that you can query using SMS and get back a photo, full name, email, and phone number of an employee in your company. I created a directory for the fictitious company Marvel Universe, which you can give a spin by sending a text message to: +1-209-337-3517. (Hint, make your text message the name of your favorite Marvel comic hero.) When you do, you&#8217;ll get back the contact info as an MMS response.</p>
+<p>&nbsp;</p>
+<p>That&#8217;s just a preview. I&#8217;ll write another blog post once that tutorial has been published. And, you know I&#8217;m going to find a way to use MassTransit with the Twilio API&#8217;s, so stay tuned&#8230;</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

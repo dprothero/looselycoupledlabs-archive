@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	Comments on: MassTransit 3 Update: A Simple Publish/Subscribe Example	</title>
+	<atom:link href="https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/feed/" rel="self" type="application/rss+xml" />
+	<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/</link>
+	<description>**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**</description>
+	<lastBuildDate>Tue, 14 Jun 2016 07:18:00 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.8.6</generator>
+	<item>
+		<title>
+		By: miguel		</title>
+		<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-97</link>
+
+		<dc:creator><![CDATA[miguel]]></dc:creator>
+		<pubDate>Tue, 14 Jun 2016 07:18:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=263#comment-97</guid>
+
+					<description><![CDATA[Hi dprothero,
+I need your help, I am studying from your real world example. I updated this version to mass transit 3. 
+loosely coupled example not run with separate solution.
+I separated the console project and run both (solution1-- console and solution2--web) but the console not found new messages.
+
+can you guide to me.
+
+thanks
+Miguel]]></description>
+			<content:encoded><![CDATA[<p>Hi dprothero,<br />
+I need your help, I am studying from your real world example. I updated this version to mass transit 3.<br />
+loosely coupled example not run with separate solution.<br />
+I separated the console project and run both (solution1&#8211; console and solution2&#8211;web) but the console not found new messages.</p>
+<p>can you guide to me.</p>
+<p>thanks<br />
+Miguel</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: miguel		</title>
+		<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-96</link>
+
+		<dc:creator><![CDATA[miguel]]></dc:creator>
+		<pubDate>Tue, 14 Jun 2016 07:13:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=263#comment-96</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-95&quot;&gt;miguel&lt;/a&gt;.
+
+updated to mass transit 3---&#062;  public static IBusControl CreateBus(Action registrationAction = null)
+
+
+publisher ---&#062;    Bus = BusInitializer.CreateBus((x, host) =&#062; { });
+consumer---&#062;BusInitializer.CreateBus((cfg, host) =&#062;
+            {
+                cfg.ReceiveEndpoint(host, &quot;StringQueUeName&quot;,e =&#062;
+                {
+                    e.Consumer();
+                });
+
+            });]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-95">miguel</a>.</p>
+<p>updated to mass transit 3&#8212;&gt;  public static IBusControl CreateBus(Action registrationAction = null)</p>
+<p>publisher &#8212;&gt;    Bus = BusInitializer.CreateBus((x, host) =&gt; { });<br />
+consumer&#8212;&gt;BusInitializer.CreateBus((cfg, host) =&gt;<br />
+            {<br />
+                cfg.ReceiveEndpoint(host, &#8220;StringQueUeName&#8221;,e =&gt;<br />
+                {<br />
+                    e.Consumer();<br />
+                });</p>
+<p>            });</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: miguel		</title>
+		<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-95</link>
+
+		<dc:creator><![CDATA[miguel]]></dc:creator>
+		<pubDate>Fri, 10 Jun 2016 03:14:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=263#comment-95</guid>
+
+					<description><![CDATA[Hi, tanks for the post.  I am looking for the ServiceBusConfigurator in masstransit 3. thanks very much.
+
+your masstransit 2 version --&#062;  public static IServiceBus CreateBus(string queueName, Action moreInitialization)]]></description>
+			<content:encoded><![CDATA[<p>Hi, tanks for the post.  I am looking for the ServiceBusConfigurator in masstransit 3. thanks very much.</p>
+<p>your masstransit 2 version &#8211;&gt;  public static IServiceBus CreateBus(string queueName, Action moreInitialization)</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: dprothero		</title>
+		<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-78</link>
+
+		<dc:creator><![CDATA[dprothero]]></dc:creator>
+		<pubDate>Thu, 24 Mar 2016 15:39:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=263#comment-78</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-77&quot;&gt;Ananth Eswar&lt;/a&gt;.
+
+Please take a look at this post: http://stackoverflow.com/questions/30760108/masstransit-temporary-queue
+
+I&#039;ll add a question for Chris on that thread.]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-77">Ananth Eswar</a>.</p>
+<p>Please take a look at this post: <a href="http://stackoverflow.com/questions/30760108/masstransit-temporary-queue" rel="nofollow ugc">http://stackoverflow.com/questions/30760108/masstransit-temporary-queue</a></p>
+<p>I&#8217;ll add a question for Chris on that thread.</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Ananth Eswar		</title>
+		<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-77</link>
+
+		<dc:creator><![CDATA[Ananth Eswar]]></dc:creator>
+		<pubDate>Tue, 22 Mar 2016 10:42:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=263#comment-77</guid>
+
+					<description><![CDATA[How do I create a temporary queue with MassTrasit 3.0. I know how to do it with 2.0 but the same is not working for 3,0. Thanks for the help!]]></description>
+			<content:encoded><![CDATA[<p>How do I create a temporary queue with MassTrasit 3.0. I know how to do it with 2.0 but the same is not working for 3,0. Thanks for the help!</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Jovan Racic		</title>
+		<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-63</link>
+
+		<dc:creator><![CDATA[Jovan Racic]]></dc:creator>
+		<pubDate>Thu, 10 Dec 2015 11:59:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=263#comment-63</guid>
+
+					<description><![CDATA[The received messages after subscriber restart are not in correct order?  Probably it&#039;s multi-threading issue because queue is FIFO. Could You give me some explanation about.Thank&#039;s.]]></description>
+			<content:encoded><![CDATA[<p>The received messages after subscriber restart are not in correct order?  Probably it&#8217;s multi-threading issue because queue is FIFO. Could You give me some explanation about.Thank&#8217;s.</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Nick Barrett		</title>
+		<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-62</link>
+
+		<dc:creator><![CDATA[Nick Barrett]]></dc:creator>
+		<pubDate>Wed, 11 Nov 2015 23:29:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=263#comment-62</guid>
+
+					<description><![CDATA[Hi David,
+Great post. Thanks for taking the time to update your original post to v3. I used this post as my first attempt at MassTransit. It worked really well. I hope you are able to find time to update some of your other posts to v3 as well.
+
+Thanks again =)]]></description>
+			<content:encoded><![CDATA[<p>Hi David,<br />
+Great post. Thanks for taking the time to update your original post to v3. I used this post as my first attempt at MassTransit. It worked really well. I hope you are able to find time to update some of your other posts to v3 as well.</p>
+<p>Thanks again =)</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Michael Rose		</title>
+		<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-59</link>
+
+		<dc:creator><![CDATA[Michael Rose]]></dc:creator>
+		<pubDate>Mon, 03 Aug 2015 19:46:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=263#comment-59</guid>
+
+					<description><![CDATA[Hi David,
+Great article. I followed the previous one as well for the previous Mass Transit version. I&#039;m struggling slightly with one part of this - when I stop the consumer my messages are automatically moved to a queuename_error queue whenever they are published. Is there any way to prevent &quot;undelivered&quot; messages being moved to the error queue and simply being queued in the main queue until the subscriber/consumer starts up again?]]></description>
+			<content:encoded><![CDATA[<p>Hi David,<br />
+Great article. I followed the previous one as well for the previous Mass Transit version. I&#8217;m struggling slightly with one part of this &#8211; when I stop the consumer my messages are automatically moved to a queuename_error queue whenever they are published. Is there any way to prevent &#8220;undelivered&#8221; messages being moved to the error queue and simply being queued in the main queue until the subscriber/consumer starts up again?</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: A Simple MassTransit Publish/Subscribe Example &#124; Loosely Coupled Labs		</title>
+		<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comment-56</link>
+
+		<dc:creator><![CDATA[A Simple MassTransit Publish/Subscribe Example &#124; Loosely Coupled Labs]]></dc:creator>
+		<pubDate>Sat, 04 Jul 2015 23:09:50 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=263#comment-56</guid>
+
+					<description><![CDATA[[&#8230;] There is a newer version of this post for those using MassTransit 3. The post below is for MassTransit [&#8230;]]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] There is a newer version of this post for those using MassTransit 3. The post below is for MassTransit [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

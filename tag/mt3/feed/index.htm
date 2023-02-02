@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>MT3 &#8211; Loosely Coupled Labs</title>
+	<atom:link href="https://looselycoupledlabs.com/tag/mt3/feed/" rel="self" type="application/rss+xml" />
+	<link>https://looselycoupledlabs.com</link>
+	<description>**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**</description>
+	<lastBuildDate>Sat, 04 Jul 2015 22:54:48 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.8.6</generator>
+	<item>
+		<title>MassTransit 3 Update: A Simple Publish/Subscribe Example</title>
+		<link>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/</link>
+					<comments>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/#comments</comments>
+		
+		<dc:creator><![CDATA[david@prothero.com]]></dc:creator>
+		<pubDate>Sat, 04 Jul 2015 22:54:48 +0000</pubDate>
+				<category><![CDATA[Tutorial]]></category>
+		<category><![CDATA[MassTransit]]></category>
+		<category><![CDATA[MT3]]></category>
+		<category><![CDATA[RabbitMQ]]></category>
+		<category><![CDATA[Service Bus]]></category>
+		<category><![CDATA[SOA]]></category>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=263</guid>
+
+					<description><![CDATA[With the announcement of MassTransit 3, we learned that there were many changes to the API that were coming. The changes are all welcome ones, making MassTransit 3 simpler to work with and now completely asynchronous. What follows is this blog&#8217;s inaugural post, but updated to work with the current pre-release version of MassTransit 3. When... <a class="more-link" href="https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/">Continue reading <span class="meta-nav">&#8594;</span></a>]]></description>
+										<content:encoded><![CDATA[<p>With the <a href="http://blog.phatboyg.com/2014/11/30/masstransit/" target="_blank">announcement of MassTransit 3</a>, we learned that there were many <a href="http://blog.phatboyg.com/2015/02/24/masstransit-3-api-changes/" target="_blank">changes to the API</a> that were coming. The changes are all welcome ones, making MassTransit 3 simpler to work with and now completely asynchronous. What follows is this blog&#8217;s inaugural post, but updated to work with the current pre-release version of MassTransit 3. <span id="more-263"></span></p>
+<div class="alert info">Whenever there is an MT3 specific update, I will call it out like this.</div>
+<p>When I first sat down to learn how to use <a title="MassTransit Project Site" href="http://masstransit-project.com/" target="_blank">MassTransit</a>, I found it difficult to just get a simple example that published a message onto the bus with another process that subscribed to messages of the same type working. Hopefully, this primer will get you on the bus quicker.</p>
+<h1>Setting Up Your Environment</h1>
+<p>The first thing you need is a message queuing framework. MassTransit supports <del>MSMQ</del>, RabbitMQ, and others, but I find that RabbitMQ is really the way to go. That’s especially true when using the publish/subscribe pattern. The reason for this is that RabbitMQ has a complete routing framework built-in and MassTransit will leverage this when persisting your subscriptions. When creating a cluster of RabbitMQ servers for availability, this routing information is replicated to all the nodes.</p>
+<div class="alert info">MT3 has dropped support for MSMQ (<a href="http://blog.phatboyg.com/2014/11/30/masstransit/#outwiththeold" target="_blank">read about that</a>) but has officially adopted Azure Service Bus as an in-the-box supported transport.</div>
+<p>In this article, you’re going to run RabbitMQ on your local Windows development box. Both our publisher and subscriber will connect to the same RabbitMQ instance. In a future post, I’ll detail how to set up multiple RabbitMQ instances in a cluster.</p>
+<h2>Installing RabbitMQ</h2>
+<p>RabbitMQ requires the Erlang runtime, so that’s the first thing you need to download and install. Head over to <a href="http://www.erlang.org/download.html" target="_blank">Erlang.org’s download page</a> and get the latest binary release for Windows (it’s likely you’ll want the 64-bit version). It’s a simple setup wizard, so you’ll have Erlang installed on your machine in short order.</p>
+<p>Next, <a href="http://www.rabbitmq.com/download.html" target="_blank">download the latest version of RabbitMQ</a> for Windows. Again, it’s an easy setup wizard that you can quickly fly through. Just accept the defaults.</p>
+<h2>Enabling the RabbitMQ Web Management Interface</h2>
+<p>One RabbitMQ feature that I found extremely useful (but which isn’t enabled by default) is the web-based management interface. With this, you can see the exchanges and queues that are set up by MassTransit in RabbitMQ. To enable this, find the “RabbitMQ Command Prompt (sbin dir)” item that the RabbitMQ installer added to your Start menu and launch it. From the command line, run the following command:</p>
+<pre class="brush: ps; toolbar: false;">&gt; rabbitmq-plugins enable rabbitmq_management</pre>
+<p>It will confirm that the plugin and its dependencies have been enabled and instruct you to restart RabbitMQ. When installed on Windows, RabbitMQ runs as a Windows service. You can use the Services MMC snap-in to restart it or just run the following command:</p>
+<pre class="brush: ps; toolbar: false;">&gt; net service stop RabbitMQ
+...
+&gt; net service start RabbitMQ</pre>
+<p>Now go to <a href="http://localhost:15672/">http://localhost:15672/</a> to open the management console. Default credentials to login are guest/guest (you can change the credentials from the Admin tab).</p>
+<p>There’s not much to see yet, but we’ll set the stage. Go to the Exchanges tab. You’ll see the following default RabbitMQ exchanges:</p>
+<p><a href="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image_thumb.png" alt="image" width="325" height="213" border="0" /></a></p>
+<p>An exchange is something you can send messages to. It cannot hold messages. It’s merely a set of routing instructions that tell RabbitMQ where to deliver the message. We’ll come back here in a little while.</p>
+<p>Now click on the Queues tab. Nothing here yet. Queues can actually hold messages and are where applications can actually pick up messages.</p>
+<p>So, to use a real world analogy, an Exchange is like the local Post Office, and a Queue is like your mailbox. The only thing that an Exchange can do that most traditional Post Offices don’t do is actually make multiple copies of a message to be delivered to multiple mailboxes.</p>
+<h1>Creating the Sample Applications</h1>
+<p>I used Visual Studio 2013 to create this sample, but it should work in 2012 as well. You can get the entire source from: <a href="https://github.com/dprothero/MtPubSubExample">https://github.com/dprothero/MtPubSubExample</a></p>
+<div class="alert info">To view the code for MT3, select the &#8220;mt3&#8221; branch in this GitHub repository.</div>
+<h2>Creating a Contract</h2>
+<p>I like to use the concept of a “contract” for my messages I want to put onto the service bus. This is an interface definition that both the publisher and subscriber have to agree upon. They don’t need to know anything about the implementation of this interface on either side. To keep the publisher and subscriber as loosely coupled as possible, I like to put my contracts in their own assembly so that this is the only shared dependency.</p>
+<p>So, the first step is to create a new solution called MtPubSubExample and a new class library called “Contracts”. To the class library, add a single interface called “SomethingHappened.”</p>
+<pre class="brush: csharp; toolbar: false;">using System;
+
+namespace Contracts
+{
+  public interface SomethingHappened
+  {
+    string What { get; }
+    DateTime When { get; }
+  }
+}</pre>
+<p>SomethingHappened will be the message interface we use for our sample message. Our publisher will create an instance of a class implementing SomethingHappened, set What and When properties, and publish it onto the service bus.</p>
+<p>Our subscriber will then set up a subscription (aka Consumer) to listen for all messages of type SomethingHappened. MassTransit will call our Consumer class whenever a SomethingHappened message is received, and we can handle it as we wish, presumably inspecting the What and the When properties.</p>
+<h2>Shared Configuration Setup Code</h2>
+<div class="alert info">The original article used a separate Configuration class to handle the common configuration tasks for both the publisher and subscriber. MT3&#8217;s configuration code is much simpler and, for clarity, I&#8217;ve moved the appropriate code into the publisher and subscriber.</div>
+<h2>Creating the Publisher</h2>
+<p>We’ll make the publisher a very simple console application that just prompts the user for some text and then publishes that text as part of a SomethingHappened message. Add a new Console Application project called “TestPublisher” to the solution and add a new class called “SomethingHappenedMessage.” This will be our concrete implementation of the SomethingHappened interface. You’ll need to add a project reference to the Contracts project.</p>
+<pre class="brush: csharp; toolbar: false;">using Contracts;
+using System;
+
+namespace TestPublisher
+{
+  class SomethingHappenedMessage : SomethingHappened
+  {
+    public string What { get; set; }
+    public DateTime When { get; set; }
+  }
+}</pre>
+<p>Now, in the Main method of the Program.cs file in your Console Application, you can put in the code to set up the bus, prompt the user for text, and publish that text onto the bus. Real quick first, however, it’s time to head to NuGet and pull in MassTransit. The quickest way to get everything you need is to find the MassTransit.RabbitMq package and install that. Doing so will install all of MassTransit and its dependencies.</p>
+<p>You still need one more package. I found that MassTransit doesn’t work unless you install one of the logging integration packages that are designed for it. For me, I selected the Log4Net integration package (MassTransit.Log4Net).</p>
+<div class="alert info">To get the pre-release version of MassTransit 3 you need to add the -Pre flag to the Install-Package commands in the Package Manager Console:</p>
+<pre>Install-Package -Pre MassTransit.RabbitMq
+Install-Package -Pre Masstransit.Log4Net</pre>
+</div>
+<pre class="brush: csharp; toolbar: false;">using System;
+using Contracts;
+using MassTransit;
+using MassTransit.Log4NetIntegration.Logging;
+
+namespace TestPublisher
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Log4NetLogger.Use();
+      var bus = Bus.Factory.CreateUsingRabbitMq(x =&gt; 
+        x.Host(new Uri("rabbitmq://localhost/"), h =&gt; { }));
+      var busHandle = bus.Start();
+      var text = "";
+
+      while (text != "quit")
+      {
+        Console.Write("Enter a message: ");
+        text = Console.ReadLine();
+
+        var message = new SomethingHappenedMessage()
+        {
+          What = text, When = DateTime.Now
+        };
+        bus.Publish&lt;SomethingHappened&gt;(message);
+      }
+
+      busHandle.Stop().Wait();
+    }
+  }
+}</pre>
+<div class="alert info">In MT3, most operations are asynchronous, including the Publish() method. However, there is no need to await the call to publish here.</div>
+<p>Pretty simple, huh? We put the input capture and message publishing in a loop to make it easy to send multiple messages. Just put a catch for the string “quit” so we can exit the publisher when we’d like.</p>
+<div class="alert info">MT3 now requires an explicit call to start the bus, returning a handle that you can use to later stop the bus. Notice the Wait() method chained to the Stop() method. This is because the Stop() method is asynchronous. If you were calling Stop() inside an async method, you could await it. However, since this is a simple Console app, we are just blocking the thread until the shutdown is complete.</div>
+<p>If you make TestPublisher the startup project of the solution and run it, right now you can publish messages all you like…. However, nobody is listening yet!</p>
+<h2>What’s Going on in RabbitMQ So Far?</h2>
+<p>If you go back into the RabbitMQ web interface and jump over to the Exchanges tab, you’ll see we have a <del>couple</del> new arrival<del>s</del>.</p>
+<p><a href="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image4.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image4_thumb.png" alt="image" width="340" height="214" border="0" /></a></p>
+<div class="alert info">MT3 doesn&#8217;t require creating a queue if you aren&#8217;t hosting an endpoint. So, for our publisher, the MtPubSubExample_TestPublisher queue will not be created as it was in the original post.</div>
+<p>Contracts:SomethingHappened is a new exchange created for the SomethingHappened message type. When we published this message, MassTransit automatically created this exchange. Click on it and scroll down to the Bindings section, and you’ll see there are no bindings yet:</p>
+<p><a href="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image1.png"><img loading="lazy" style="border-width: 0px; margin: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image_thumb1.png" alt="image" width="152" height="143" border="0" /></a></p>
+<p>That’s because nobody has subscribed to SomethingHappened messages yet. They go to the exchange and then die because there’s no queue to route them to.</p>
+<h2>Creating the Subscriber</h2>
+<p>The final piece of the puzzle! Add another Console Application project to your solution and call it TestSubscriber. Again, add project references to Contracts and Configuration and then add the MassTransit.RabbitMq and MassTransit.Log4Net NuGet packages.</p>
+<div class="alert info">Don&#8217;t forget the -Pre switch to get the pre-release version of MT3.</div>
+<p>The first thing we need is a Consumer class to consume the SomethingHappened messages. Add a new class to the console app and call it “SomethingHappenedConsumer.”</p>
+<pre class="brush: csharp; toolbar: false;">using System;
+using System.Threading.Tasks;
+using Contracts;
+using MassTransit;
+
+namespace TestSubscriber
+{
+  class SomethingHappenedConsumer : IConsumer&lt;SomethingHappened&gt;
+  {
+    public Task Consume(ConsumeContext&lt;SomethingHappened&gt; context)
+    {
+      Console.Write("TXT: " + context.Message.What);
+      Console.Write("  SENT: " + context.Message.When);
+      Console.Write("  PROCESSED: " + DateTime.Now);
+      Console.WriteLine(" (" + System.Threading.Thread.CurrentThread.ManagedThreadId + ")");
+      return Task.FromResult(0);
+    }
+  }
+}</pre>
+<p>This consumer class implements a specific MassTransit interface whose Consume method will be called with the message context and SomethingHappened message each time a message is received. Here we are simply writing the message out to the console.</p>
+<div class="alert info">The Consume method is meant to be asynchronous, so it returns a Task. In this example, we aren&#8217;t making any other asynchronous calls, so we just use the Task.FromResult() helper method to return a Task with a zero result. If you were doing something asynchronous in the Consume method you could use async/await:</p>
+<pre>public <span style="background-color: yellow;">async</span> Task Consume(ConsumeContext&lt;SomethingHappened&gt; context)
+{
+  <span style="background-color: yellow;">await</span> SomeAsynchronousMethod(context.Message);
+}</pre>
+</div>
+<p>Finally, in the Main method of Program.cs, we can initialize the bus and, as part of the initialization, instruct MassTransit that we wish to subscribe to messages of type SomethingHappened.</p>
+<pre class="brush: csharp; toolbar: false;">using System;
+using MassTransit;
+using MassTransit.Log4NetIntegration.Logging;
+
+namespace TestSubscriber
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Log4NetLogger.Use();
+      var bus = Bus.Factory.CreateUsingRabbitMq(x =&gt;
+      {
+        var host = x.Host(new Uri("rabbitmq://localhost/"), h =&gt; { });
+
+        x.ReceiveEndpoint(host, "MtPubSubExample_TestSubscriber", e =&gt;
+          e.Consumer&lt;SomethingHappenedConsumer&gt;());
+      });
+      var busHandle = bus.Start();
+      Console.ReadKey();
+      busHandle.Stop().Wait();
+    }
+  }
+}</pre>
+<div class="alert info">Notice we are now passing a queue name to the new ReceiveEndpoint MT3 method. Make sure not to share this queue name with other applications.</div>
+<p>Now right-click on the MtPubSubExample solution in the solution explorer and choose “Set Startup Projects….” From here, choose the Multiple startup projects option and set the Action for both TestPublisher and TestSubscriber to Start. Now when you run your solution, both the publisher and subscriber will run.</p>
+<p>Type some messages into the publisher. You should see them show up immediately in the subscriber window!</p>
+<p><a href="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image10.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image10_thumb.png" alt="image" width="570" height="212" border="0" /></a></p>
+<p>Now close <em>just</em> the Subscriber sample window and publish a few more messages in the Publisher window.</p>
+<p><a href="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image2.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image_thumb2.png" alt="image" width="432" height="213" border="0" /></a></p>
+<p>Go ahead and close the Publisher window for now. Let’s take a deeper look at where those three messages went.</p>
+<h2>What’s Going on in RabbitMQ Now?</h2>
+<p>Go back into the RabbitMQ web interface and go back to the Exchanges tab. You’ll see a new exchange called MtPubSubExample_TestSubscriber, but first click on the Contracts:SomethingHappened exchange and scroll down to the Bindings section. You’ll see we now have a binding.</p>
+<p><a href="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image3.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image_thumb3.png" alt="image" width="534" height="207" border="0" /></a></p>
+<p>So, by creating a subscription from our TestSubscriber, MassTransit automatically set up this binding for us. Click on the MtPubSubExample_TestSubscriber here, and you’ll see you’re taken to the setup page for an exchange called MtPubSubExample_TestSubscriber. Scroll down to Bindings, and you’ll see we’re bound to a queue named the same as the exchange (in the binding diagrams, exchanges show up as rectangles with rounded corners, whereas queues have straight corners).</p>
+<p><a href="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image5.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image_thumb4.png" alt="image" width="531" height="331" border="0" /></a></p>
+<p>The web interface is great in how it shows the predecessor in addition to the successor in the path. Click the MtPubSubExample_TestSubscriber queue here, and you’ll be taken to the queue setup page for that queue. If you haven’t fired up the TestSubscriber app since we published those last three messages, you should see that there are three messages in the queue:</p>
+<p><a href="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image6.png"><img loading="lazy" style="border-width: 0px; margin: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image_thumb5.png" alt="image" width="219" height="103" border="0" /></a></p>
+<p>Fire up the TestSubscriber app, and you should see it process the three messages left in the queue.</p>
+<p><a href="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image7.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="http://looselycoupledlabs.com/wp-content/uploads/2014/06/image_thumb6.png" alt="image" width="563" height="123" border="0" /></a></p>
+<p>Notice the timestamp from the message versus the timestamp of when the subscriber actually published the message. In this case, there was a 6-minute lag (the 6 minutes we were poking around in RabbitMQ before starting up the subscriber again).</p>
+<h1>Wrap Up</h1>
+<p>Hopefully, this post was helpful in getting you off the ground with MassTransit 3. I will work on updating more posts like this one.</p>
+<p>Until then…</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/feed/</wfw:commentRss>
+			<slash:comments>9</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>

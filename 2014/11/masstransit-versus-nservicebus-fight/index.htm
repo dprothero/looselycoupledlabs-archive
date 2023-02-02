@@ -1,0 +1,584 @@
+﻿<!doctype html>
+
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	
+	
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+			    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+	<title>MassTransit versus NServiceBus: FIGHT! | Loosely Coupled Labs</title>
+    
+    <!--[if lte IE 9]>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/html5shiv.js"></script>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/selectivizr-min.js"></script>
+    <![endif]-->
+	
+		
+	<meta name='robots' content='max-image-preview:large'>
+<link rel='dns-prefetch' href='//fonts.googleapis.com'>
+<link rel='dns-prefetch' href='//s.w.org'>
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Feed" href="../../../feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Comments Feed" href="../../../comments/feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; MassTransit versus NServiceBus: FIGHT! Comments Feed" href="feed/index.htm">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/looselycoupledlabs.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.8.6"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([10084,65039,8205,55357,56613],[10084,65039,8203,55357,56613])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='../../../wp-includes/css/dist/block-library/style.min.css?ver=5.8.6' type='text/css' media='all'>
+<link rel='stylesheet' id='unifrakturmaguntia-css' href='../../../css?family=UnifrakturMaguntia&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='coustard-css' href='../../../css-1?family=Coustard&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='lora-css' href='../../../css-2?family=Lora:400,700,400italic,700italic&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='print-css' href='../../../wp-content/themes/read-v4-2-4/css/print.css' type='text/css' media='print'>
+<link rel='stylesheet' id='grid-css' href='../../../wp-content/themes/read-v4-2-4/css/grid.css' type='text/css' media='all'>
+<link rel='stylesheet' id='normalize-css' href='../../../wp-content/themes/read-v4-2-4/css/normalize.css' type='text/css' media='all'>
+<link rel='stylesheet' id='font-awesome-css' href='../../../wp-content/themes/read-v4-2-4/css/font-awesome.css' type='text/css' media='all'>
+<link rel='stylesheet' id='google-code-prettify-css' href='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.css' type='text/css' media='all'>
+<link rel='stylesheet' id='uniform-css' href='../../../wp-content/themes/read-v4-2-4/css/uniform.default.css' type='text/css' media='all'>
+<link rel='stylesheet' id='flexslider-css' href='../../../wp-content/themes/read-v4-2-4/css/flexslider.css' type='text/css' media='all'>
+<link rel='stylesheet' id='mediaelementplayer-css' href='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelementplayer.css' type='text/css' media='all'>
+<link rel='stylesheet' id='gamma-gallery-css' href='../../../wp-content/themes/read-v4-2-4/css/gamma-gallery.css' type='text/css' media='all'>
+<link rel='stylesheet' id='main-css' href='../../../wp-content/themes/read-v4-2-4/css/main.css' type='text/css' media='all'>
+<link rel='stylesheet' id='fancybox-css' href='../../../wp-content/themes/read-v4-2-4/css/jquery.fancybox-1.3.4.css' type='text/css' media='all'>
+<link rel='stylesheet' id='wp-fix-css' href='../../../wp-content/themes/read-v4-2-4/css/wp-fix.css' type='text/css' media='all'>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery.min.js?ver=3.6.0' id='jquery-core-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
+<link rel="https://api.w.org/" href="../../../wp-json/index.htm"><link rel="alternate" type="application/json" href="../../../wp-json/wp/v2/posts/244"><link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../../xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../../wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.8.6">
+<link rel="canonical" href="index.htm">
+<link rel='shortlink' href='index.htm?p=244'>
+<link rel="alternate" type="application/json+oembed" href="../../../wp-json/oembed/1.0/embed-10?url=https%3A%2F%2Flooselycoupledlabs.com%2F2014%2F11%2Fmasstransit-versus-nservicebus-fight%2F">
+<link rel="alternate" type="text/xml+oembed" href="../../../wp-json/oembed/1.0/embed-11?url=https%3A%2F%2Flooselycoupledlabs.com%2F2014%2F11%2Fmasstransit-versus-nservicebus-fight%2F&#038;format=xml">
+
+<link rel="stylesheet" type="text/css" href="../../../wp-content/themes/read-v4-2-4/style.css">
+
+		
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-3?family=Lora&subset=latin">
+<style type="text/css">
+a { color: #4488ff; }
+
+a:hover { color: #3377ee; }
+
+.main-navigation ul .current_page_item > a, .main-navigation ul .current-menu-item > a { color: #69be28; }
+
+h1.site-title, h1.site-title a { font-family: "Coustard", Georgia, serif; }
+
+h1, h2, h3, h4, h5, h6 { font-family: "Coustard", Georgia, serif; }
+
+.main-navigation ul li { font-family: "Coustard", Georgia, serif; }
+
+html { font-family: "Lora", Georgia, serif; }
+</style>
+		<style type="text/css">
+.site-header hgroup {
+  padding: 0;
+}
+
+h1.site-title {
+  font-size: 2.20em;
+}
+
+.site-header {
+  padding-bottom: 0;
+}
+
+table {
+  border-collapse: collapse;     
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+}
+
+code {
+  box-shadow: none;
+}
+</style>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPowerShell.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<link href="../../../syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css">
+<link href="../../../syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="post-template-default single single-post postid-244 single-format-standard">
+
+    <div id="page" class="hfeed site"> 
+        <header class="site-header wrapper" role="banner">
+			<div class="row">
+			    <hgroup>
+					<h1 class="site-title">
+															<a rel="home" href="../../../index.htm">
+										<img alt="Loosely Coupled Labs" src="../../../wp-content/uploads/2014/06/loosely600-300x105.png">
+									</a>
+													</h1>
+					<!-- end .site-title -->
+					
+					<h2 class="site-description">
+						**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**					</h2>
+					<!-- end .site-description -->
+			    </hgroup>
+				
+								
+			    <nav id="site-navigation" class="main-navigation" role="navigation">
+					<ul class="menu-default"><li class="page_item page-item-39"><a href="../../../about-me/index.htm">About Me</a></li><li class="page_item page-item-226"><a href="../../../subscribe/index.htm">Subscribe</a></li></ul>
+			    </nav>
+			    <!-- end #site-navigation -->
+			</div>
+			<!-- end .row -->
+        </header>
+        <!-- end .site-header -->
+		
+				
+        <section id="main" class="middle wrapper">
+			<div class="row row-fluid ">
+<div id="primary" class="site-content">
+	<div id="content" role="main">
+		<div class="readable-content blog-single">
+										<article id="post-244" class="clearfix post-244 post type-post status-publish format-standard has-post-thumbnail hentry category-commentary tag-masstransit tag-nservicebus tag-service-bus tag-soa">
+								<header class="entry-header">
+																		<h1 class="entry-title">MassTransit versus NServiceBus: FIGHT!</h1>
+								</header>
+								<!-- end .entry-header -->
+								
+								<div class="entry-meta">
+									<span class="post-category">
+										posted in <a href="../../../category/commentary/index.htm" rel="category tag">Commentary</a>									</span>
+									<!-- end .post-category -->
+									
+									<span class="post-date">
+										on <a rel="bookmark" title="11:01 pm" href="index.htm"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">November 16, 2014</time></a>
+									</span>
+									<!-- end .post-date -->
+									
+									<span class="by-author"> by										<span class="author vcard">
+											<a class="url fn n" rel="author" title="View all posts by david@prothero.com" href="../../../author/davidprothero-com/index.htm">david@prothero.com</a>
+										</span>
+										<!-- end .author -->
+									</span>
+									<!-- end .by-author -->
+									
+									<div class="share-links">
+	<a>SHARE</a>
+	
+	<div class="share-wrap">
+		<div class="facebook-wrap">
+			<div id="fb-root"></div>
+			
+			<script>
+				(function(d, s, id)
+				{
+					var js, fjs = d.getElementsByTagName(s)[0];
+					if (d.getElementById(id)) return;
+					js = d.createElement(s); js.id = id;
+					js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+					fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));
+			</script>
+			
+			<div class="fb-like" data-send="false" data-layout="button_count" data-width="400" data-show-faces="false" data-colorscheme="light" data-action="like"></div>
+		</div>
+		<!-- end .facebook-wrap -->
+		
+		<div class="twitter-wrap">
+						<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+			
+			<script>
+				!function(d, s, id)
+				{
+					var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}
+				}(document, "script", "twitter-wjs");
+			</script>
+		</div>
+		<!-- end .twitter-wrap -->
+		
+		<div class="google-wrap">
+			<!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium"></div>
+			
+			<!-- Place this tag after the last +1 button tag. -->
+			<script type="text/javascript">
+			  (function()
+			  {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			  })();
+			</script>
+		</div>
+		<!-- end .google-wrap -->
+		
+		<div class="pinterest-wrap">
+						
+			<a href="http://pinterest.com/pin/create/button/?url=https://looselycoupledlabs.com/2014/11/masstransit-versus-nservicebus-fight/&media=https://looselycoupledlabs.com/wp-content/uploads/2014/11/mt-vs-nsb.png&description=MassTransit versus NServiceBus: FIGHT!" class="pin-it-button" count-layout="horizontal"><img src="../../../images/PinExt.png" alt="Pin It" title="Pin It"></a>
+			
+			<script type="text/javascript" src="../../../js/pinit.js"></script>
+		</div>
+		<!-- end .pinterest-wrap -->
+	</div>
+	<!-- end .share-wrap -->
+</div>	
+<!-- end .share-links -->									
+																	</div>
+								<!-- end .entry-meta -->
+								
+																			<div class="featured-image">
+												<img width="700" height="212" src="../../../wp-content/uploads/2014/11/mt-vs-nsb.png" class="attachment-full size-full wp-post-image" alt="MassTransit versus NServiceBus: FIGHT!" loading="lazy" title="" srcset="../../../wp-content/uploads/2014/11/mt-vs-nsb.png 700w, ../../../wp-content/uploads/2014/11/mt-vs-nsb-300x90.png 300w, ../../../wp-content/uploads/2014/11/mt-vs-nsb-150x45.png 150w, ../../../wp-content/uploads/2014/11/mt-vs-nsb-400x121.png 400w, ../../../wp-content/uploads/2014/11/mt-vs-nsb-200x60.png 200w" sizes="(max-width: 700px) 100vw, 700px">											</div>
+											<!-- end .featured-image -->
+																		
+								<div class="entry-content clearfix">
+									<p>I often get asked: &#8220;which is better, <a href="http://masstransit-project.com/" target="_blank">MassTransit</a> or <a href="http://particular.net/NServiceBus" target="_blank">NServiceBus</a>?&#8221; It&#8217;s a perfectly reasonable question for an outsider looking to get started with message-based SOA on .NET to ask. However, as is usually the case with the &#8220;which is better&#8221; question for any technology, the answer is the ubiquitous (and exasperating) &#8220;it depends.&#8221;<span id="more-244"></span></p>
+<h1>Goals and Disclaimers</h1>
+<p>This post is not a deep-dive comparison of the two frameworks. To do so would be extremely time consuming and I’m not sure would add a lot of value as the use cases for these frameworks are so broad. Instead, I hope to offer some general guidance on how to approach your own comparison research (with links to more details where appropriate).</p>
+<p>The other goal for this post is to hopefully solicit feedback from others to improve the quality of advice offered here. You may want to check back frequently for updates and interesting conversation. Keep things civil, however, please. (The “FIGHT&#8221;!” in the post title is just my own attempt at journalistic sensationalism.)</p>
+<p>First, the disclaimers… I’ve used MassTransit for quite some time and obviously if you look at the other <a href="../../../tag/masstransit/index.htm" target="_blank">posts on this blog</a>, you can see there’s a definite MassTransit bias. But there’s a twist! I actually do some (paid) work for <a href="http://particular.net/" target="_blank">Particular Software</a> (makers of NServiceBus) writing documentation for their products. Particular is not paying me to write this blog post, however. If this post feels biased to you in any way, I apologize. We’re all human. On the other hand, the level of exposure I have to both frameworks does put me in a good position to publish some thoughts on the differences. Proceed with caution!</p>
+<h1>MassTransit versus NServiceBus</h1>
+<h2>Common Qualities</h2>
+<p>Both frameworks have these qualities in common (in broad strokes):</p>
+<ul>
+<li>The projects were started and are actively maintained by wicked smart SOA experts. [<a href="https://github.com/orgs/MassTransit/people" target="_blank">MT</a> | <a href="http://particular.net/leadership" target="_blank">NSB</a>]</li>
+<li>The code base is high quality, unit tested, and open to community contributions. [<a href="https://github.com/MassTransit/MassTransit" target="_blank">MT</a> | <a href="https://github.com/Particular/NServiceBus" target="_blank">NSB</a>]</li>
+<li>There is a very responsive community. [<a href="https://groups.google.com/forum/#!forum/masstransit-discuss" target="_blank">MT</a> | <a href="https://groups.google.com/forum/#!forum/particularsoftware" target="_blank">NSB</a>]</li>
+<li>They support the most common messaging patterns (request/response, publish/subscribe, sagas, etc.). [<a href="http://docs.masstransit-project.com/en/latest/overview/index.html" target="_blank">MT</a> | <a href="http://docs.particular.net/nservicebus/architectural-principles" target="_blank">NSB</a>]</li>
+<li>Both support your choice of IoC Container. [<a href="http://docs.masstransit-project.com/en/latest/configuration/containers.html" target="_blank">MT</a> | <a href="http://docs.particular.net/nservicebus/containers" target="_blank">NSB</a>]</li>
+<li>Exceptions during message processing are handled and messages re-queued to be retried. [<a href="http://automatonymous.readthedocs.org/en/latest/overview/valueadd.html#retries-poision-messages" target="_blank">MT</a> | <a href="http://docs.particular.net/nservicebus/second-level-retries" target="_blank">NSB</a>]</li>
+</ul>
+<p>The bottom line is these are both very solid frameworks.</p>
+<h2>So What’s Different?</h2>
+<p>It’s been mentioned in other places many times before, but here are the basic differences if you haven’t seen them (again in broad strokes):</p>
+<ul>
+<li>While both are open source, only MassTransit is free to use in production. Production use of NServiceBus requires a commercial license. [<a href="https://github.com/MassTransit/MassTransit/blob/develop/LICENSE" target="_blank">MT</a> | <a href="http://particular.net/licensing" target="_blank">NSB</a>]</li>
+<li>MassTransit support is strictly community-based through it’s Google Group (where the founders are extremely active) whereas NServiceBus offers a commercial support option. [<a href="http://docs.masstransit-project.com/en/latest/installation/help.html" target="_blank">MT</a> | <a href="http://particular.net/support" target="_blank">NSB</a>]</li>
+<li>NServiceBus has an <a href="http://particular.net/service-platform" target="_blank">entire platform</a> of other (commercial) tools supporting it.</li>
+<li>NServiceBus’ documentation and the platform itself tends to hold your hand a little more and try to steer you down the path of good practices. (You can still shoot yourself in the foot, they just try to make it harder.)</li>
+</ul>
+<p>Obviously, there are many other, more detailed, differences but these are the major factors most people are considering when getting started.</p>
+<h2>The Automotive Analogy</h2>
+<p>Let’s use an automotive analogy and say MassTransit is a base model Honda Accord. Very solid, reliable vehicle. Always highly recommended by the auto experts and consumer groups. It will get you from point A to point B in a predictable manner. There are even upgraded components you can get that are designed to work well with it to give you a better experience.</p>
+<p>If MassTransit is a Honda Accord, then NServiceBus is a Lexus IS350. All the same attributes as the Honda, but with a lot more capabilities right in the package. It’s a lot more comfortable, has more horsepower, and can do some pretty impressive things. Could you make the Honda do all the things that a Lexus could do? Possibly, but you’re going to be working in the garage a long time to upgrade it (or paying a custom car shop a lot of money to do so). It would be a very custom, one-of-a-kind vehicle, whereas the Lexus was designed holistically to have all its features work together in a reliable and safe package.</p>
+<h2>A Concrete Example</h2>
+<p>Let me give you a concrete example of some of the additional features you would get “in the box” from NServiceBus versus MassTransit. Take the example of working with a queuing system like RabbitMQ or Azure Service Bus that does not support distributed transactions. If you have a business process that needs to be highly reliable <em>and</em> consistent, then you have to deal with this lack of distributed transaction support. Consider this simple example:</p>
+<ol>
+<li>You take the message off the queue.</li>
+<li>You do some database work.</li>
+<li>Before you can commit your database work, your server crashes.</li>
+</ol>
+<p>In this example, you will lose data because the message will no longer be in the queue, but your database work was not persisted. This is why both MassTransit and NServiceBus don&#8217;t actually remove the message from the queue until your handler has completed successfully. So the scenario could go like this:</p>
+<ol>
+<li>You peek at the next message on the queue.</li>
+<li>You do your database work and it commits.</li>
+<li>You go to remove the message from the queue, but… oops… the server crashes.</li>
+</ol>
+<p>Now the message is still in the queue and will be processed again. This could lead to duplicate data. “No problem,” you say, “just keep track of the messages that are processed in the database.”</p>
+<ol>
+<li>You peek at the next message on the queue.</li>
+<li>You do your database work.</li>
+<li>In the same db transaction, you record the message id so you know it’s been processed.</li>
+<li>Commit the database transaction.</li>
+<li>You go to remove the message from the queue, but… oops… the server crashes.</li>
+</ol>
+<p>Now we’re okay because the logic in your handler can check to see if the message id has already been processed. We’re utilizing the transaction capability of your database to help us out here.</p>
+<p>Problem solved, right? Actually, not quite… what if you want to publish another message after finishing the database work? That won’t be involved in the same transaction and now you risk either publishing incorrect information to the service bus or not publishing it at all depending on what order you do your database commit and message publishing. Here’s a great talk by Udi Dahan about this very problem and what the full end-to-end solution for it looks like:</p>
+<div style="width: 500px; font-size: 11px;"><iframe loading="lazy" style="margin-bottom: 0; padding-bottom: 0;" src="//player.vimeo.com/video/111998645" width="500" height="281" frameborder="0" allowfullscreen="allowfullscreen"></iframe><br>Used with permission. Please visit <a href="http://particular.net/adsd" target="_blank">Particular&#8217;s site</a> for more information on the Advanced Distributed Systems Design course that this video is from.</div>
+<p>The point that I am trying to make here is that with MassTransit, you have to code for these scenarios. This isn’t always necessary given the business requirements. If the occasional lost message or inconsistency in the database is not a big deal, then you wouldn’t need to add that logic and MT or NSB would do the job for you just fine.</p>
+<p>However, if you do need this, then NServiceBus offers it out of the box. It also offers deferred message retry and publishing out of the box. There’s just a number of scenarios that it handles for you where with MassTransit you have to either roll your own or wire up another component (some of which are built by the MassTransit guys).</p>
+<h2>Bottom Line</h2>
+<p>If your needs don’t require compromise-free reliability and consistency and you are on a tight budget, then definitely look at MassTransit. If you do require compromise-free reliability and consistency, then you need to weigh the pros and cons of building the additional code necessary on top of MassTransit versus paying for NServiceBus but getting all of the functionality you need in one package.</p>
+<p>Now it’s your turn. Let me know where I dropped the ball, where I didn’t elaborate enough, or where you think I’ve got it just all wrong…</p>
+									
+																	</div>
+								<!-- end .entry-content -->
+								
+																			<footer class="entry-meta post-tags">
+												<a href="../../../tag/masstransit/index.htm" rel="tag">MassTransit</a>, <a href="../../../tag/nservicebus/index.htm" rel="tag">NServiceBus</a>, <a href="../../../tag/service-bus/index.htm" rel="tag">Service Bus</a>, <a href="../../../tag/soa/index.htm" rel="tag">SOA</a>											</footer>
+											<!-- end .entry-meta -->
+																	</article>
+							<!-- end .hentry -->
+							
+							<aside class="about-author">
+	<h3>ABOUT THE AUTHOR</h3>
+	
+	<div class="row-fluid author-bio">
+		<div class="span2 author-img">
+			<a href="../../../author/davidprothero-com/index.htm">
+				<img alt='david@prothero.com' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b.jpeg?s=226&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-1.jpeg 2x?s=452&#038;d=mm&#038;r=g 2x' class='avatar avatar-226 photo' height='226' width='226' loading='lazy'>			</a>
+		</div>
+		<!-- end .author-img -->
+		
+		<div class="span10 author-info">
+			<h4 class="author-name">david@prothero.com</h4>
+			
+			<p>
+				I have been providing technical leadership for companies for over 15 years. However, my software engineering experience extends back over 25 years. Currently, I am a Developer Educator for Twilio. Prior to that, I served as both IT Director and Software Engineering Director for Therapeutic Research Center (TRC). I guided the company from a print-based newsletter company to an online information services company.			</p>
+		</div>
+		<!-- end .author-info -->
+	</div>
+	<!-- end .author-bio -->
+</aside>
+<!-- end .about-author -->							
+							<nav class="row-fluid nav-single">
+								<div class="span6 nav-previous">
+									<h4>PREVIOUS POST</h4><a href="../../09/masstransit-on-microsoft-azure-2/index.htm" rel="prev"><span class="meta-nav">&#8592;</span> MassTransit on Microsoft Azure</a>								</div>
+								<!-- end .nav-previous -->
+								
+								<div class="span6 nav-next">
+									<h4>NEXT POST</h4><a href="../../../2015/07/masstransit-3-update-a-simple-publishsubscribe-example/index.htm" rel="next">MassTransit 3 Update: A Simple Publish/Subscribe Example <span class="meta-nav">&#8594;</span></a>								</div>
+								<!-- end .nav-next -->
+							</nav>
+							<!-- end .nav-single -->
+							
+							
+<div id="comments" class="comments-area">
+					<h2 class="comments-title">
+					8 Comments <span class="on">&#8594;</span> <span>MassTransit versus NServiceBus: FIGHT!</span>				</h2>
+				<!-- end .comments-title -->
+				
+				<ol class="commentlist">
+										
+					<li class="comment even thread-even depth-1" id="li-comment-26">
+						<article id="comment-26" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/4dc91351eb1c3391bdba4455d2a24dcc.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/4dc91351eb1c3391bdba4455d2a24dcc-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn"><a href='http://blog.dox.com.au/' rel='external nofollow ugc' class='url'>Ian Yates</a> </cite><a href="index.htm#comment-26"><time datetime="2014-12-08T00:04:00+00:00">December 8, 2014 at 12:04 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>As someone yet to jump in with both feet using either framework, I&#8217;ve also been keeping an eye on Rebus (<a href="http://mookid.dk/oncode/rebus" rel="nofollow ugc">http://mookid.dk/oncode/rebus</a>).  Do you have any thoughts/experience with it?</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					<ol class="children">
+					
+					<li class="comment odd alt depth-2" id="li-comment-27">
+						<article id="comment-27" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-2.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-3.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">dprothero </cite><a href="index.htm#comment-27"><time datetime="2014-12-10T02:39:00+00:00">December 10, 2014 at 2:39 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>I haven&#8217;t used Rebus, no. It&#8217;s newer than MT or NSB which can have advantages as well as disadvantages.</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+						<li class="pingback even thread-odd thread-alt depth-1" id="comment-57">
+							<p>
+								Pingback: <a href='http://www.maldworth.com/2015/07/19/signalrchat-with-masstransit-v3/' rel='external nofollow ugc' class='url'>SignalRChat with MassTransit v3 | maldworth</a> 							</p>
+					</li><!-- #comment-## -->
+					
+					<li class="comment odd alt thread-even depth-1" id="li-comment-140">
+						<article id="comment-140" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/7e51f60f2f16172c334fc4dc426361f9.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/7e51f60f2f16172c334fc4dc426361f9-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Lukas Kocourek </cite><a href="index.htm#comment-140"><time datetime="2017-01-11T22:30:00+00:00">January 11, 2017 at 10:30 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>David, thanks for a brief, yet informative comparison. This topic became very actual for me now.<br>
+Would you mind doing a short refresh on it? After all it&#8217;s been 2 years and things might have changed a bit since you wrote this article..</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					<ol class="children">
+					
+					<li class="comment even depth-2" id="li-comment-141">
+						<article id="comment-141" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-2.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-3.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">dprothero </cite><a href="index.htm#comment-141"><time datetime="2017-01-13T20:48:00+00:00">January 13, 2017 at 8:48 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Hi Lukas, honestly I haven&#8217;t used the two frameworks much since then as I&#8217;m now a Developer Educator for Twilio. I can say, as I&#8217;m still on the mailing lists for both, that both have been under active development with new improvements coming out frequently. That said, the bottom line is probably much the same&#8230; MassTransit is highly capable and free of charge. NServiceBus has the expanded toolset and support you&#8217;d expect from a commercial offering.</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+					
+					<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-192">
+						<article id="comment-192" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/20813f231f7a62bad519d261c36c9c78.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/20813f231f7a62bad519d261c36c9c78-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Soms User </cite><a href="index.htm#comment-192"><time datetime="2017-08-10T10:12:00+00:00">August 10, 2017 at 10:12 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>MassTransit now supports using transactions﻿﻿ in MT3:</p>
+<p><a href="http://masstransit-project.com/MassTransit/advanced/transactions.html" rel="nofollow ugc">http://masstransit-project.com/MassTransit/advanced/transactions.html</a></p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+					
+					<li class="comment even thread-even depth-1" id="li-comment-196">
+						<article id="comment-196" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/092676a53bf81dfd90085ac17e2f545b.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/092676a53bf81dfd90085ac17e2f545b-1.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Don Woodford </cite><a href="index.htm#comment-196"><time datetime="2017-08-25T20:28:00+00:00">August 25, 2017 at 8:28 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>I prototyped NServiceBus and MassTransit service bus implementations and while I would have liked to use NServiceBus because of the extensive tooling and support, it was way beyond our budget.</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+					
+					<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-289">
+						<article id="comment-289" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/4a7b6b5ba49ea76d534bfb33fe1aa32e.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/4a7b6b5ba49ea76d534bfb33fe1aa32e-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Quooston </cite><a href="index.htm#comment-289"><time datetime="2019-12-09T06:02:00+00:00">December 9, 2019 at 6:02 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>MT, 8 years in and never looked back. Built many software as a medical device (SAMD) and IoT systems in that time. Just solid as a rock. And for the  record, the support you get directly from Chris Patterson and others is unbelievable; especially considering it&#8217;s a free tool.</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+				</ol>
+				<!-- end .commentlist -->
+				
+								
+											<p class="nocomments">Comments are closed.</p>
+										
+	</div>
+<!-- end #comments -->								</div>
+		<!-- end .blog-single -->
+	</div>
+	<!-- end #content -->
+</div>
+<!-- end #primary -->
+
+			</div>
+			<!-- end .row .row-fluid -->
+        </section>
+        <!-- end #main -->
+		
+        <footer class="site-footer wrapper" role="contentinfo">
+			<div class="row">
+				<div id="supplementary" class="row-fluid">
+									</div>
+				<!-- end #supplementary -->
+				
+				<div class="site-info">
+					Copyright © 2014 by David Prothero
+All rights reserved.				</div>
+				<!-- end .site-info -->
+			</div>
+			<!-- end .row -->
+        </footer>
+        <!-- end .site-footer -->
+    </div>
+    <!-- end #PAGE -->
+	
+	<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1922425-8', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script type="text/javascript">
+  SyntaxHighlighter.all();
+</script><script type='text/javascript' src='../../../wp-includes/js/comment-reply.min.js?ver=5.8.6' id='comment-reply-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/detectmobilebrowser.js' id='detectmobilebrowser-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/modernizr.js' id='modernizr-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/imagesloaded.min.js?ver=4.1.4' id='imagesloaded-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fitvids.js' id='fitvids-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.js' id='google-code-prettify-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.uniform.min.js' id='uniform-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.flexslider-min.js' id='flexslider-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelement-and-player.min.js' id='mediaelement-and-player-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.isotope.min.js' id='isotope-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fancybox-1.3.4.pack.js' id='fancybox-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.masonry.min.js' id='masonry-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.history.js' id='history-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/js-url.min.js' id='js-url-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquerypp.custom.js' id='jquerypp-custom-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/gamma.js' id='gamma-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/main.js' id='main-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.validate.min.js' id='validate-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/send-mail.js' id='send-mail-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/wp-embed.min.js?ver=5.8.6' id='wp-embed-js'></script>
+</body>
+</html>

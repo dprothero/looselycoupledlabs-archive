@@ -1,0 +1,366 @@
+﻿<!doctype html>
+
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	
+	
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+			    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+	<title>MMS Employee Directory in ASP.NET MVC 5 | Loosely Coupled Labs</title>
+    
+    <!--[if lte IE 9]>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/html5shiv.js"></script>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/selectivizr-min.js"></script>
+    <![endif]-->
+	
+		
+	<meta name='robots' content='max-image-preview:large'>
+<link rel='dns-prefetch' href='//fonts.googleapis.com'>
+<link rel='dns-prefetch' href='//s.w.org'>
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Feed" href="../../../feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Comments Feed" href="../../../comments/feed/index.htm">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/looselycoupledlabs.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.8.6"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([10084,65039,8205,55357,56613],[10084,65039,8203,55357,56613])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='../../../wp-includes/css/dist/block-library/style.min.css?ver=5.8.6' type='text/css' media='all'>
+<link rel='stylesheet' id='unifrakturmaguntia-css' href='../../../css?family=UnifrakturMaguntia&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='coustard-css' href='../../../css-1?family=Coustard&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='lora-css' href='../../../css-2?family=Lora:400,700,400italic,700italic&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='print-css' href='../../../wp-content/themes/read-v4-2-4/css/print.css' type='text/css' media='print'>
+<link rel='stylesheet' id='grid-css' href='../../../wp-content/themes/read-v4-2-4/css/grid.css' type='text/css' media='all'>
+<link rel='stylesheet' id='normalize-css' href='../../../wp-content/themes/read-v4-2-4/css/normalize.css' type='text/css' media='all'>
+<link rel='stylesheet' id='font-awesome-css' href='../../../wp-content/themes/read-v4-2-4/css/font-awesome.css' type='text/css' media='all'>
+<link rel='stylesheet' id='google-code-prettify-css' href='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.css' type='text/css' media='all'>
+<link rel='stylesheet' id='uniform-css' href='../../../wp-content/themes/read-v4-2-4/css/uniform.default.css' type='text/css' media='all'>
+<link rel='stylesheet' id='flexslider-css' href='../../../wp-content/themes/read-v4-2-4/css/flexslider.css' type='text/css' media='all'>
+<link rel='stylesheet' id='mediaelementplayer-css' href='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelementplayer.css' type='text/css' media='all'>
+<link rel='stylesheet' id='gamma-gallery-css' href='../../../wp-content/themes/read-v4-2-4/css/gamma-gallery.css' type='text/css' media='all'>
+<link rel='stylesheet' id='main-css' href='../../../wp-content/themes/read-v4-2-4/css/main.css' type='text/css' media='all'>
+<link rel='stylesheet' id='fancybox-css' href='../../../wp-content/themes/read-v4-2-4/css/jquery.fancybox-1.3.4.css' type='text/css' media='all'>
+<link rel='stylesheet' id='wp-fix-css' href='../../../wp-content/themes/read-v4-2-4/css/wp-fix.css' type='text/css' media='all'>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery.min.js?ver=3.6.0' id='jquery-core-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
+<link rel="https://api.w.org/" href="../../../wp-json/index.htm"><link rel="alternate" type="application/json" href="../../../wp-json/wp/v2/posts/282"><link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../../xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../../wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.8.6">
+<link rel="canonical" href="index.htm">
+<link rel='shortlink' href='index.htm?p=282'>
+<link rel="alternate" type="application/json+oembed" href="../../../wp-json/oembed/1.0/embed-4?url=https%3A%2F%2Flooselycoupledlabs.com%2F2016%2F03%2Fmms-employee-directory-in-asp-net-mvc-5%2F">
+<link rel="alternate" type="text/xml+oembed" href="../../../wp-json/oembed/1.0/embed-5?url=https%3A%2F%2Flooselycoupledlabs.com%2F2016%2F03%2Fmms-employee-directory-in-asp-net-mvc-5%2F&#038;format=xml">
+
+<link rel="stylesheet" type="text/css" href="../../../wp-content/themes/read-v4-2-4/style.css">
+
+		
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-3?family=Lora&subset=latin">
+<style type="text/css">
+a { color: #4488ff; }
+
+a:hover { color: #3377ee; }
+
+.main-navigation ul .current_page_item > a, .main-navigation ul .current-menu-item > a { color: #69be28; }
+
+h1.site-title, h1.site-title a { font-family: "Coustard", Georgia, serif; }
+
+h1, h2, h3, h4, h5, h6 { font-family: "Coustard", Georgia, serif; }
+
+.main-navigation ul li { font-family: "Coustard", Georgia, serif; }
+
+html { font-family: "Lora", Georgia, serif; }
+</style>
+		<style type="text/css">
+.site-header hgroup {
+  padding: 0;
+}
+
+h1.site-title {
+  font-size: 2.20em;
+}
+
+.site-header {
+  padding-bottom: 0;
+}
+
+table {
+  border-collapse: collapse;     
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+}
+
+code {
+  box-shadow: none;
+}
+</style>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPowerShell.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<link href="../../../syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css">
+<link href="../../../syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="post-template-default single single-post postid-282 single-format-standard">
+
+    <div id="page" class="hfeed site"> 
+        <header class="site-header wrapper" role="banner">
+			<div class="row">
+			    <hgroup>
+					<h1 class="site-title">
+															<a rel="home" href="../../../index.htm">
+										<img alt="Loosely Coupled Labs" src="../../../wp-content/uploads/2014/06/loosely600-300x105.png">
+									</a>
+													</h1>
+					<!-- end .site-title -->
+					
+					<h2 class="site-description">
+						**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**					</h2>
+					<!-- end .site-description -->
+			    </hgroup>
+				
+								
+			    <nav id="site-navigation" class="main-navigation" role="navigation">
+					<ul class="menu-default"><li class="page_item page-item-39"><a href="../../../about-me/index.htm">About Me</a></li><li class="page_item page-item-226"><a href="../../../subscribe/index.htm">Subscribe</a></li></ul>
+			    </nav>
+			    <!-- end #site-navigation -->
+			</div>
+			<!-- end .row -->
+        </header>
+        <!-- end .site-header -->
+		
+				
+        <section id="main" class="middle wrapper">
+			<div class="row row-fluid ">
+<div id="primary" class="site-content">
+	<div id="content" role="main">
+		<div class="readable-content blog-single">
+										<article id="post-282" class="clearfix post-282 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial">
+								<header class="entry-header">
+																		<h1 class="entry-title">MMS Employee Directory in ASP.NET MVC 5</h1>
+								</header>
+								<!-- end .entry-header -->
+								
+								<div class="entry-meta">
+									<span class="post-category">
+										posted in <a href="../../../category/tutorial/index.htm" rel="category tag">Tutorial</a>									</span>
+									<!-- end .post-category -->
+									
+									<span class="post-date">
+										on <a rel="bookmark" title="7:45 pm" href="index.htm"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">March 25, 2016</time></a>
+									</span>
+									<!-- end .post-date -->
+									
+									<span class="by-author"> by										<span class="author vcard">
+											<a class="url fn n" rel="author" title="View all posts by david@prothero.com" href="../../../author/davidprothero-com/index.htm">david@prothero.com</a>
+										</span>
+										<!-- end .author -->
+									</span>
+									<!-- end .by-author -->
+									
+									<div class="share-links">
+	<a>SHARE</a>
+	
+	<div class="share-wrap">
+		<div class="facebook-wrap">
+			<div id="fb-root"></div>
+			
+			<script>
+				(function(d, s, id)
+				{
+					var js, fjs = d.getElementsByTagName(s)[0];
+					if (d.getElementById(id)) return;
+					js = d.createElement(s); js.id = id;
+					js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+					fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));
+			</script>
+			
+			<div class="fb-like" data-send="false" data-layout="button_count" data-width="400" data-show-faces="false" data-colorscheme="light" data-action="like"></div>
+		</div>
+		<!-- end .facebook-wrap -->
+		
+		<div class="twitter-wrap">
+						<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+			
+			<script>
+				!function(d, s, id)
+				{
+					var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}
+				}(document, "script", "twitter-wjs");
+			</script>
+		</div>
+		<!-- end .twitter-wrap -->
+		
+		<div class="google-wrap">
+			<!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium"></div>
+			
+			<!-- Place this tag after the last +1 button tag. -->
+			<script type="text/javascript">
+			  (function()
+			  {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			  })();
+			</script>
+		</div>
+		<!-- end .google-wrap -->
+		
+		<div class="pinterest-wrap">
+						
+			<a href="http://pinterest.com/pin/create/button/?url=https://looselycoupledlabs.com/2016/03/mms-employee-directory-in-asp-net-mvc-5/&media=https://looselycoupledlabs.com/wp-content/uploads/2016/03/Google_Profile.jpg&description=MMS Employee Directory in ASP.NET MVC 5" class="pin-it-button" count-layout="horizontal"><img src="../../../images/PinExt.png" alt="Pin It" title="Pin It"></a>
+			
+			<script type="text/javascript" src="../../../js/pinit.js"></script>
+		</div>
+		<!-- end .pinterest-wrap -->
+	</div>
+	<!-- end .share-wrap -->
+</div>	
+<!-- end .share-links -->									
+																	</div>
+								<!-- end .entry-meta -->
+								
+																			<div class="featured-image">
+												<img width="270" height="270" src="../../../wp-content/uploads/2016/03/Google_Profile.jpg" class="attachment-full size-full wp-post-image" alt="MMS Employee Directory in ASP.NET MVC 5" loading="lazy" title="" srcset="../../../wp-content/uploads/2016/03/Google_Profile.jpg 270w, ../../../wp-content/uploads/2016/03/Google_Profile-150x150.jpg 150w, ../../../wp-content/uploads/2016/03/Google_Profile-200x200.jpg 200w, ../../../wp-content/uploads/2016/03/Google_Profile-57x57.jpg 57w, ../../../wp-content/uploads/2016/03/Google_Profile-72x72.jpg 72w, ../../../wp-content/uploads/2016/03/Google_Profile-114x114.jpg 114w, ../../../wp-content/uploads/2016/03/Google_Profile-144x144.jpg 144w" sizes="(max-width: 270px) 100vw, 270px">											</div>
+											<!-- end .featured-image -->
+																		
+								<div class="entry-content clearfix">
+									<p>In <a href="../meet-your-friendly-neighborhood-net-twilion/index.htm">my last post</a>, I mentioned I would have a new tutorial posted on the Twilio site very soon.</p>
+<p>Well, <a href="http://bit.ly/1RqAegr">the post is now live</a>.</p>
+<p>It&#8217;s a simple ASP.NET MVC 5 application that listens for SMS text messages and uses Entity Framework to find employees in the database that match the incoming queries. It responds with an MMS message with the photo and contact info for the employee.</p>
+<p>After you&#8217;re done playing with that, please send me your ideas for a cool MassTransit / Twilio integration!</p>
+									
+																	</div>
+								<!-- end .entry-content -->
+								
+															</article>
+							<!-- end .hentry -->
+							
+							<aside class="about-author">
+	<h3>ABOUT THE AUTHOR</h3>
+	
+	<div class="row-fluid author-bio">
+		<div class="span2 author-img">
+			<a href="../../../author/davidprothero-com/index.htm">
+				<img alt='david@prothero.com' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b.jpeg?s=226&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-1.jpeg 2x?s=452&#038;d=mm&#038;r=g 2x' class='avatar avatar-226 photo' height='226' width='226' loading='lazy'>			</a>
+		</div>
+		<!-- end .author-img -->
+		
+		<div class="span10 author-info">
+			<h4 class="author-name">david@prothero.com</h4>
+			
+			<p>
+				I have been providing technical leadership for companies for over 15 years. However, my software engineering experience extends back over 25 years. Currently, I am a Developer Educator for Twilio. Prior to that, I served as both IT Director and Software Engineering Director for Therapeutic Research Center (TRC). I guided the company from a print-based newsletter company to an online information services company.			</p>
+		</div>
+		<!-- end .author-info -->
+	</div>
+	<!-- end .author-bio -->
+</aside>
+<!-- end .about-author -->							
+							<nav class="row-fluid nav-single">
+								<div class="span6 nav-previous">
+									<h4>PREVIOUS POST</h4><a href="../meet-your-friendly-neighborhood-net-twilion/index.htm" rel="prev"><span class="meta-nav">&#8592;</span> Meet Your Friendly, Neighborhood .NET Twilion</a>								</div>
+								<!-- end .nav-previous -->
+								
+								<div class="span6 nav-next">
+																	</div>
+								<!-- end .nav-next -->
+							</nav>
+							<!-- end .nav-single -->
+							
+							
+<div id="comments" class="comments-area">
+		
+	</div>
+<!-- end #comments -->								</div>
+		<!-- end .blog-single -->
+	</div>
+	<!-- end #content -->
+</div>
+<!-- end #primary -->
+
+			</div>
+			<!-- end .row .row-fluid -->
+        </section>
+        <!-- end #main -->
+		
+        <footer class="site-footer wrapper" role="contentinfo">
+			<div class="row">
+				<div id="supplementary" class="row-fluid">
+									</div>
+				<!-- end #supplementary -->
+				
+				<div class="site-info">
+					Copyright © 2014 by David Prothero
+All rights reserved.				</div>
+				<!-- end .site-info -->
+			</div>
+			<!-- end .row -->
+        </footer>
+        <!-- end .site-footer -->
+    </div>
+    <!-- end #PAGE -->
+	
+	<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1922425-8', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script type="text/javascript">
+  SyntaxHighlighter.all();
+</script><script type='text/javascript' src='../../../wp-includes/js/comment-reply.min.js?ver=5.8.6' id='comment-reply-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/detectmobilebrowser.js' id='detectmobilebrowser-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/modernizr.js' id='modernizr-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/imagesloaded.min.js?ver=4.1.4' id='imagesloaded-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fitvids.js' id='fitvids-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.js' id='google-code-prettify-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.uniform.min.js' id='uniform-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.flexslider-min.js' id='flexslider-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelement-and-player.min.js' id='mediaelement-and-player-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.isotope.min.js' id='isotope-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fancybox-1.3.4.pack.js' id='fancybox-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.masonry.min.js' id='masonry-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.history.js' id='history-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/js-url.min.js' id='js-url-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquerypp.custom.js' id='jquerypp-custom-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/gamma.js' id='gamma-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/main.js' id='main-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.validate.min.js' id='validate-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/send-mail.js' id='send-mail-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/wp-embed.min.js?ver=5.8.6' id='wp-embed-js'></script>
+</body>
+</html>

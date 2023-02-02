@@ -1,0 +1,806 @@
+﻿<!doctype html>
+
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	
+	
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+			    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+	<title>A Real-World MassTransit Customer Portal Example | Loosely Coupled Labs</title>
+    
+    <!--[if lte IE 9]>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/html5shiv.js"></script>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/selectivizr-min.js"></script>
+    <![endif]-->
+	
+		
+	<meta name='robots' content='max-image-preview:large'>
+<link rel='dns-prefetch' href='//fonts.googleapis.com'>
+<link rel='dns-prefetch' href='//s.w.org'>
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Feed" href="../../../feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Comments Feed" href="../../../comments/feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; A Real-World MassTransit Customer Portal Example Comments Feed" href="feed/index.htm">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/looselycoupledlabs.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.8.6"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([10084,65039,8205,55357,56613],[10084,65039,8203,55357,56613])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='../../../wp-includes/css/dist/block-library/style.min.css?ver=5.8.6' type='text/css' media='all'>
+<link rel='stylesheet' id='unifrakturmaguntia-css' href='../../../css?family=UnifrakturMaguntia&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='coustard-css' href='../../../css-1?family=Coustard&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='lora-css' href='../../../css-2?family=Lora:400,700,400italic,700italic&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='print-css' href='../../../wp-content/themes/read-v4-2-4/css/print.css' type='text/css' media='print'>
+<link rel='stylesheet' id='grid-css' href='../../../wp-content/themes/read-v4-2-4/css/grid.css' type='text/css' media='all'>
+<link rel='stylesheet' id='normalize-css' href='../../../wp-content/themes/read-v4-2-4/css/normalize.css' type='text/css' media='all'>
+<link rel='stylesheet' id='font-awesome-css' href='../../../wp-content/themes/read-v4-2-4/css/font-awesome.css' type='text/css' media='all'>
+<link rel='stylesheet' id='google-code-prettify-css' href='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.css' type='text/css' media='all'>
+<link rel='stylesheet' id='uniform-css' href='../../../wp-content/themes/read-v4-2-4/css/uniform.default.css' type='text/css' media='all'>
+<link rel='stylesheet' id='flexslider-css' href='../../../wp-content/themes/read-v4-2-4/css/flexslider.css' type='text/css' media='all'>
+<link rel='stylesheet' id='mediaelementplayer-css' href='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelementplayer.css' type='text/css' media='all'>
+<link rel='stylesheet' id='gamma-gallery-css' href='../../../wp-content/themes/read-v4-2-4/css/gamma-gallery.css' type='text/css' media='all'>
+<link rel='stylesheet' id='main-css' href='../../../wp-content/themes/read-v4-2-4/css/main.css' type='text/css' media='all'>
+<link rel='stylesheet' id='fancybox-css' href='../../../wp-content/themes/read-v4-2-4/css/jquery.fancybox-1.3.4.css' type='text/css' media='all'>
+<link rel='stylesheet' id='wp-fix-css' href='../../../wp-content/themes/read-v4-2-4/css/wp-fix.css' type='text/css' media='all'>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery.min.js?ver=3.6.0' id='jquery-core-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
+<link rel="https://api.w.org/" href="../../../wp-json/index.htm"><link rel="alternate" type="application/json" href="../../../wp-json/wp/v2/posts/98"><link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../../xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../../wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.8.6">
+<link rel="canonical" href="index.htm">
+<link rel='shortlink' href='index.htm?p=98'>
+<link rel="alternate" type="application/json+oembed" href="../../../wp-json/oembed/1.0/embed-20?url=https%3A%2F%2Flooselycoupledlabs.com%2F2014%2F07%2Fa-real-world-masstransit-customer-portal-example%2F">
+<link rel="alternate" type="text/xml+oembed" href="../../../wp-json/oembed/1.0/embed-21?url=https%3A%2F%2Flooselycoupledlabs.com%2F2014%2F07%2Fa-real-world-masstransit-customer-portal-example%2F&#038;format=xml">
+
+<link rel="stylesheet" type="text/css" href="../../../wp-content/themes/read-v4-2-4/style.css">
+
+		
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-3?family=Lora&subset=latin">
+<style type="text/css">
+a { color: #4488ff; }
+
+a:hover { color: #3377ee; }
+
+.main-navigation ul .current_page_item > a, .main-navigation ul .current-menu-item > a { color: #69be28; }
+
+h1.site-title, h1.site-title a { font-family: "Coustard", Georgia, serif; }
+
+h1, h2, h3, h4, h5, h6 { font-family: "Coustard", Georgia, serif; }
+
+.main-navigation ul li { font-family: "Coustard", Georgia, serif; }
+
+html { font-family: "Lora", Georgia, serif; }
+</style>
+		<style type="text/css">
+.site-header hgroup {
+  padding: 0;
+}
+
+h1.site-title {
+  font-size: 2.20em;
+}
+
+.site-header {
+  padding-bottom: 0;
+}
+
+table {
+  border-collapse: collapse;     
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+}
+
+code {
+  box-shadow: none;
+}
+</style>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPowerShell.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<link href="../../../syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css">
+<link href="../../../syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="post-template-default single single-post postid-98 single-format-standard">
+
+    <div id="page" class="hfeed site"> 
+        <header class="site-header wrapper" role="banner">
+			<div class="row">
+			    <hgroup>
+					<h1 class="site-title">
+															<a rel="home" href="../../../index.htm">
+										<img alt="Loosely Coupled Labs" src="../../../wp-content/uploads/2014/06/loosely600-300x105.png">
+									</a>
+													</h1>
+					<!-- end .site-title -->
+					
+					<h2 class="site-description">
+						**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**					</h2>
+					<!-- end .site-description -->
+			    </hgroup>
+				
+								
+			    <nav id="site-navigation" class="main-navigation" role="navigation">
+					<ul class="menu-default"><li class="page_item page-item-39"><a href="../../../about-me/index.htm">About Me</a></li><li class="page_item page-item-226"><a href="../../../subscribe/index.htm">Subscribe</a></li></ul>
+			    </nav>
+			    <!-- end #site-navigation -->
+			</div>
+			<!-- end .row -->
+        </header>
+        <!-- end .site-header -->
+		
+				
+        <section id="main" class="middle wrapper">
+			<div class="row row-fluid ">
+<div id="primary" class="site-content">
+	<div id="content" role="main">
+		<div class="readable-content blog-single">
+										<article id="post-98" class="clearfix post-98 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-masstransit tag-rabbitmq tag-service-bus tag-soa">
+								<header class="entry-header">
+																		<h1 class="entry-title">A Real-World MassTransit Customer Portal Example</h1>
+								</header>
+								<!-- end .entry-header -->
+								
+								<div class="entry-meta">
+									<span class="post-category">
+										posted in <a href="../../../category/tutorial/index.htm" rel="category tag">Tutorial</a>									</span>
+									<!-- end .post-category -->
+									
+									<span class="post-date">
+										on <a rel="bookmark" title="4:11 am" href="index.htm"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">July 19, 2014</time></a>
+									</span>
+									<!-- end .post-date -->
+									
+									<span class="by-author"> by										<span class="author vcard">
+											<a class="url fn n" rel="author" title="View all posts by david@prothero.com" href="../../../author/davidprothero-com/index.htm">david@prothero.com</a>
+										</span>
+										<!-- end .author -->
+									</span>
+									<!-- end .by-author -->
+									
+									<div class="share-links">
+	<a>SHARE</a>
+	
+	<div class="share-wrap">
+		<div class="facebook-wrap">
+			<div id="fb-root"></div>
+			
+			<script>
+				(function(d, s, id)
+				{
+					var js, fjs = d.getElementsByTagName(s)[0];
+					if (d.getElementById(id)) return;
+					js = d.createElement(s); js.id = id;
+					js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+					fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));
+			</script>
+			
+			<div class="fb-like" data-send="false" data-layout="button_count" data-width="400" data-show-faces="false" data-colorscheme="light" data-action="like"></div>
+		</div>
+		<!-- end .facebook-wrap -->
+		
+		<div class="twitter-wrap">
+						<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+			
+			<script>
+				!function(d, s, id)
+				{
+					var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}
+				}(document, "script", "twitter-wjs");
+			</script>
+		</div>
+		<!-- end .twitter-wrap -->
+		
+		<div class="google-wrap">
+			<!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium"></div>
+			
+			<!-- Place this tag after the last +1 button tag. -->
+			<script type="text/javascript">
+			  (function()
+			  {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			  })();
+			</script>
+		</div>
+		<!-- end .google-wrap -->
+		
+		<div class="pinterest-wrap">
+						
+			<a href="http://pinterest.com/pin/create/button/?url=https://looselycoupledlabs.com/2014/07/a-real-world-masstransit-customer-portal-example/&media=https://looselycoupledlabs.com/wp-content/uploads/2014/07/customer-portal.jpg&description=A Real-World MassTransit Customer Portal Example" class="pin-it-button" count-layout="horizontal"><img src="../../../images/PinExt.png" alt="Pin It" title="Pin It"></a>
+			
+			<script type="text/javascript" src="../../../js/pinit.js"></script>
+		</div>
+		<!-- end .pinterest-wrap -->
+	</div>
+	<!-- end .share-wrap -->
+</div>	
+<!-- end .share-links -->									
+																	</div>
+								<!-- end .entry-meta -->
+								
+																			<div class="featured-image">
+												<img width="300" height="209" src="../../../wp-content/uploads/2014/07/customer-portal.jpg" class="attachment-full size-full wp-post-image" alt="A Real-World MassTransit Customer Portal Example" loading="lazy" title="" srcset="../../../wp-content/uploads/2014/07/customer-portal.jpg 300w, ../../../wp-content/uploads/2014/07/customer-portal-150x104.jpg 150w, ../../../wp-content/uploads/2014/07/customer-portal-200x139.jpg 200w" sizes="(max-width: 300px) 100vw, 300px">											</div>
+											<!-- end .featured-image -->
+																		
+								<div class="entry-content clearfix">
+									<p>Now that we’ve seen <a href="../../06/masstransit-publish-subscribe-example/index.htm">some</a> simple <a href="../creating-a-rabbitmq-cluster-for-use-with-masstransit/index.htm">examples</a> of how to use <a href="http://masstransit-project.com/" target="_blank">MassTransit</a> with the Publish/Subscribe pattern on multiple machines, let’s build something that resembles a more real-world app. In this article, we’ll build an ASP.NET MVC Customer Portal app where a customer can create a new support ticket. The ticket will be published onto the service bus. We’ll create a Windows Service to be the subscriber of these messages and it will handle the tickets, in this example, sending a confirmation email to the customer.</p>
+<p>You can get all the code from this blog post at <a href="https://github.com/dprothero/Loosely.CustomerPortal" target="_blank">https://github.com/dprothero/Loosely.CustomerPortal</a>.</p>
+<p>This is a big one, so roll up your sleeves…</p>
+<h1>The Web App</h1>
+<p>Let’s build a rudimentary front-end application that will be a stand-in for a true customer portal style web site. We’ll build an app that has a single menu option on it’s home page:</p>
+<p><a href="../../../wp-content/uploads/2014/07/image.png"><img loading="lazy" style="margin: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb.png" alt="image" width="244" height="195" border="0"></a></p>
+<p>When the user clicks “Open a new support ticket,” they will get a very simple form asking for their email address and a description of their problem or question:</p>
+<p><a href="../../../wp-content/uploads/2014/07/image1.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb1.png" alt="image" width="244" height="321" border="0"></a></p>
+<p>When the user clicks “Open Ticket,” they will see a confirmation message containing their ticket number:</p>
+<p><a href="../../../wp-content/uploads/2014/07/image2.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb2.png" alt="image" width="543" height="206" border="0"></a></p>
+<p>So let’s dig into the code to build this web app.</p>
+<h2>New ASP.NET MVC Project</h2>
+<p>Open Visual Studio and choose File… New Project. Select the “ASP.NET Web Application” project template. Give it the name “Loosely.CustomerPortal.WebApp” and name the solution “Loosely.CustomerPortal.”</p>
+<p>In the “New ASP.NET Project” select the “Empty” template and check the “MVC” box under the “Add folders and core references for&#8221; heading.</p>
+<h2>Contracts</h2>
+<p>Now we need a place to keep our “contracts” for our service bus. A contract is an interface that specifies the format of our message type. Add a new class library to the solution and name it “Loosely.Bus.Contracts.” Add a new file to the class library called TicketOpened and define the following interface:</p>
+<pre class="brush: csharp; toolbar: false;">namespace Loosely.Bus.Contracts
+{
+  public interface TicketOpened
+  {
+    string Id { get; }
+    string CustomerEmail { get; set; }
+    string Message { get; set; }
+  }
+}
+</pre>
+<p>This is the message type we will publish onto the service bus whenever a user of the web application wants to open a new support ticket.</p>
+<h2>Configuration</h2>
+<p>Now let’s add another class library named “Loosely.Bus.Configuration” where we’ll keep our common MassTransit configuration code. Add the MassTransit.Log4Net and MassTransit.RabbitMQ NuGet packages to this new class library.</p>
+<p>We’ll put the common service bus initialization code into a class called BusInitializer:</p>
+<pre class="brush: csharp; toolbar: false;">using MassTransit;
+using MassTransit.BusConfigurators;
+using MassTransit.Log4NetIntegration.Logging;
+using System;
+
+namespace Loosely.Bus.Configuration
+{
+  public class BusInitializer
+  {
+    public static IServiceBus CreateBus(string queueName, Action&lt;ServiceBusConfigurator&gt; moreInitialization)
+    {
+      Log4NetLogger.Use();
+      var bus = ServiceBusFactory.New(x =&gt;
+      {
+        x.UseRabbitMq();
+        x.ReceiveFrom("rabbitmq://localhost/Loosely_" + queueName);
+        moreInitialization(x);
+      });
+
+      return bus;
+    }
+  }
+}
+</pre>
+<p>You may recall, in <a href="../../06/masstransit-publish-subscribe-example/index.htm">a previous post</a>, when we did the same thing. In fact, this code is nearly identical. The only thing we’ve changed is the prefix for the queue name. In that <a href="../../06/masstransit-publish-subscribe-example/index.htm">earlier post</a> I describe what we’re doing here in detail. In summary, we’re setting up a new instance of a MassTransit service bus that will use RabbitMQ for it’s transport mechanism.</p>
+<h2>Put ASP.NET on the Bus</h2>
+<p>Returning to the Loosely.CustomerPortal.WebApp in our solution, right-click on References and add project references to the Loosely.Bus.Configuration and Loosely.Bus.Contracts projects. Also, add the MassTransit NuGet package to the project.</p>
+<p>The best place I’ve found to create and configure MassTransit in an ASP.NET app is in the Global.asax’s Application_Start event handler. Open Global.asax.cs and make sure the code looks like this:</p>
+<pre class="brush: csharp; toolbar: false;">using Loosely.Bus.Configuration;
+using MassTransit;
+using System.Web.Mvc;
+using System.Web.Routing;
+
+namespace Loosely.CustomerPortal.WebApp
+{
+  public class MvcApplication : System.Web.HttpApplication
+  {
+    public static IServiceBus Bus {get; set;}
+
+    protected void Application_Start()
+    {
+      AreaRegistration.RegisterAllAreas();
+      RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+      Bus = BusInitializer.CreateBus("CustomerPortal_WebApp", x =&gt; { });
+    }
+
+    protected void Application_End()
+    {
+      Bus.Dispose();
+    }
+  }
+}
+</pre>
+<p>We’re adding a public, static property to the MvcApplication class that we can use elsewhere in our application to get access to our service bus. In the Application_Start event handler, after the routing code added by Visual Studio, we can use our BusInitializer class to create a new bus and assign it to the static property. Later, when we want to use the bus, we’ll simply use the expression MvcApplication.Bus.</p>
+<p>Don’t forget to call Dispose on the bus in the Application_End event.</p>
+<h2>Ticket Model</h2>
+<p>Still within the WebApp project, add a new model to the Models folder and call it “Ticket.” This will be the model we will bind our support ticket data entry form to. We’ll also have it implement the TicketOpened interface so we can publish it to our service bus.</p>
+<pre class="brush: csharp; toolbar: false;">using Loosely.Bus.Contracts;
+using System;
+
+namespace Loosely.CustomerPortal.WebApp.Models
+{
+  public class Ticket : TicketOpened
+  {
+    private string _id;
+    
+    public string Id { get { return _id; } }
+    public string CustomerEmail { get; set; }
+    public string Message { get; set; }
+
+    public Ticket()
+    {
+      _id = Guid.NewGuid().ToString();
+    }
+
+    public void Save()
+    {
+      MvcApplication.Bus.Publish&lt;TicketOpened&gt;(this, x =&gt; { 
+        x.SetDeliveryMode(MassTransit.DeliveryMode.Persistent);
+      });
+    }
+  }
+}
+</pre>
+<p>Because we want to be able to tell the user what their ticket ID is right away, we need some method to generate a statistically unique, random ID. GUIDs work well for this in terms of being easy to implement for a developer, as it’s a single line of code. They aren’t a great user experience, of course, due their length.</p>
+<h3>Timeout to Pontificate</h3>
+<p>The point to remember is that we need a way to generate an identifier that we know should be unique in whatever data storage repository we will be storing the tickets in <em>without</em> having to consult said data storage repository. Remember, the reason we’re using a service bus is to have this web application loosely coupled to whatever backend is used for our ticketing system.</p>
+<p>When the rubber meets the road, however, you may be integrating with a ticketing system that wants to assign it’s own IDs. In that case, you will have to decide whether the requirement to display the ticket ID immediately to the user is worth a round-trip to the ticketing system to get it. There’s no one right answer. Building systems is a constant series of trade-offs.</p>
+<h3>Back to the Model…</h3>
+<p>We also have a Save method that we will call from our controller (coming soon). Instead of what you typically see in a Save method (saving to a database), we’re publishing the Ticket onto the bus. Since the ticket implements the TicketOpened interface from our Contracts assembly, other processes can subscribe to these TicketOpened messages and do something interesting with them.</p>
+<h2>The Controllers and Views</h2>
+<p>Now let’s build some UI. Add an empty controller called “HomeController” to the “Controllers” folder. Nothing much is needed in this controller – just return a view that will have our “menu” of options (a menu of one option, that is):</p>
+<pre class="brush: csharp; toolbar: false;">using System.Web.Mvc;
+
+namespace Loosely.CustomerPortal.WebApp.Controllers
+{
+  public class HomeController : Controller
+  {
+    // GET: Home
+    public ActionResult Index()
+    {
+      return View();
+    }
+  }
+}
+</pre>
+<p>Create a view named Index under the Views/Home folder, leaving the “Use a layout page” option checked. The layout page will give us a basic page template so we don’t have to worry about formatting too much. The view can then simply present our single menu option:</p>
+<pre class="brush: csharp; toolbar: false;">@{
+    ViewBag.Title = "Index";
+}
+
+&lt;h2&gt;Customer Portal&lt;/h2&gt;
+
+&lt;a href="@Url.Content("~/Ticket/Open")"&gt;Open a new support ticket&lt;/a&gt;
+</pre>
+<p>As you can see, the link to open a new support ticket is taking us to /Ticket/Open, which means we need a TicketController with an Open action. Add this controller to the Controllers folder (choose empty again). Below is the code for this controller:</p>
+<pre class="brush: csharp; toolbar: false;">using System.Web.Mvc;
+
+namespace Loosely.CustomerPortal.WebApp.Controllers
+{
+  public class TicketController : Controller
+  {
+    [HttpGet]
+    public ActionResult Open()
+    {
+      var ticket = new Models.Ticket();
+      return View(ticket);
+    }
+
+    [HttpPost]
+    public ActionResult Open(Models.Ticket ticket)
+    {
+      ticket.Save();
+      return Redirect("~/Ticket/Opened/" + ticket.Id);
+    }
+
+    public ActionResult Opened(string id)
+    {
+      ViewBag.TicketId = id;
+      return View();
+    }
+  }
+}
+</pre>
+<p>A few interesting things are going on now. First, we’ve got the Open action that’s tagged with the HttpGet attribute. This action simply creates a new ticket model and binds it to the (soon to be created) view. This view will be the data entry form allowing the user to supply their email and message text.</p>
+<p>The next method is also called Open but is tagged with the HttpPost attribute. This is because when the user submits the form we will still be posting to the /Ticket/Open url (sorry if this is review for you MVC vets). The post action takes in a ticket model that should be populated with the data from the user’s form submission.</p>
+<p>We take the ticket the user submits and call the Save method on it (which, as you’ll recall, is what will post the message to the service bus). Following the save, we redirect to the Opened action, passing the ticket ID.</p>
+<p>Finally, we have the Opened action which passes the ticket ID into the view via the ViewBag so it can be displayed to the user.</p>
+<h3>Ticket Views</h3>
+<p>We need a couple views for the Ticket controller. Under the Views/Ticket folder, create an empty view named Open and be sure to select “Ticket (Loosely.CustomerPortal.WebApp.Models)” for the model class. This view will contain our data input form that will be bound to the Ticket model:</p>
+<pre class="brush: csharp; toolbar: false;">@model Loosely.CustomerPortal.WebApp.Models.Ticket
+
+@{
+    ViewBag.Title = "Open";
+}
+
+&lt;h2&gt;Open a Ticket&lt;/h2&gt;
+
+@using ( Html.BeginForm() )
+{
+  &lt;fieldset&gt;
+    &lt;legend&gt;Ticket Info&lt;/legend&gt;
+    &lt;div&gt;@Html.LabelFor(model =&gt; model.CustomerEmail)&lt;/div&gt;
+    &lt;div&gt;@Html.TextBoxFor(model =&gt; model.CustomerEmail)&lt;/div&gt;
+
+    &lt;div&gt;@Html.LabelFor(model =&gt; model.Message)&lt;/div&gt;
+    &lt;div&gt;@Html.TextBoxFor(model =&gt; model.Message)&lt;/div&gt;
+
+    &lt;input type="submit" value="Open Ticket" /&gt;
+
+  &lt;/fieldset&gt;
+}
+</pre>
+<p>Add another view named Opened under the same Views/Ticket folder. This view will simply display the ticket ID:</p>
+<pre class="brush: csharp; toolbar: false;">@{
+    ViewBag.Title = "Opened";
+}
+
+&lt;h2&gt;Ticket Opened&lt;/h2&gt;
+
+&lt;p&gt;
+  Your ticket has been opened.
+  Your ticket id is: &lt;strong&gt;@ViewBag.TicketId&lt;/strong&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+  &lt;a href="@Url.Content("~/")"&gt;Return Home&lt;/a&gt;
+&lt;/p&gt;
+</pre>
+<h2>Checkpoint – The Web App Works, Now What?</h2>
+<p>If you run the web app now, you’ll be able to create a new ticket, and you’ll even get a new ticket ID assigned each time! If you go into the RabbitMQ management interface (see <a href="../../06/masstransit-publish-subscribe-example/index.htm">this post</a> for instructions), you will see that there’s an exchange named Loosely.Bus.Contracts:TicketOpened that isn’t connected to any other exchanges or queues. If you’ve been following my blog, you’ll know this is because we don’t have anyone listening for these types of messages yet.</p>
+<h1>Creating the Backend Service</h1>
+<p>It’s time to do something with these tickets that are being created by the web app. Let’s create a Windows service that can run in the background on any machine and subscribe to TicketOpened messages that are published to the service bus. We’ll use the open source project <a href="http://topshelf-project.com/" target="_blank">TopShelf</a> for creating our Windows service. TopShelf is published by the same trio of geniuses that gave us MassTransit and it makes creating Windows services extremely simple.</p>
+<p>Start by adding a new Console application to our solution and name it Loosely.CustomerPortal.Backend. Add project references to Loosely.Bus.Configuration and Loosely.Bus.Contracts, as well as a framework reference to System.Configuration. Finally, add NuGet packages MassTransit and TopShelf to the project.</p>
+<h2>Backend Configuration</h2>
+<p>First, let’s setup a little configuration so that TopShelf will log any messages to a log file we can create. We’ll also setup the configuration to log general Trace messages. To send email messages, we’ll use Gmail’s SMTP server, so we also need some place to store our Gmail credentials.</p>
+<p>All this configuration can go in the App.config file in the new console application:</p>
+<pre class="brush: xml; toolbar: false;">&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;configuration&gt;
+  &lt;startup&gt;
+    &lt;supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5" /&gt;
+  &lt;/startup&gt;
+  &lt;system.diagnostics&gt;
+    &lt;sharedListeners&gt;
+      &lt;add name="traceLogListener" type="System.Diagnostics.TextWriterTraceListener" 
+           initializeData="C:\Logs\Loosely.CustomerPortal.Backend.log" /&gt;
+    &lt;/sharedListeners&gt;
+    &lt;sources&gt;
+      &lt;source name="Default"&gt;
+        &lt;listeners&gt;
+          &lt;add name="traceLogListener" /&gt;
+          &lt;remove name="Default" /&gt;
+        &lt;/listeners&gt;
+      &lt;/source&gt;
+    &lt;/sources&gt;
+    &lt;trace autoflush="true" indentsize="4"&gt;
+      &lt;listeners&gt;
+        &lt;add name="traceLogListener" /&gt;
+        &lt;remove name="Default" /&gt;
+      &lt;/listeners&gt;
+    &lt;/trace&gt;
+  &lt;/system.diagnostics&gt;
+
+  &lt;appSettings file="C:\Config\Loosely.CustomerPortal.Backend.config"&gt;
+    &lt;add key="Gmail.Account" value="youraccount@gmail.com"/&gt;
+    &lt;add key="Gmail.Password" value="yourpassword"/&gt;
+  &lt;/appSettings&gt;
+  
+&lt;/configuration&gt;
+</pre>
+<p>Notice we’re logging messages to C:\Logs\Loosely.CustomerPortal.Backend.log, so be sure to create a C:\Logs folder (or change this path to somewhere else you might prefer).</p>
+<h2>Email Helper</h2>
+<p>When a new ticket is opened, we want to send a confirmation to the customer’s email address that they supplied. Create a new EmailHelper class to handle the down and dirty SMTP communication:</p>
+<pre class="brush: csharp; toolbar: false;">using System.Configuration;
+
+namespace Loosely.CustomerPortal.Backend
+{
+  class EmailHelper
+  {
+    readonly static string gmailAccount = ConfigurationManager.AppSettings.Get("Gmail.Account");
+    readonly static string gmailPassword = ConfigurationManager.AppSettings.Get("Gmail.Password");
+
+    public static void Send(string customerEmail, string subject, string messageBody)
+    {
+      var client = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587);
+      client.EnableSsl = true;
+      client.Credentials = new System.Net.NetworkCredential(gmailAccount, gmailPassword);
+      client.Send(gmailAccount, customerEmail, subject, messageBody);
+    }
+  }
+}
+</pre>
+<p>Nothing magical here. We just pull the Gmail credentials out of our config file and then open a secure connection to Gmail’s smtp server to send a message. Obviously, in a true production app, this code would be written to connect to the appropriate SMTP server and likely not use Gmail like this. Gmail works well for a simple example, however.</p>
+<h2>A Consumer for TicketOpened</h2>
+<p>Now we need a consumer class to which MassTransit can send TicketOpened messages. Add a new class called TicketOpenedConsumer:</p>
+<pre class="brush: csharp; toolbar: false;">using Loosely.Bus.Contracts;
+using MassTransit;
+using System.Diagnostics;
+
+namespace Loosely.CustomerPortal.Backend
+{
+  class TicketOpenedConsumer : Consumes&lt;TicketOpened&gt;.Context
+  {
+    public void Consume(IConsumeContext&lt;TicketOpened&gt; envelope)
+    {
+      // Here is where you would persist the ticket to a data store of some kind.
+      // For this example, we'll just write it to the trace log.
+      Trace.WriteLine("=========== NEW TICKET ===========\r\n" +
+                      "Id: " + envelope.Message.Id + "\r\n" +
+                      "Email: " + envelope.Message.CustomerEmail + "\r\n" + 
+                      "Message: " + envelope.Message.Message);
+
+      // Send email confirmation to the customer.
+      var messageBody = "Ticket ID " + envelope.Message.Id + " has been opened for you! " +
+                        "We will respond to your inquiry ASAP.\n\n" + 
+                        "Your Message:\n" + envelope.Message.Message;
+
+      EmailHelper.Send(envelope.Message.CustomerEmail, "Ticket Opened", messageBody);
+    }
+  }
+}
+</pre>
+<p>This is the real meat of the backend service. The Consume method will be called for every TicketOpened message that MassTransit picks up off the bus for us. In this example, we’re simply logging the information from the ticket and then sending the confirmation email to the customer.</p>
+<h2>The Service Class</h2>
+<p>Next let’s create a class that we’ll use to host our service. We’ll furnish this class to TopShelf, who will call the Start method when the service is started and the Stop method when the service is stopped. Create a new class called TicketService:</p>
+<pre class="brush: csharp; toolbar: false;">using Loosely.Bus.Configuration;
+using MassTransit;
+
+namespace Loosely.CustomerPortal.Backend
+{
+  class TicketService
+  {
+    IServiceBus _bus;
+
+    public TicketService()  {  }
+
+    public void Start()
+    {
+      _bus = BusInitializer.CreateBus("CustomerPortal_Backend", x =&gt;
+      {
+        x.Subscribe(subs =&gt;
+        {
+          subs.Consumer&lt;TicketOpenedConsumer&gt;().Permanent();
+        });
+      });
+    }
+
+    public void Stop()
+    {
+      _bus.Dispose();
+    }
+  }
+}
+</pre>
+<p>The Start method is the perfect place to put our bus initialization code. Notice how we are adding a subscription in MassTransit and providing it our TicketOpenedConsumer class. We’re also making it a permanent subscription.</p>
+<h2>The Startup Glue</h2>
+<p>Now we have all the classes we need. Open the Program.cs file and put the following TopShelf configuration code into the Main() function:</p>
+<pre class="brush: csharp; toolbar: false;">using System.Diagnostics;
+using Topshelf;
+
+namespace Loosely.CustomerPortal.Backend
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      HostFactory.Run(x =&gt;
+      {
+        x.Service&lt;TicketService&gt;(s =&gt;
+        {
+          s.ConstructUsing(name =&gt; new TicketService());
+          s.WhenStarted(ts =&gt; ts.Start());
+          s.WhenStopped(ts =&gt; ts.Stop());
+        });
+        x.RunAsLocalSystem();
+
+        x.SetDescription("Loosely Coupled Labs Customer Portal Backend");
+        x.SetDisplayName("Loosely.CustomerPortal.Backend");
+        x.SetServiceName("Loosely.CustomerPortal.Backend");
+      });
+    }
+  }
+}
+</pre>
+<p>I’ll refer you to the <a href="http://docs.topshelf-project.com/en/latest/" target="_blank">TopShelf documentation</a> for details on how TopShelf works. For this example, you just need to know that this code wires up our TicketService class to the TopShelf framework. The great thing about TopShelf is you can just run the executable and it will run your program as a standard console app. If you run it with the “install” command line parameter, it will install it as a Windows service.</p>
+<h2>Let’s Do This</h2>
+<p>Right-click on the solution and choose “Set Startup Projects…” and make both Loosely.CustomerPortal.Backend and Loosely.CustomerPortal.WebApp startup apps. Run the solution and you’ll get a web browser with the web app and a console window running your new service.</p>
+<p>Try submitting a few tickets. You should see the emails (assuming you used your own email address to create the ticket) as well as log entries in the C:\Logs\Loosely.CustomerPortal.Backend.log file:</p>
+<p><a href="../../../wp-content/uploads/2014/07/image3.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb3.png" alt="image" width="467" height="174" border="0"></a></p>
+<p><a href="../../../wp-content/uploads/2014/07/image4.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb4.png" alt="image" width="758" height="120" border="0"></a></p>
+<h2>Install the Service</h2>
+<p>Now, let’s actually make the backend an actual Windows service. Open a command prompt as administrator (as administrator is important). Change to the directory where the <strong>Loosely.CustomerPortal.Backend.exe</strong> was built from Visual Studio. This will likely be the <strong>Loosely.CustomerPortal\Loosely.CustomerPortal.Backend\bin</strong> Debug folder. Run the following command:</p>
+<pre class="brush: ps; toolbar: false;">&gt; Loosely.CustomerPortal.Backend.exe install
+</pre>
+<p>Now you should be able to launch the Windows services MMC snap-in (services.msc) and see the new Loosely.CustomerPortal.Backend Windows service and fire it up!</p>
+<p><a href="../../../wp-content/uploads/2014/07/image5.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb5.png" alt="image" width="718" height="61" border="0"></a></p>
+<p>With the service running, you will want to change your Visual Studio solution back to having only the web app as the startup project.</p>
+<h1>What’s Next?</h1>
+<p>Now that we’ve built this app, I’d like to refer back to it in future blog posts so we can refine it to be more robust and “enterprise-ready”. Let’s use it to look at things like message retry logic, sagas, and multiple subscribers (for scale or for different functions). As always, let me know if there’s anything specific you’d like to see me write about.</p>
+									
+																	</div>
+								<!-- end .entry-content -->
+								
+																			<footer class="entry-meta post-tags">
+												<a href="../../../tag/masstransit/index.htm" rel="tag">MassTransit</a>, <a href="../../../tag/rabbitmq/index.htm" rel="tag">RabbitMQ</a>, <a href="../../../tag/service-bus/index.htm" rel="tag">Service Bus</a>, <a href="../../../tag/soa/index.htm" rel="tag">SOA</a>											</footer>
+											<!-- end .entry-meta -->
+																	</article>
+							<!-- end .hentry -->
+							
+							<aside class="about-author">
+	<h3>ABOUT THE AUTHOR</h3>
+	
+	<div class="row-fluid author-bio">
+		<div class="span2 author-img">
+			<a href="../../../author/davidprothero-com/index.htm">
+				<img alt='david@prothero.com' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b.jpeg?s=226&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-1.jpeg 2x?s=452&#038;d=mm&#038;r=g 2x' class='avatar avatar-226 photo' height='226' width='226' loading='lazy'>			</a>
+		</div>
+		<!-- end .author-img -->
+		
+		<div class="span10 author-info">
+			<h4 class="author-name">david@prothero.com</h4>
+			
+			<p>
+				I have been providing technical leadership for companies for over 15 years. However, my software engineering experience extends back over 25 years. Currently, I am a Developer Educator for Twilio. Prior to that, I served as both IT Director and Software Engineering Director for Therapeutic Research Center (TRC). I guided the company from a print-based newsletter company to an online information services company.			</p>
+		</div>
+		<!-- end .author-info -->
+	</div>
+	<!-- end .author-bio -->
+</aside>
+<!-- end .about-author -->							
+							<nav class="row-fluid nav-single">
+								<div class="span6 nav-previous">
+									<h4>PREVIOUS POST</h4><a href="../creating-a-rabbitmq-cluster-for-use-with-masstransit/index.htm" rel="prev"><span class="meta-nav">&#8592;</span> Creating a RabbitMQ Cluster for Use with MassTransit</a>								</div>
+								<!-- end .nav-previous -->
+								
+								<div class="span6 nav-next">
+									<h4>NEXT POST</h4><a href="../error-handling-in-masstransit-consumers/index.htm" rel="next">Error Handling in MassTransit Consumers <span class="meta-nav">&#8594;</span></a>								</div>
+								<!-- end .nav-next -->
+							</nav>
+							<!-- end .nav-single -->
+							
+							
+<div id="comments" class="comments-area">
+					<h2 class="comments-title">
+					2 Comments <span class="on">&#8594;</span> <span>A Real-World MassTransit Customer Portal Example</span>				</h2>
+				<!-- end .comments-title -->
+				
+				<ol class="commentlist">
+										
+					<li class="comment even thread-even depth-1" id="li-comment-20">
+						<article id="comment-20" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/495b58160c330eb6e8e4d804201745bc.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/495b58160c330eb6e8e4d804201745bc-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">marco </cite><a href="index.htm#comment-20"><time datetime="2014-10-23T19:34:00+00:00">October 23, 2014 at 7:34 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>awesome cant wait to see sagas in action!</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+					
+					<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-258">
+						<article id="comment-258" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/f1865ca6732055f2a0a971877f8cf4ce.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/f1865ca6732055f2a0a971877f8cf4ce-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">José Félix </cite><a href="index.htm#comment-258"><time datetime="2018-08-15T21:50:00+00:00">August 15, 2018 at 9:50 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Hi, where is the saga part?</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+				</ol>
+				<!-- end .commentlist -->
+				
+								
+											<p class="nocomments">Comments are closed.</p>
+										
+	</div>
+<!-- end #comments -->								</div>
+		<!-- end .blog-single -->
+	</div>
+	<!-- end #content -->
+</div>
+<!-- end #primary -->
+
+			</div>
+			<!-- end .row .row-fluid -->
+        </section>
+        <!-- end #main -->
+		
+        <footer class="site-footer wrapper" role="contentinfo">
+			<div class="row">
+				<div id="supplementary" class="row-fluid">
+									</div>
+				<!-- end #supplementary -->
+				
+				<div class="site-info">
+					Copyright © 2014 by David Prothero
+All rights reserved.				</div>
+				<!-- end .site-info -->
+			</div>
+			<!-- end .row -->
+        </footer>
+        <!-- end .site-footer -->
+    </div>
+    <!-- end #PAGE -->
+	
+	<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1922425-8', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script type="text/javascript">
+  SyntaxHighlighter.all();
+</script><script type='text/javascript' src='../../../wp-includes/js/comment-reply.min.js?ver=5.8.6' id='comment-reply-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/detectmobilebrowser.js' id='detectmobilebrowser-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/modernizr.js' id='modernizr-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/imagesloaded.min.js?ver=4.1.4' id='imagesloaded-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fitvids.js' id='fitvids-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.js' id='google-code-prettify-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.uniform.min.js' id='uniform-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.flexslider-min.js' id='flexslider-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelement-and-player.min.js' id='mediaelement-and-player-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.isotope.min.js' id='isotope-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fancybox-1.3.4.pack.js' id='fancybox-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.masonry.min.js' id='masonry-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.history.js' id='history-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/js-url.min.js' id='js-url-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquerypp.custom.js' id='jquerypp-custom-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/gamma.js' id='gamma-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/main.js' id='main-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.validate.min.js' id='validate-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/send-mail.js' id='send-mail-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/wp-embed.min.js?ver=5.8.6' id='wp-embed-js'></script>
+</body>
+</html>

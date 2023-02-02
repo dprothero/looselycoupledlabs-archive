@@ -1,0 +1,580 @@
+﻿<!doctype html>
+
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	
+	
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+			    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+	<title>SOA | Loosely Coupled Labs</title>
+    
+    <!--[if lte IE 9]>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/html5shiv.js"></script>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/selectivizr-min.js"></script>
+    <![endif]-->
+	
+		
+	<meta name='robots' content='max-image-preview:large'>
+<link rel='dns-prefetch' href='//fonts.googleapis.com'>
+<link rel='dns-prefetch' href='//s.w.org'>
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Feed" href="../../feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Comments Feed" href="../../comments/feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; SOA Tag Feed" href="feed/index.htm">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/looselycoupledlabs.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.8.6"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([10084,65039,8205,55357,56613],[10084,65039,8203,55357,56613])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='../../wp-includes/css/dist/block-library/style.min.css?ver=5.8.6' type='text/css' media='all'>
+<link rel='stylesheet' id='unifrakturmaguntia-css' href='../../css?family=UnifrakturMaguntia&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='coustard-css' href='../../css-1?family=Coustard&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='lora-css' href='../../css-2?family=Lora:400,700,400italic,700italic&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='print-css' href='../../wp-content/themes/read-v4-2-4/css/print.css' type='text/css' media='print'>
+<link rel='stylesheet' id='grid-css' href='../../wp-content/themes/read-v4-2-4/css/grid.css' type='text/css' media='all'>
+<link rel='stylesheet' id='normalize-css' href='../../wp-content/themes/read-v4-2-4/css/normalize.css' type='text/css' media='all'>
+<link rel='stylesheet' id='font-awesome-css' href='../../wp-content/themes/read-v4-2-4/css/font-awesome.css' type='text/css' media='all'>
+<link rel='stylesheet' id='google-code-prettify-css' href='../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.css' type='text/css' media='all'>
+<link rel='stylesheet' id='uniform-css' href='../../wp-content/themes/read-v4-2-4/css/uniform.default.css' type='text/css' media='all'>
+<link rel='stylesheet' id='flexslider-css' href='../../wp-content/themes/read-v4-2-4/css/flexslider.css' type='text/css' media='all'>
+<link rel='stylesheet' id='mediaelementplayer-css' href='../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelementplayer.css' type='text/css' media='all'>
+<link rel='stylesheet' id='gamma-gallery-css' href='../../wp-content/themes/read-v4-2-4/css/gamma-gallery.css' type='text/css' media='all'>
+<link rel='stylesheet' id='main-css' href='../../wp-content/themes/read-v4-2-4/css/main.css' type='text/css' media='all'>
+<link rel='stylesheet' id='fancybox-css' href='../../wp-content/themes/read-v4-2-4/css/jquery.fancybox-1.3.4.css' type='text/css' media='all'>
+<link rel='stylesheet' id='wp-fix-css' href='../../wp-content/themes/read-v4-2-4/css/wp-fix.css' type='text/css' media='all'>
+<script type='text/javascript' src='../../wp-includes/js/jquery/jquery.min.js?ver=3.6.0' id='jquery-core-js'></script>
+<script type='text/javascript' src='../../wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
+<link rel="https://api.w.org/" href="../../wp-json/index.htm"><link rel="alternate" type="application/json" href="../../wp-json/wp/v2/tags/5"><link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.8.6">
+
+<link rel="stylesheet" type="text/css" href="../../wp-content/themes/read-v4-2-4/style.css">
+
+		
+<link rel="stylesheet" type="text/css" href="../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../css-3?family=Lora&subset=latin">
+<style type="text/css">
+a { color: #4488ff; }
+
+a:hover { color: #3377ee; }
+
+.main-navigation ul .current_page_item > a, .main-navigation ul .current-menu-item > a { color: #69be28; }
+
+h1.site-title, h1.site-title a { font-family: "Coustard", Georgia, serif; }
+
+h1, h2, h3, h4, h5, h6 { font-family: "Coustard", Georgia, serif; }
+
+.main-navigation ul li { font-family: "Coustard", Georgia, serif; }
+
+html { font-family: "Lora", Georgia, serif; }
+</style>
+		<style type="text/css">
+.site-header hgroup {
+  padding: 0;
+}
+
+h1.site-title {
+  font-size: 2.20em;
+}
+
+.site-header {
+  padding-bottom: 0;
+}
+
+table {
+  border-collapse: collapse;     
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+}
+
+code {
+  box-shadow: none;
+}
+</style>
+<script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushPowerShell.js"></script>
+<script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+<script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<link href="../../syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css">
+<link href="../../syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="archive tag tag-soa tag-5">
+
+    <div id="page" class="hfeed site"> 
+        <header class="site-header wrapper" role="banner">
+			<div class="row">
+			    <hgroup>
+					<h1 class="site-title">
+															<a rel="home" href="../../index.htm">
+										<img alt="Loosely Coupled Labs" src="../../wp-content/uploads/2014/06/loosely600-300x105.png">
+									</a>
+													</h1>
+					<!-- end .site-title -->
+					
+					<h2 class="site-description">
+						**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**					</h2>
+					<!-- end .site-description -->
+			    </hgroup>
+				
+								
+			    <nav id="site-navigation" class="main-navigation" role="navigation">
+					<ul class="menu-default"><li class="page_item page-item-39"><a href="../../about-me/index.htm">About Me</a></li><li class="page_item page-item-226"><a href="../../subscribe/index.htm">Subscribe</a></li></ul>
+			    </nav>
+			    <!-- end #site-navigation -->
+			</div>
+			<!-- end .row -->
+        </header>
+        <!-- end .site-header -->
+		
+				
+        <section id="main" class="middle wrapper">
+			<div class="row row-fluid ">
+<div id="primary" class="site-content">
+	<div id="content" role="main">
+		<div class="post-archive blog-masonry">
+			<header class="page-header">
+				<h1 class="page-title">Posts Tagged <span class="on">&#8594;</span> <span>SOA</span></h1>
+			</header>
+			<!-- end .page-header -->
+			
+			<article id="post-263" class="clearfix post-263 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-masstransit tag-mt3 tag-rabbitmq tag-service-bus tag-soa">
+	<header class="entry-header">
+		<h1 class="entry-title">
+						<a rel="bookmark" href="../../2015/07/masstransit-3-update-a-simple-publishsubscribe-example/index.htm">MassTransit 3 Update: A Simple Publish/Subscribe Example</a>
+		</h1>
+		<!-- end .entry-title -->
+	</header>
+	<!-- end .entry-header -->
+	
+	<footer class="entry-meta">
+		<span class="post-category">
+			posted in <a href="../../category/tutorial/index.htm" rel="category tag">Tutorial</a>		</span>
+		<!-- end .post-category -->
+		
+		<span class="post-date">
+			on <a href="../../2015/07/masstransit-3-update-a-simple-publishsubscribe-example/index.htm" title="10:54 pm" rel="bookmark"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">July 4, 2015</time></a>
+		</span>
+		<!-- end .post-date -->
+		
+		<span class="by-author"> by			<span class="author vcard">
+				<a class="url fn n" href="../../author/davidprothero-com/index.htm" title="View all posts by david@prothero.com" rel="author">david@prothero.com</a>
+			</span>
+			<!-- end .author -->
+		</span>
+		<!-- end .by-author -->
+		
+		<span class="comments-link">
+			<a href="../../2015/07/masstransit-3-update-a-simple-publishsubscribe-example/index.htm#comments">9 Comments</a>		</span>
+		<!-- end .comments-link -->
+		
+			</footer>
+	<!-- end .entry-meta -->
+	
+					<div class="featured-image">
+					<img width="230" height="200" src="../../wp-content/uploads/2014/06/mt-small.png" class="attachment-blog_feat_img size-blog_feat_img wp-post-image" alt="MassTransit 3 Update: A Simple Publish/Subscribe Example" loading="lazy" title="" srcset="../../wp-content/uploads/2014/06/mt-small.png 230w, ../../wp-content/uploads/2014/06/mt-small-150x130.png 150w, ../../wp-content/uploads/2014/06/mt-small-200x173.png 200w" sizes="(max-width: 230px) 100vw, 230px">				</div>
+				<!-- end .featured-image -->
+				
+	<div class="entry-content clearfix">
+		<p>With the announcement of MassTransit 3, we learned that there were many changes to the API that were coming. The changes are all welcome ones, making MassTransit 3 simpler to work with and now completely asynchronous. What follows is this blog&#8217;s inaugural post, but updated to work with the current pre-release version of MassTransit 3.</p>
+		
+			</div>
+	<!-- end .entry-content -->
+</article>
+<!-- end .post --><article id="post-244" class="clearfix post-244 post type-post status-publish format-standard has-post-thumbnail hentry category-commentary tag-masstransit tag-nservicebus tag-service-bus tag-soa">
+	<header class="entry-header">
+		<h1 class="entry-title">
+						<a rel="bookmark" href="../../2014/11/masstransit-versus-nservicebus-fight/index.htm">MassTransit versus NServiceBus: FIGHT!</a>
+		</h1>
+		<!-- end .entry-title -->
+	</header>
+	<!-- end .entry-header -->
+	
+	<footer class="entry-meta">
+		<span class="post-category">
+			posted in <a href="../../category/commentary/index.htm" rel="category tag">Commentary</a>		</span>
+		<!-- end .post-category -->
+		
+		<span class="post-date">
+			on <a href="../../2014/11/masstransit-versus-nservicebus-fight/index.htm" title="11:01 pm" rel="bookmark"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">November 16, 2014</time></a>
+		</span>
+		<!-- end .post-date -->
+		
+		<span class="by-author"> by			<span class="author vcard">
+				<a class="url fn n" href="../../author/davidprothero-com/index.htm" title="View all posts by david@prothero.com" rel="author">david@prothero.com</a>
+			</span>
+			<!-- end .author -->
+		</span>
+		<!-- end .by-author -->
+		
+		<span class="comments-link">
+			<a href="../../2014/11/masstransit-versus-nservicebus-fight/index.htm#comments">8 Comments</a>		</span>
+		<!-- end .comments-link -->
+		
+			</footer>
+	<!-- end .entry-meta -->
+	
+					<div class="featured-image">
+					<img width="700" height="212" src="../../wp-content/uploads/2014/11/mt-vs-nsb.png" class="attachment-blog_feat_img size-blog_feat_img wp-post-image" alt="MassTransit versus NServiceBus: FIGHT!" loading="lazy" title="" srcset="../../wp-content/uploads/2014/11/mt-vs-nsb.png 700w, ../../wp-content/uploads/2014/11/mt-vs-nsb-300x90.png 300w, ../../wp-content/uploads/2014/11/mt-vs-nsb-150x45.png 150w, ../../wp-content/uploads/2014/11/mt-vs-nsb-400x121.png 400w, ../../wp-content/uploads/2014/11/mt-vs-nsb-200x60.png 200w" sizes="(max-width: 700px) 100vw, 700px">				</div>
+				<!-- end .featured-image -->
+				
+	<div class="entry-content clearfix">
+		<p>I often get asked: &#8220;which is better, MassTransit or NServiceBus?&#8221; It&#8217;s a perfectly reasonable question for an outsider looking to get started with message-based SOA on .NET to ask. However, as is usually the case with the &#8220;which is better&#8221; question for any technology, the answer is the ubiquitous (and exasperating) &#8220;it depends.&#8221;</p>
+		
+			</div>
+	<!-- end .entry-content -->
+</article>
+<!-- end .post --><article id="post-213" class="clearfix post-213 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-azure tag-masstransit tag-service-bus tag-soa">
+	<header class="entry-header">
+		<h1 class="entry-title">
+						<a rel="bookmark" href="../../2014/09/masstransit-on-microsoft-azure-2/index.htm">MassTransit on Microsoft Azure</a>
+		</h1>
+		<!-- end .entry-title -->
+	</header>
+	<!-- end .entry-header -->
+	
+	<footer class="entry-meta">
+		<span class="post-category">
+			posted in <a href="../../category/tutorial/index.htm" rel="category tag">Tutorial</a>		</span>
+		<!-- end .post-category -->
+		
+		<span class="post-date">
+			on <a href="../../2014/09/masstransit-on-microsoft-azure-2/index.htm" title="3:11 pm" rel="bookmark"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">September 16, 2014</time></a>
+		</span>
+		<!-- end .post-date -->
+		
+		<span class="by-author"> by			<span class="author vcard">
+				<a class="url fn n" href="../../author/davidprothero-com/index.htm" title="View all posts by david@prothero.com" rel="author">david@prothero.com</a>
+			</span>
+			<!-- end .author -->
+		</span>
+		<!-- end .by-author -->
+		
+		<span class="comments-link">
+			<a href="../../2014/09/masstransit-on-microsoft-azure-2/index.htm#comments">10 Comments</a>		</span>
+		<!-- end .comments-link -->
+		
+			</footer>
+	<!-- end .entry-meta -->
+	
+					<div class="featured-image">
+					<img width="474" height="240" src="../../wp-content/uploads/2014/09/MTonAzure.png" class="attachment-blog_feat_img size-blog_feat_img wp-post-image" alt="MassTransit on Microsoft Azure" loading="lazy" title="" srcset="../../wp-content/uploads/2014/09/MTonAzure.png 474w, ../../wp-content/uploads/2014/09/MTonAzure-300x151.png 300w, ../../wp-content/uploads/2014/09/MTonAzure-150x75.png 150w, ../../wp-content/uploads/2014/09/MTonAzure-400x202.png 400w, ../../wp-content/uploads/2014/09/MTonAzure-200x101.png 200w" sizes="(max-width: 474px) 100vw, 474px">				</div>
+				<!-- end .featured-image -->
+				
+	<div class="entry-content clearfix">
+		<p>In my first post on this blog, I showed you how to get a simple Publish/Subscribe example working very quickly using MassTransit and RabbitMQ. I’d always planned to show you how to move that example to the cloud, with Microsoft Azure being a compelling competitor in this space, especially for the .NET developer (though not&#8230; <a class="more-link" href="../../2014/09/masstransit-on-microsoft-azure-2/index.htm">Continue reading <span class="meta-nav">&rarr;</span></a></p>
+		
+			</div>
+	<!-- end .entry-content -->
+</article>
+<!-- end .post --><article id="post-150" class="clearfix post-150 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-masstransit tag-rabbitmq tag-service-bus tag-soa">
+	<header class="entry-header">
+		<h1 class="entry-title">
+						<a rel="bookmark" href="../../2014/08/scaling-out-subscribers-with-masstransit/index.htm">Scaling Out Subscribers With MassTransit</a>
+		</h1>
+		<!-- end .entry-title -->
+	</header>
+	<!-- end .entry-header -->
+	
+	<footer class="entry-meta">
+		<span class="post-category">
+			posted in <a href="../../category/tutorial/index.htm" rel="category tag">Tutorial</a>		</span>
+		<!-- end .post-category -->
+		
+		<span class="post-date">
+			on <a href="../../2014/08/scaling-out-subscribers-with-masstransit/index.htm" title="12:41 am" rel="bookmark"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">August 4, 2014</time></a>
+		</span>
+		<!-- end .post-date -->
+		
+		<span class="by-author"> by			<span class="author vcard">
+				<a class="url fn n" href="../../author/davidprothero-com/index.htm" title="View all posts by david@prothero.com" rel="author">david@prothero.com</a>
+			</span>
+			<!-- end .author -->
+		</span>
+		<!-- end .by-author -->
+		
+		<span class="comments-link">
+			<a href="../../2014/08/scaling-out-subscribers-with-masstransit/index.htm#comments">7 Comments</a>		</span>
+		<!-- end .comments-link -->
+		
+			</footer>
+	<!-- end .entry-meta -->
+	
+					<div class="featured-image">
+					<img width="237" height="215" src="../../wp-content/uploads/2014/08/lots-of-messages1.jpg" class="attachment-blog_feat_img size-blog_feat_img wp-post-image" alt="Scaling Out Subscribers With MassTransit" loading="lazy" title="" srcset="../../wp-content/uploads/2014/08/lots-of-messages1.jpg 237w, ../../wp-content/uploads/2014/08/lots-of-messages1-150x136.jpg 150w, ../../wp-content/uploads/2014/08/lots-of-messages1-200x181.jpg 200w" sizes="(max-width: 237px) 100vw, 237px">				</div>
+				<!-- end .featured-image -->
+				
+	<div class="entry-content clearfix">
+		<p>So far on this blog, we’ve been looking at the publish/subscribe messaging pattern using MassTransit and RabbitMQ. So far, we’ve dealt with a single publisher and a single subscriber. We looked at how we can have those two roles live on separate servers. Finally, we looked at how to handle errors in the subscriber. What&#8230; <a class="more-link" href="../../2014/08/scaling-out-subscribers-with-masstransit/index.htm">Continue reading <span class="meta-nav">&rarr;</span></a></p>
+		
+			</div>
+	<!-- end .entry-content -->
+</article>
+<!-- end .post --><article id="post-115" class="clearfix post-115 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-masstransit tag-rabbitmq tag-service-bus tag-soa">
+	<header class="entry-header">
+		<h1 class="entry-title">
+						<a rel="bookmark" href="../../2014/07/error-handling-in-masstransit-consumers/index.htm">Error Handling in MassTransit Consumers</a>
+		</h1>
+		<!-- end .entry-title -->
+	</header>
+	<!-- end .entry-header -->
+	
+	<footer class="entry-meta">
+		<span class="post-category">
+			posted in <a href="../../category/tutorial/index.htm" rel="category tag">Tutorial</a>		</span>
+		<!-- end .post-category -->
+		
+		<span class="post-date">
+			on <a href="../../2014/07/error-handling-in-masstransit-consumers/index.htm" title="2:18 am" rel="bookmark"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">July 27, 2014</time></a>
+		</span>
+		<!-- end .post-date -->
+		
+		<span class="by-author"> by			<span class="author vcard">
+				<a class="url fn n" href="../../author/davidprothero-com/index.htm" title="View all posts by david@prothero.com" rel="author">david@prothero.com</a>
+			</span>
+			<!-- end .author -->
+		</span>
+		<!-- end .by-author -->
+		
+		<span class="comments-link">
+			<a href="../../2014/07/error-handling-in-masstransit-consumers/index.htm#comments">7 Comments</a>		</span>
+		<!-- end .comments-link -->
+		
+			</footer>
+	<!-- end .entry-meta -->
+	
+					<div class="featured-image">
+					<img width="300" height="192" src="../../wp-content/uploads/2014/07/errors.png" class="attachment-blog_feat_img size-blog_feat_img wp-post-image" alt="Error Handling in MassTransit Consumers" loading="lazy" title="" srcset="../../wp-content/uploads/2014/07/errors.png 300w, ../../wp-content/uploads/2014/07/errors-150x96.png 150w, ../../wp-content/uploads/2014/07/errors-200x128.png 200w" sizes="(max-width: 300px) 100vw, 300px">				</div>
+				<!-- end .featured-image -->
+				
+	<div class="entry-content clearfix">
+		<p>Previously, we built a simple Customer Portal application where a user could use an ASP.NET MVC app to open a new customer service ticket. The website created a TicketOpened message and published it to the MassTransit service bus. Then, we built a Windows Service, using the TopShelf library, that subscribed to TicketOpened messages and handled&#8230; <a class="more-link" href="../../2014/07/error-handling-in-masstransit-consumers/index.htm">Continue reading <span class="meta-nav">&rarr;</span></a></p>
+		
+			</div>
+	<!-- end .entry-content -->
+</article>
+<!-- end .post --><article id="post-98" class="clearfix post-98 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-masstransit tag-rabbitmq tag-service-bus tag-soa">
+	<header class="entry-header">
+		<h1 class="entry-title">
+						<a rel="bookmark" href="../../2014/07/a-real-world-masstransit-customer-portal-example/index.htm">A Real-World MassTransit Customer Portal Example</a>
+		</h1>
+		<!-- end .entry-title -->
+	</header>
+	<!-- end .entry-header -->
+	
+	<footer class="entry-meta">
+		<span class="post-category">
+			posted in <a href="../../category/tutorial/index.htm" rel="category tag">Tutorial</a>		</span>
+		<!-- end .post-category -->
+		
+		<span class="post-date">
+			on <a href="../../2014/07/a-real-world-masstransit-customer-portal-example/index.htm" title="4:11 am" rel="bookmark"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">July 19, 2014</time></a>
+		</span>
+		<!-- end .post-date -->
+		
+		<span class="by-author"> by			<span class="author vcard">
+				<a class="url fn n" href="../../author/davidprothero-com/index.htm" title="View all posts by david@prothero.com" rel="author">david@prothero.com</a>
+			</span>
+			<!-- end .author -->
+		</span>
+		<!-- end .by-author -->
+		
+		<span class="comments-link">
+			<a href="../../2014/07/a-real-world-masstransit-customer-portal-example/index.htm#comments">2 Comments</a>		</span>
+		<!-- end .comments-link -->
+		
+			</footer>
+	<!-- end .entry-meta -->
+	
+					<div class="featured-image">
+					<img width="300" height="209" src="../../wp-content/uploads/2014/07/customer-portal.jpg" class="attachment-blog_feat_img size-blog_feat_img wp-post-image" alt="A Real-World MassTransit Customer Portal Example" loading="lazy" title="" srcset="../../wp-content/uploads/2014/07/customer-portal.jpg 300w, ../../wp-content/uploads/2014/07/customer-portal-150x104.jpg 150w, ../../wp-content/uploads/2014/07/customer-portal-200x139.jpg 200w" sizes="(max-width: 300px) 100vw, 300px">				</div>
+				<!-- end .featured-image -->
+				
+	<div class="entry-content clearfix">
+		<p>Now that we’ve seen some simple examples of how to use MassTransit with the Publish/Subscribe pattern on multiple machines, let’s build something that resembles a more real-world app. In this article, we’ll build an ASP.NET MVC Customer Portal app where a customer can create a new support ticket. The ticket will be published onto the&#8230; <a class="more-link" href="../../2014/07/a-real-world-masstransit-customer-portal-example/index.htm">Continue reading <span class="meta-nav">&rarr;</span></a></p>
+		
+			</div>
+	<!-- end .entry-content -->
+</article>
+<!-- end .post --><article id="post-46" class="clearfix post-46 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-masstransit tag-rabbitmq tag-service-bus tag-soa">
+	<header class="entry-header">
+		<h1 class="entry-title">
+						<a rel="bookmark" href="../../2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/index.htm">Creating a RabbitMQ Cluster for Use with MassTransit</a>
+		</h1>
+		<!-- end .entry-title -->
+	</header>
+	<!-- end .entry-header -->
+	
+	<footer class="entry-meta">
+		<span class="post-category">
+			posted in <a href="../../category/tutorial/index.htm" rel="category tag">Tutorial</a>		</span>
+		<!-- end .post-category -->
+		
+		<span class="post-date">
+			on <a href="../../2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/index.htm" title="1:09 am" rel="bookmark"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">July 9, 2014</time></a>
+		</span>
+		<!-- end .post-date -->
+		
+		<span class="by-author"> by			<span class="author vcard">
+				<a class="url fn n" href="../../author/davidprothero-com/index.htm" title="View all posts by david@prothero.com" rel="author">david@prothero.com</a>
+			</span>
+			<!-- end .author -->
+		</span>
+		<!-- end .by-author -->
+		
+		<span class="comments-link">
+			<a href="../../2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/index.htm#comments">20 Comments</a>		</span>
+		<!-- end .comments-link -->
+		
+			</footer>
+	<!-- end .entry-meta -->
+	
+					<div class="featured-image">
+					<img width="253" height="230" src="../../wp-content/uploads/2014/07/iStock_000005276021ExtraSmall.jpg" class="attachment-blog_feat_img size-blog_feat_img wp-post-image" alt="Creating a RabbitMQ Cluster for Use with MassTransit" loading="lazy" title="" srcset="../../wp-content/uploads/2014/07/iStock_000005276021ExtraSmall.jpg 253w, ../../wp-content/uploads/2014/07/iStock_000005276021ExtraSmall-150x136.jpg 150w, ../../wp-content/uploads/2014/07/iStock_000005276021ExtraSmall-200x181.jpg 200w" sizes="(max-width: 253px) 100vw, 253px">				</div>
+				<!-- end .featured-image -->
+				
+	<div class="entry-content clearfix">
+		<p>In my last post, A Simple MassTransit Publish/Subscribe Example, we looked at how to build basic publishers and subscribers using MassTransit and RabbitMQ. In the example, however, we were only using a single RabbitMQ instance on a single machine. In the real world, your publishers are most likely to live on separate machines from your subscribers. To do that,&#8230; <a class="more-link" href="../../2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/index.htm">Continue reading <span class="meta-nav">&rarr;</span></a></p>
+		
+			</div>
+	<!-- end .entry-content -->
+</article>
+<!-- end .post --><article id="post-27" class="clearfix post-27 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-masstransit tag-rabbitmq tag-service-bus tag-soa">
+	<header class="entry-header">
+		<h1 class="entry-title">
+						<a rel="bookmark" href="../../2014/06/masstransit-publish-subscribe-example/index.htm">A Simple MassTransit Publish/Subscribe Example</a>
+		</h1>
+		<!-- end .entry-title -->
+	</header>
+	<!-- end .entry-header -->
+	
+	<footer class="entry-meta">
+		<span class="post-category">
+			posted in <a href="../../category/tutorial/index.htm" rel="category tag">Tutorial</a>		</span>
+		<!-- end .post-category -->
+		
+		<span class="post-date">
+			on <a href="../../2014/06/masstransit-publish-subscribe-example/index.htm" title="12:23 am" rel="bookmark"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">June 28, 2014</time></a>
+		</span>
+		<!-- end .post-date -->
+		
+		<span class="by-author"> by			<span class="author vcard">
+				<a class="url fn n" href="../../author/davidprothero-com/index.htm" title="View all posts by david@prothero.com" rel="author">david@prothero.com</a>
+			</span>
+			<!-- end .author -->
+		</span>
+		<!-- end .by-author -->
+		
+		<span class="comments-link">
+			<a href="../../2014/06/masstransit-publish-subscribe-example/index.htm#comments">5 Comments</a>		</span>
+		<!-- end .comments-link -->
+		
+			</footer>
+	<!-- end .entry-meta -->
+	
+					<div class="featured-image">
+					<img width="230" height="200" src="../../wp-content/uploads/2014/06/mt-small.png" class="attachment-blog_feat_img size-blog_feat_img wp-post-image" alt="A Simple MassTransit Publish/Subscribe Example" loading="lazy" title="" srcset="../../wp-content/uploads/2014/06/mt-small.png 230w, ../../wp-content/uploads/2014/06/mt-small-150x130.png 150w, ../../wp-content/uploads/2014/06/mt-small-200x173.png 200w" sizes="(max-width: 230px) 100vw, 230px">				</div>
+				<!-- end .featured-image -->
+				
+	<div class="entry-content clearfix">
+		<p>When I first sat down to learn how to use MassTransit, I found it difficult to just get a simple example that published a message onto the bus with another process that subscribed to messages of the same type working. Hopefully, this primer will get you on the bus quicker. Setting Up Your Environment The&#8230; <a class="more-link" href="../../2014/06/masstransit-publish-subscribe-example/index.htm">Continue reading <span class="meta-nav">&rarr;</span></a></p>
+		
+			</div>
+	<!-- end .entry-content -->
+</article>
+<!-- end .post -->		</div>
+		<!-- end .blog-masonry -->
+		
+					<!-- post nav -->
+			<nav class="navigation" role="navigation">
+				<div class="nav-previous"></div>
+				
+				<div class="nav-next"></div>
+			</nav>
+			<!-- end post nav -->
+			</div>
+	<!-- end #content -->
+</div>
+<!-- end #primary -->
+
+			</div>
+			<!-- end .row .row-fluid -->
+        </section>
+        <!-- end #main -->
+		
+        <footer class="site-footer wrapper" role="contentinfo">
+			<div class="row">
+				<div id="supplementary" class="row-fluid">
+									</div>
+				<!-- end #supplementary -->
+				
+				<div class="site-info">
+					Copyright © 2014 by David Prothero
+All rights reserved.				</div>
+				<!-- end .site-info -->
+			</div>
+			<!-- end .row -->
+        </footer>
+        <!-- end .site-footer -->
+    </div>
+    <!-- end #PAGE -->
+	
+	<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1922425-8', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script type="text/javascript">
+  SyntaxHighlighter.all();
+</script><script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/detectmobilebrowser.js' id='detectmobilebrowser-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/modernizr.js' id='modernizr-js'></script>
+<script type='text/javascript' src='../../wp-includes/js/imagesloaded.min.js?ver=4.1.4' id='imagesloaded-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/jquery.fitvids.js' id='fitvids-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.js' id='google-code-prettify-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/jquery.uniform.min.js' id='uniform-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/jquery.flexslider-min.js' id='flexslider-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelement-and-player.min.js' id='mediaelement-and-player-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/jquery.isotope.min.js' id='isotope-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/jquery.fancybox-1.3.4.pack.js' id='fancybox-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/jquery.masonry.min.js' id='masonry-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/jquery.history.js' id='history-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/js-url.min.js' id='js-url-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/jquerypp.custom.js' id='jquerypp-custom-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/gamma.js' id='gamma-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/main.js' id='main-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/jquery.validate.min.js' id='validate-js'></script>
+<script type='text/javascript' src='../../wp-content/themes/read-v4-2-4/js/send-mail.js' id='send-mail-js'></script>
+<script type='text/javascript' src='../../wp-includes/js/wp-embed.min.js?ver=5.8.6' id='wp-embed-js'></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	Comments on: Creating a RabbitMQ Cluster for Use with MassTransit	</title>
+	<atom:link href="https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/feed/" rel="self" type="application/rss+xml" />
+	<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/</link>
+	<description>**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**</description>
+	<lastBuildDate>Wed, 13 Apr 2016 15:32:00 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.8.6</generator>
+	<item>
+		<title>
+		By: Michael Denny		</title>
+		<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-84</link>
+
+		<dc:creator><![CDATA[Michael Denny]]></dc:creator>
+		<pubDate>Wed, 13 Apr 2016 15:32:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=46#comment-84</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-24&quot;&gt;Andrew Lane&lt;/a&gt;.
+
+In our scenario that is that big, we have 4 centralized brokers as state by Andrew, that are in cluster+HA(+sharding work in progress).]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-24">Andrew Lane</a>.</p>
+<p>In our scenario that is that big, we have 4 centralized brokers as state by Andrew, that are in cluster+HA(+sharding work in progress).</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Nipun Joshi		</title>
+		<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-53</link>
+
+		<dc:creator><![CDATA[Nipun Joshi]]></dc:creator>
+		<pubDate>Thu, 09 Apr 2015 17:50:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=46#comment-53</guid>
+
+					<description><![CDATA[Great series! Kudos and keep up the great writing.
+
+What would be your recommendation in the scenario can both consume and publish messages. Also, there can be, let&#039;s say 5 applications that participate in the process, each consumes from one queue, processes and then publishes back to an exchange with a different queue? So each application acts as a consumer as well as publisher.
+
+My thought is that you can have a webserver running all the applications, and all talking to one RabbitMQ instance. Scale out this setup to other webservers and each webserver has its own dedicated RabbitMQ instance. All RMQ instances would be clustered. Mostly like the setup you mentioned above, the only difference being both the publisher and subscriber would have the same RMQ instance that they would talk to from one webserver, unless any RMQ instance goes down and in that case, the applications would throw &quot;Send exception&quot; while consuming or publishing. The exception should not be a problem as other webservers would continue to process the messages, since its a clustered RMQ environment.
+
+Or would you prefer having a load balancer in between the webservers and RMQ cluster instead?]]></description>
+			<content:encoded><![CDATA[<p>Great series! Kudos and keep up the great writing.</p>
+<p>What would be your recommendation in the scenario can both consume and publish messages. Also, there can be, let&#8217;s say 5 applications that participate in the process, each consumes from one queue, processes and then publishes back to an exchange with a different queue? So each application acts as a consumer as well as publisher.</p>
+<p>My thought is that you can have a webserver running all the applications, and all talking to one RabbitMQ instance. Scale out this setup to other webservers and each webserver has its own dedicated RabbitMQ instance. All RMQ instances would be clustered. Mostly like the setup you mentioned above, the only difference being both the publisher and subscriber would have the same RMQ instance that they would talk to from one webserver, unless any RMQ instance goes down and in that case, the applications would throw &#8220;Send exception&#8221; while consuming or publishing. The exception should not be a problem as other webservers would continue to process the messages, since its a clustered RMQ environment.</p>
+<p>Or would you prefer having a load balancer in between the webservers and RMQ cluster instead?</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Faisal Nadeem		</title>
+		<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-48</link>
+
+		<dc:creator><![CDATA[Faisal Nadeem]]></dc:creator>
+		<pubDate>Sat, 17 Jan 2015 00:48:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=46#comment-48</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-47&quot;&gt;dprothero&lt;/a&gt;.
+
+thanks David. I achieved it by downgrading MT to 2.6.5 and implemented distributor using MSMQ, distributor doesn&#039;t work on latest MT build.]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-47">dprothero</a>.</p>
+<p>thanks David. I achieved it by downgrading MT to 2.6.5 and implemented distributor using MSMQ, distributor doesn&#8217;t work on latest MT build.</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: dprothero		</title>
+		<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-47</link>
+
+		<dc:creator><![CDATA[dprothero]]></dc:creator>
+		<pubDate>Thu, 15 Jan 2015 03:44:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=46#comment-47</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-46&quot;&gt;Faisal Nadeem&lt;/a&gt;.
+
+I have not done that, no. You might try the MassTransit mailing list. https://groups.google.com/forum/#!forum/masstransit-discuss]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-46">Faisal Nadeem</a>.</p>
+<p>I have not done that, no. You might try the MassTransit mailing list. <a href="https://groups.google.com/forum/#!forum/masstransit-discuss" rel="nofollow ugc">https://groups.google.com/forum/#!forum/masstransit-discuss</a></p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Faisal Nadeem		</title>
+		<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-46</link>
+
+		<dc:creator><![CDATA[Faisal Nadeem]]></dc:creator>
+		<pubDate>Tue, 13 Jan 2015 23:05:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=46#comment-46</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-44&quot;&gt;dprothero&lt;/a&gt;.
+
+Actually there are real time transactions. I have developed a booking system. When request comes for trips search, i have to send response real time and to the same request. Any idea how can i send response out of message context?]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-44">dprothero</a>.</p>
+<p>Actually there are real time transactions. I have developed a booking system. When request comes for trips search, i have to send response real time and to the same request. Any idea how can i send response out of message context?</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: dprothero		</title>
+		<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-44</link>
+
+		<dc:creator><![CDATA[dprothero]]></dc:creator>
+		<pubDate>Tue, 13 Jan 2015 15:32:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=46#comment-44</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-43&quot;&gt;Faisal Nadeem&lt;/a&gt;.
+
+No, I don&#039;t think so, but it&#039;s hard to know without seeing your code. You don&#039;t want your consumers to be connecting to different instances of RabbitMQ because they will pull duplicate messages off the queue. Can you just change the endpoint for your reply message?]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-43">Faisal Nadeem</a>.</p>
+<p>No, I don&#8217;t think so, but it&#8217;s hard to know without seeing your code. You don&#8217;t want your consumers to be connecting to different instances of RabbitMQ because they will pull duplicate messages off the queue. Can you just change the endpoint for your reply message?</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Faisal Nadeem		</title>
+		<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-43</link>
+
+		<dc:creator><![CDATA[Faisal Nadeem]]></dc:creator>
+		<pubDate>Mon, 12 Jan 2015 23:35:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=46#comment-43</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-42&quot;&gt;dprothero&lt;/a&gt;.
+
+Yeah actually problem lies here. When i respond to context, context has EndPoint URI of rabbitmq://localhost/SAPTCO.WebWare1. That is why it is throwing the exception.
+But if i install rabbitmq server on my both Virtual Servers with using same queue of SubMaster, it is responding back. But is it right mechanism?]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-42">dprothero</a>.</p>
+<p>Yeah actually problem lies here. When i respond to context, context has EndPoint URI of rabbitmq://localhost/SAPTCO.WebWare1. That is why it is throwing the exception.<br />
+But if i install rabbitmq server on my both Virtual Servers with using same queue of SubMaster, it is responding back. But is it right mechanism?</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: dprothero		</title>
+		<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-42</link>
+
+		<dc:creator><![CDATA[dprothero]]></dc:creator>
+		<pubDate>Mon, 12 Jan 2015 15:13:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=46#comment-42</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-41&quot;&gt;Faisal Nadeem&lt;/a&gt;.
+
+I haven&#039;t sent replies back to web applications. I would think, however, you would still want to use submaster to send the replies. Since all your rabbitmq servers are part of the same cluster, it will know how to route the messages (and hold onto them if the web server is down).]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-41">Faisal Nadeem</a>.</p>
+<p>I haven&#8217;t sent replies back to web applications. I would think, however, you would still want to use submaster to send the replies. Since all your rabbitmq servers are part of the same cluster, it will know how to route the messages (and hold onto them if the web server is down).</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Faisal Nadeem		</title>
+		<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-41</link>
+
+		<dc:creator><![CDATA[Faisal Nadeem]]></dc:creator>
+		<pubDate>Mon, 12 Jan 2015 06:19:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=46#comment-41</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-40&quot;&gt;dprothero&lt;/a&gt;.
+
+So as per my understanding i will not install RabbitMq server on both subscriber servers, and i will only initialize MassTransit on both machines and connect to Submaster to receive messages.
+
+
+At first i did the same, both Subscriber machines are receiving the messages, but when i try to respond to context than it is throwing the exception as i mentioned earlier.
+
+Probably it is trying to accesses the publisher rabbitmq://localhost/SAPTCO.WebWare1.
+By the way when i connected to submaster and receiving messages, shall i respond directly to WebWare1 (Publisher)?]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-40">dprothero</a>.</p>
+<p>So as per my understanding i will not install RabbitMq server on both subscriber servers, and i will only initialize MassTransit on both machines and connect to Submaster to receive messages.</p>
+<p>At first i did the same, both Subscriber machines are receiving the messages, but when i try to respond to context than it is throwing the exception as i mentioned earlier.</p>
+<p>Probably it is trying to accesses the publisher rabbitmq://localhost/SAPTCO.WebWare1.<br />
+By the way when i connected to submaster and receiving messages, shall i respond directly to WebWare1 (Publisher)?</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: dprothero		</title>
+		<link>https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-40</link>
+
+		<dc:creator><![CDATA[dprothero]]></dc:creator>
+		<pubDate>Mon, 12 Jan 2015 04:18:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=46#comment-40</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-39&quot;&gt;Faisal Nadeem&lt;/a&gt;.
+
+Because you are using the competing consumer pattern you must connect to the submaster machine for receiving messages. Otherwise, you risk processing duplicate messages. You can also use submaster to send messages as that keeps the configuration simpler.]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/creating-a-rabbitmq-cluster-for-use-with-masstransit/#comment-39">Faisal Nadeem</a>.</p>
+<p>Because you are using the competing consumer pattern you must connect to the submaster machine for receiving messages. Otherwise, you risk processing duplicate messages. You can also use submaster to send messages as that keeps the configuration simpler.</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

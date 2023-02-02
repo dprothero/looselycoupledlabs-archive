@@ -1,0 +1,744 @@
+﻿<!doctype html>
+
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	
+	
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+			    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+	<title>MassTransit 3 Update: A Simple Publish/Subscribe Example | Loosely Coupled Labs</title>
+    
+    <!--[if lte IE 9]>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/html5shiv.js"></script>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/selectivizr-min.js"></script>
+    <![endif]-->
+	
+		
+	<meta name='robots' content='max-image-preview:large'>
+<link rel='dns-prefetch' href='//fonts.googleapis.com'>
+<link rel='dns-prefetch' href='//s.w.org'>
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Feed" href="../../../feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Comments Feed" href="../../../comments/feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; MassTransit 3 Update: A Simple Publish/Subscribe Example Comments Feed" href="feed/index.htm">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/looselycoupledlabs.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.8.6"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([10084,65039,8205,55357,56613],[10084,65039,8203,55357,56613])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='../../../wp-includes/css/dist/block-library/style.min.css?ver=5.8.6' type='text/css' media='all'>
+<link rel='stylesheet' id='unifrakturmaguntia-css' href='../../../css?family=UnifrakturMaguntia&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='coustard-css' href='../../../css-1?family=Coustard&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='lora-css' href='../../../css-2?family=Lora:400,700,400italic,700italic&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='print-css' href='../../../wp-content/themes/read-v4-2-4/css/print.css' type='text/css' media='print'>
+<link rel='stylesheet' id='grid-css' href='../../../wp-content/themes/read-v4-2-4/css/grid.css' type='text/css' media='all'>
+<link rel='stylesheet' id='normalize-css' href='../../../wp-content/themes/read-v4-2-4/css/normalize.css' type='text/css' media='all'>
+<link rel='stylesheet' id='font-awesome-css' href='../../../wp-content/themes/read-v4-2-4/css/font-awesome.css' type='text/css' media='all'>
+<link rel='stylesheet' id='google-code-prettify-css' href='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.css' type='text/css' media='all'>
+<link rel='stylesheet' id='uniform-css' href='../../../wp-content/themes/read-v4-2-4/css/uniform.default.css' type='text/css' media='all'>
+<link rel='stylesheet' id='flexslider-css' href='../../../wp-content/themes/read-v4-2-4/css/flexslider.css' type='text/css' media='all'>
+<link rel='stylesheet' id='mediaelementplayer-css' href='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelementplayer.css' type='text/css' media='all'>
+<link rel='stylesheet' id='gamma-gallery-css' href='../../../wp-content/themes/read-v4-2-4/css/gamma-gallery.css' type='text/css' media='all'>
+<link rel='stylesheet' id='main-css' href='../../../wp-content/themes/read-v4-2-4/css/main.css' type='text/css' media='all'>
+<link rel='stylesheet' id='fancybox-css' href='../../../wp-content/themes/read-v4-2-4/css/jquery.fancybox-1.3.4.css' type='text/css' media='all'>
+<link rel='stylesheet' id='wp-fix-css' href='../../../wp-content/themes/read-v4-2-4/css/wp-fix.css' type='text/css' media='all'>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery.min.js?ver=3.6.0' id='jquery-core-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
+<link rel="https://api.w.org/" href="../../../wp-json/index.htm"><link rel="alternate" type="application/json" href="../../../wp-json/wp/v2/posts/263"><link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../../xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../../wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.8.6">
+<link rel="canonical" href="index.htm">
+<link rel='shortlink' href='index.htm?p=263'>
+<link rel="alternate" type="application/json+oembed" href="../../../wp-json/oembed/1.0/embed-8?url=https%3A%2F%2Flooselycoupledlabs.com%2F2015%2F07%2Fmasstransit-3-update-a-simple-publishsubscribe-example%2F">
+<link rel="alternate" type="text/xml+oembed" href="../../../wp-json/oembed/1.0/embed-9?url=https%3A%2F%2Flooselycoupledlabs.com%2F2015%2F07%2Fmasstransit-3-update-a-simple-publishsubscribe-example%2F&#038;format=xml">
+
+<link rel="stylesheet" type="text/css" href="../../../wp-content/themes/read-v4-2-4/style.css">
+
+		
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-3?family=Lora&subset=latin">
+<style type="text/css">
+a { color: #4488ff; }
+
+a:hover { color: #3377ee; }
+
+.main-navigation ul .current_page_item > a, .main-navigation ul .current-menu-item > a { color: #69be28; }
+
+h1.site-title, h1.site-title a { font-family: "Coustard", Georgia, serif; }
+
+h1, h2, h3, h4, h5, h6 { font-family: "Coustard", Georgia, serif; }
+
+.main-navigation ul li { font-family: "Coustard", Georgia, serif; }
+
+html { font-family: "Lora", Georgia, serif; }
+</style>
+		<style type="text/css">
+.site-header hgroup {
+  padding: 0;
+}
+
+h1.site-title {
+  font-size: 2.20em;
+}
+
+.site-header {
+  padding-bottom: 0;
+}
+
+table {
+  border-collapse: collapse;     
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+}
+
+code {
+  box-shadow: none;
+}
+</style>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPowerShell.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<link href="../../../syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css">
+<link href="../../../syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="post-template-default single single-post postid-263 single-format-standard">
+
+    <div id="page" class="hfeed site"> 
+        <header class="site-header wrapper" role="banner">
+			<div class="row">
+			    <hgroup>
+					<h1 class="site-title">
+															<a rel="home" href="../../../index.htm">
+										<img alt="Loosely Coupled Labs" src="../../../wp-content/uploads/2014/06/loosely600-300x105.png">
+									</a>
+													</h1>
+					<!-- end .site-title -->
+					
+					<h2 class="site-description">
+						**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**					</h2>
+					<!-- end .site-description -->
+			    </hgroup>
+				
+								
+			    <nav id="site-navigation" class="main-navigation" role="navigation">
+					<ul class="menu-default"><li class="page_item page-item-39"><a href="../../../about-me/index.htm">About Me</a></li><li class="page_item page-item-226"><a href="../../../subscribe/index.htm">Subscribe</a></li></ul>
+			    </nav>
+			    <!-- end #site-navigation -->
+			</div>
+			<!-- end .row -->
+        </header>
+        <!-- end .site-header -->
+		
+				
+        <section id="main" class="middle wrapper">
+			<div class="row row-fluid ">
+<div id="primary" class="site-content">
+	<div id="content" role="main">
+		<div class="readable-content blog-single">
+										<article id="post-263" class="clearfix post-263 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-masstransit tag-mt3 tag-rabbitmq tag-service-bus tag-soa">
+								<header class="entry-header">
+																		<h1 class="entry-title">MassTransit 3 Update: A Simple Publish/Subscribe Example</h1>
+								</header>
+								<!-- end .entry-header -->
+								
+								<div class="entry-meta">
+									<span class="post-category">
+										posted in <a href="../../../category/tutorial/index.htm" rel="category tag">Tutorial</a>									</span>
+									<!-- end .post-category -->
+									
+									<span class="post-date">
+										on <a rel="bookmark" title="10:54 pm" href="index.htm"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">July 4, 2015</time></a>
+									</span>
+									<!-- end .post-date -->
+									
+									<span class="by-author"> by										<span class="author vcard">
+											<a class="url fn n" rel="author" title="View all posts by david@prothero.com" href="../../../author/davidprothero-com/index.htm">david@prothero.com</a>
+										</span>
+										<!-- end .author -->
+									</span>
+									<!-- end .by-author -->
+									
+									<div class="share-links">
+	<a>SHARE</a>
+	
+	<div class="share-wrap">
+		<div class="facebook-wrap">
+			<div id="fb-root"></div>
+			
+			<script>
+				(function(d, s, id)
+				{
+					var js, fjs = d.getElementsByTagName(s)[0];
+					if (d.getElementById(id)) return;
+					js = d.createElement(s); js.id = id;
+					js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+					fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));
+			</script>
+			
+			<div class="fb-like" data-send="false" data-layout="button_count" data-width="400" data-show-faces="false" data-colorscheme="light" data-action="like"></div>
+		</div>
+		<!-- end .facebook-wrap -->
+		
+		<div class="twitter-wrap">
+						<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+			
+			<script>
+				!function(d, s, id)
+				{
+					var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}
+				}(document, "script", "twitter-wjs");
+			</script>
+		</div>
+		<!-- end .twitter-wrap -->
+		
+		<div class="google-wrap">
+			<!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium"></div>
+			
+			<!-- Place this tag after the last +1 button tag. -->
+			<script type="text/javascript">
+			  (function()
+			  {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			  })();
+			</script>
+		</div>
+		<!-- end .google-wrap -->
+		
+		<div class="pinterest-wrap">
+						
+			<a href="http://pinterest.com/pin/create/button/?url=https://looselycoupledlabs.com/2015/07/masstransit-3-update-a-simple-publishsubscribe-example/&media=https://looselycoupledlabs.com/wp-content/uploads/2014/06/mt-small.png&description=MassTransit 3 Update: A Simple Publish/Subscribe Example" class="pin-it-button" count-layout="horizontal"><img src="../../../images/PinExt.png" alt="Pin It" title="Pin It"></a>
+			
+			<script type="text/javascript" src="../../../js/pinit.js"></script>
+		</div>
+		<!-- end .pinterest-wrap -->
+	</div>
+	<!-- end .share-wrap -->
+</div>	
+<!-- end .share-links -->									
+																	</div>
+								<!-- end .entry-meta -->
+								
+																			<div class="featured-image">
+												<img width="230" height="200" src="../../../wp-content/uploads/2014/06/mt-small.png" class="attachment-full size-full wp-post-image" alt="MassTransit 3 Update: A Simple Publish/Subscribe Example" loading="lazy" title="" srcset="../../../wp-content/uploads/2014/06/mt-small.png 230w, ../../../wp-content/uploads/2014/06/mt-small-150x130.png 150w, ../../../wp-content/uploads/2014/06/mt-small-200x173.png 200w" sizes="(max-width: 230px) 100vw, 230px">											</div>
+											<!-- end .featured-image -->
+																		
+								<div class="entry-content clearfix">
+									<p>With the <a href="http://blog.phatboyg.com/2014/11/30/masstransit/" target="_blank">announcement of MassTransit 3</a>, we learned that there were many <a href="http://blog.phatboyg.com/2015/02/24/masstransit-3-api-changes/" target="_blank">changes to the API</a> that were coming. The changes are all welcome ones, making MassTransit 3 simpler to work with and now completely asynchronous. What follows is this blog&#8217;s inaugural post, but updated to work with the current pre-release version of MassTransit 3. <span id="more-263"></span></p>
+<div class="alert info">Whenever there is an MT3 specific update, I will call it out like this.</div>
+<p>When I first sat down to learn how to use <a title="MassTransit Project Site" href="http://masstransit-project.com/" target="_blank">MassTransit</a>, I found it difficult to just get a simple example that published a message onto the bus with another process that subscribed to messages of the same type working. Hopefully, this primer will get you on the bus quicker.</p>
+<h1>Setting Up Your Environment</h1>
+<p>The first thing you need is a message queuing framework. MassTransit supports <del>MSMQ</del>, RabbitMQ, and others, but I find that RabbitMQ is really the way to go. That’s especially true when using the publish/subscribe pattern. The reason for this is that RabbitMQ has a complete routing framework built-in and MassTransit will leverage this when persisting your subscriptions. When creating a cluster of RabbitMQ servers for availability, this routing information is replicated to all the nodes.</p>
+<div class="alert info">MT3 has dropped support for MSMQ (<a href="http://blog.phatboyg.com/2014/11/30/masstransit/#outwiththeold" target="_blank">read about that</a>) but has officially adopted Azure Service Bus as an in-the-box supported transport.</div>
+<p>In this article, you’re going to run RabbitMQ on your local Windows development box. Both our publisher and subscriber will connect to the same RabbitMQ instance. In a future post, I’ll detail how to set up multiple RabbitMQ instances in a cluster.</p>
+<h2>Installing RabbitMQ</h2>
+<p>RabbitMQ requires the Erlang runtime, so that’s the first thing you need to download and install. Head over to <a href="http://www.erlang.org/download.html" target="_blank">Erlang.org’s download page</a> and get the latest binary release for Windows (it’s likely you’ll want the 64-bit version). It’s a simple setup wizard, so you’ll have Erlang installed on your machine in short order.</p>
+<p>Next, <a href="http://www.rabbitmq.com/download.html" target="_blank">download the latest version of RabbitMQ</a> for Windows. Again, it’s an easy setup wizard that you can quickly fly through. Just accept the defaults.</p>
+<h2>Enabling the RabbitMQ Web Management Interface</h2>
+<p>One RabbitMQ feature that I found extremely useful (but which isn’t enabled by default) is the web-based management interface. With this, you can see the exchanges and queues that are set up by MassTransit in RabbitMQ. To enable this, find the “RabbitMQ Command Prompt (sbin dir)” item that the RabbitMQ installer added to your Start menu and launch it. From the command line, run the following command:</p>
+<pre class="brush: ps; toolbar: false;">&gt; rabbitmq-plugins enable rabbitmq_management</pre>
+<p>It will confirm that the plugin and its dependencies have been enabled and instruct you to restart RabbitMQ. When installed on Windows, RabbitMQ runs as a Windows service. You can use the Services MMC snap-in to restart it or just run the following command:</p>
+<pre class="brush: ps; toolbar: false;">&gt; net service stop RabbitMQ
+...
+&gt; net service start RabbitMQ</pre>
+<p>Now go to <a href="http://localhost:15672/">http://localhost:15672/</a> to open the management console. Default credentials to login are guest/guest (you can change the credentials from the Admin tab).</p>
+<p>There’s not much to see yet, but we’ll set the stage. Go to the Exchanges tab. You’ll see the following default RabbitMQ exchanges:</p>
+<p><a href="../../../wp-content/uploads/2014/06/image.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/06/image_thumb.png" alt="image" width="325" height="213" border="0"></a></p>
+<p>An exchange is something you can send messages to. It cannot hold messages. It’s merely a set of routing instructions that tell RabbitMQ where to deliver the message. We’ll come back here in a little while.</p>
+<p>Now click on the Queues tab. Nothing here yet. Queues can actually hold messages and are where applications can actually pick up messages.</p>
+<p>So, to use a real world analogy, an Exchange is like the local Post Office, and a Queue is like your mailbox. The only thing that an Exchange can do that most traditional Post Offices don’t do is actually make multiple copies of a message to be delivered to multiple mailboxes.</p>
+<h1>Creating the Sample Applications</h1>
+<p>I used Visual Studio 2013 to create this sample, but it should work in 2012 as well. You can get the entire source from: <a href="https://github.com/dprothero/MtPubSubExample">https://github.com/dprothero/MtPubSubExample</a></p>
+<div class="alert info">To view the code for MT3, select the &#8220;mt3&#8221; branch in this GitHub repository.</div>
+<h2>Creating a Contract</h2>
+<p>I like to use the concept of a “contract” for my messages I want to put onto the service bus. This is an interface definition that both the publisher and subscriber have to agree upon. They don’t need to know anything about the implementation of this interface on either side. To keep the publisher and subscriber as loosely coupled as possible, I like to put my contracts in their own assembly so that this is the only shared dependency.</p>
+<p>So, the first step is to create a new solution called MtPubSubExample and a new class library called “Contracts”. To the class library, add a single interface called “SomethingHappened.”</p>
+<pre class="brush: csharp; toolbar: false;">using System;
+
+namespace Contracts
+{
+  public interface SomethingHappened
+  {
+    string What { get; }
+    DateTime When { get; }
+  }
+}</pre>
+<p>SomethingHappened will be the message interface we use for our sample message. Our publisher will create an instance of a class implementing SomethingHappened, set What and When properties, and publish it onto the service bus.</p>
+<p>Our subscriber will then set up a subscription (aka Consumer) to listen for all messages of type SomethingHappened. MassTransit will call our Consumer class whenever a SomethingHappened message is received, and we can handle it as we wish, presumably inspecting the What and the When properties.</p>
+<h2>Shared Configuration Setup Code</h2>
+<div class="alert info">The original article used a separate Configuration class to handle the common configuration tasks for both the publisher and subscriber. MT3&#8217;s configuration code is much simpler and, for clarity, I&#8217;ve moved the appropriate code into the publisher and subscriber.</div>
+<h2>Creating the Publisher</h2>
+<p>We’ll make the publisher a very simple console application that just prompts the user for some text and then publishes that text as part of a SomethingHappened message. Add a new Console Application project called “TestPublisher” to the solution and add a new class called “SomethingHappenedMessage.” This will be our concrete implementation of the SomethingHappened interface. You’ll need to add a project reference to the Contracts project.</p>
+<pre class="brush: csharp; toolbar: false;">using Contracts;
+using System;
+
+namespace TestPublisher
+{
+  class SomethingHappenedMessage : SomethingHappened
+  {
+    public string What { get; set; }
+    public DateTime When { get; set; }
+  }
+}</pre>
+<p>Now, in the Main method of the Program.cs file in your Console Application, you can put in the code to set up the bus, prompt the user for text, and publish that text onto the bus. Real quick first, however, it’s time to head to NuGet and pull in MassTransit. The quickest way to get everything you need is to find the MassTransit.RabbitMq package and install that. Doing so will install all of MassTransit and its dependencies.</p>
+<p>You still need one more package. I found that MassTransit doesn’t work unless you install one of the logging integration packages that are designed for it. For me, I selected the Log4Net integration package (MassTransit.Log4Net).</p>
+<div class="alert info">To get the pre-release version of MassTransit 3 you need to add the -Pre flag to the Install-Package commands in the Package Manager Console:
+<pre>Install-Package -Pre MassTransit.RabbitMq
+Install-Package -Pre Masstransit.Log4Net</pre>
+</div>
+<pre class="brush: csharp; toolbar: false;">using System;
+using Contracts;
+using MassTransit;
+using MassTransit.Log4NetIntegration.Logging;
+
+namespace TestPublisher
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Log4NetLogger.Use();
+      var bus = Bus.Factory.CreateUsingRabbitMq(x =&gt; 
+        x.Host(new Uri("rabbitmq://localhost/"), h =&gt; { }));
+      var busHandle = bus.Start();
+      var text = "";
+
+      while (text != "quit")
+      {
+        Console.Write("Enter a message: ");
+        text = Console.ReadLine();
+
+        var message = new SomethingHappenedMessage()
+        {
+          What = text, When = DateTime.Now
+        };
+        bus.Publish&lt;SomethingHappened&gt;(message);
+      }
+
+      busHandle.Stop().Wait();
+    }
+  }
+}</pre>
+<div class="alert info">In MT3, most operations are asynchronous, including the Publish() method. However, there is no need to await the call to publish here.</div>
+<p>Pretty simple, huh? We put the input capture and message publishing in a loop to make it easy to send multiple messages. Just put a catch for the string “quit” so we can exit the publisher when we’d like.</p>
+<div class="alert info">MT3 now requires an explicit call to start the bus, returning a handle that you can use to later stop the bus. Notice the Wait() method chained to the Stop() method. This is because the Stop() method is asynchronous. If you were calling Stop() inside an async method, you could await it. However, since this is a simple Console app, we are just blocking the thread until the shutdown is complete.</div>
+<p>If you make TestPublisher the startup project of the solution and run it, right now you can publish messages all you like…. However, nobody is listening yet!</p>
+<h2>What’s Going on in RabbitMQ So Far?</h2>
+<p>If you go back into the RabbitMQ web interface and jump over to the Exchanges tab, you’ll see we have a <del>couple</del> new arrival<del>s</del>.</p>
+<p><a href="../../../wp-content/uploads/2014/06/image4.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/06/image4_thumb.png" alt="image" width="340" height="214" border="0"></a></p>
+<div class="alert info">MT3 doesn&#8217;t require creating a queue if you aren&#8217;t hosting an endpoint. So, for our publisher, the MtPubSubExample_TestPublisher queue will not be created as it was in the original post.</div>
+<p>Contracts:SomethingHappened is a new exchange created for the SomethingHappened message type. When we published this message, MassTransit automatically created this exchange. Click on it and scroll down to the Bindings section, and you’ll see there are no bindings yet:</p>
+<p><a href="../../../wp-content/uploads/2014/06/image1.png"><img loading="lazy" style="border-width: 0px; margin: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/06/image_thumb1.png" alt="image" width="152" height="143" border="0"></a></p>
+<p>That’s because nobody has subscribed to SomethingHappened messages yet. They go to the exchange and then die because there’s no queue to route them to.</p>
+<h2>Creating the Subscriber</h2>
+<p>The final piece of the puzzle! Add another Console Application project to your solution and call it TestSubscriber. Again, add project references to Contracts and Configuration and then add the MassTransit.RabbitMq and MassTransit.Log4Net NuGet packages.</p>
+<div class="alert info">Don&#8217;t forget the -Pre switch to get the pre-release version of MT3.</div>
+<p>The first thing we need is a Consumer class to consume the SomethingHappened messages. Add a new class to the console app and call it “SomethingHappenedConsumer.”</p>
+<pre class="brush: csharp; toolbar: false;">using System;
+using System.Threading.Tasks;
+using Contracts;
+using MassTransit;
+
+namespace TestSubscriber
+{
+  class SomethingHappenedConsumer : IConsumer&lt;SomethingHappened&gt;
+  {
+    public Task Consume(ConsumeContext&lt;SomethingHappened&gt; context)
+    {
+      Console.Write("TXT: " + context.Message.What);
+      Console.Write("  SENT: " + context.Message.When);
+      Console.Write("  PROCESSED: " + DateTime.Now);
+      Console.WriteLine(" (" + System.Threading.Thread.CurrentThread.ManagedThreadId + ")");
+      return Task.FromResult(0);
+    }
+  }
+}</pre>
+<p>This consumer class implements a specific MassTransit interface whose Consume method will be called with the message context and SomethingHappened message each time a message is received. Here we are simply writing the message out to the console.</p>
+<div class="alert info">The Consume method is meant to be asynchronous, so it returns a Task. In this example, we aren&#8217;t making any other asynchronous calls, so we just use the Task.FromResult() helper method to return a Task with a zero result. If you were doing something asynchronous in the Consume method you could use async/await:
+<pre>public <span style="background-color: yellow;">async</span> Task Consume(ConsumeContext&lt;SomethingHappened&gt; context)
+{
+  <span style="background-color: yellow;">await</span> SomeAsynchronousMethod(context.Message);
+}</pre>
+</div>
+<p>Finally, in the Main method of Program.cs, we can initialize the bus and, as part of the initialization, instruct MassTransit that we wish to subscribe to messages of type SomethingHappened.</p>
+<pre class="brush: csharp; toolbar: false;">using System;
+using MassTransit;
+using MassTransit.Log4NetIntegration.Logging;
+
+namespace TestSubscriber
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Log4NetLogger.Use();
+      var bus = Bus.Factory.CreateUsingRabbitMq(x =&gt;
+      {
+        var host = x.Host(new Uri("rabbitmq://localhost/"), h =&gt; { });
+
+        x.ReceiveEndpoint(host, "MtPubSubExample_TestSubscriber", e =&gt;
+          e.Consumer&lt;SomethingHappenedConsumer&gt;());
+      });
+      var busHandle = bus.Start();
+      Console.ReadKey();
+      busHandle.Stop().Wait();
+    }
+  }
+}</pre>
+<div class="alert info">Notice we are now passing a queue name to the new ReceiveEndpoint MT3 method. Make sure not to share this queue name with other applications.</div>
+<p>Now right-click on the MtPubSubExample solution in the solution explorer and choose “Set Startup Projects….” From here, choose the Multiple startup projects option and set the Action for both TestPublisher and TestSubscriber to Start. Now when you run your solution, both the publisher and subscriber will run.</p>
+<p>Type some messages into the publisher. You should see them show up immediately in the subscriber window!</p>
+<p><a href="../../../wp-content/uploads/2014/06/image10.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/06/image10_thumb.png" alt="image" width="570" height="212" border="0"></a></p>
+<p>Now close <em>just</em> the Subscriber sample window and publish a few more messages in the Publisher window.</p>
+<p><a href="../../../wp-content/uploads/2014/06/image2.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/06/image_thumb2.png" alt="image" width="432" height="213" border="0"></a></p>
+<p>Go ahead and close the Publisher window for now. Let’s take a deeper look at where those three messages went.</p>
+<h2>What’s Going on in RabbitMQ Now?</h2>
+<p>Go back into the RabbitMQ web interface and go back to the Exchanges tab. You’ll see a new exchange called MtPubSubExample_TestSubscriber, but first click on the Contracts:SomethingHappened exchange and scroll down to the Bindings section. You’ll see we now have a binding.</p>
+<p><a href="../../../wp-content/uploads/2014/06/image3.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/06/image_thumb3.png" alt="image" width="534" height="207" border="0"></a></p>
+<p>So, by creating a subscription from our TestSubscriber, MassTransit automatically set up this binding for us. Click on the MtPubSubExample_TestSubscriber here, and you’ll see you’re taken to the setup page for an exchange called MtPubSubExample_TestSubscriber. Scroll down to Bindings, and you’ll see we’re bound to a queue named the same as the exchange (in the binding diagrams, exchanges show up as rectangles with rounded corners, whereas queues have straight corners).</p>
+<p><a href="../../../wp-content/uploads/2014/06/image5.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/06/image_thumb4.png" alt="image" width="531" height="331" border="0"></a></p>
+<p>The web interface is great in how it shows the predecessor in addition to the successor in the path. Click the MtPubSubExample_TestSubscriber queue here, and you’ll be taken to the queue setup page for that queue. If you haven’t fired up the TestSubscriber app since we published those last three messages, you should see that there are three messages in the queue:</p>
+<p><a href="../../../wp-content/uploads/2014/06/image6.png"><img loading="lazy" style="border-width: 0px; margin: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/06/image_thumb5.png" alt="image" width="219" height="103" border="0"></a></p>
+<p>Fire up the TestSubscriber app, and you should see it process the three messages left in the queue.</p>
+<p><a href="../../../wp-content/uploads/2014/06/image7.png"><img loading="lazy" style="border-width: 0px; padding-top: 0px; padding-right: 0px; padding-left: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/06/image_thumb6.png" alt="image" width="563" height="123" border="0"></a></p>
+<p>Notice the timestamp from the message versus the timestamp of when the subscriber actually published the message. In this case, there was a 6-minute lag (the 6 minutes we were poking around in RabbitMQ before starting up the subscriber again).</p>
+<h1>Wrap Up</h1>
+<p>Hopefully, this post was helpful in getting you off the ground with MassTransit 3. I will work on updating more posts like this one.</p>
+<p>Until then…</p>
+									
+																	</div>
+								<!-- end .entry-content -->
+								
+																			<footer class="entry-meta post-tags">
+												<a href="../../../tag/masstransit/index.htm" rel="tag">MassTransit</a>, <a href="../../../tag/mt3/index.htm" rel="tag">MT3</a>, <a href="../../../tag/rabbitmq/index.htm" rel="tag">RabbitMQ</a>, <a href="../../../tag/service-bus/index.htm" rel="tag">Service Bus</a>, <a href="../../../tag/soa/index.htm" rel="tag">SOA</a>											</footer>
+											<!-- end .entry-meta -->
+																	</article>
+							<!-- end .hentry -->
+							
+							<aside class="about-author">
+	<h3>ABOUT THE AUTHOR</h3>
+	
+	<div class="row-fluid author-bio">
+		<div class="span2 author-img">
+			<a href="../../../author/davidprothero-com/index.htm">
+				<img alt='david@prothero.com' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b.jpeg?s=226&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-1.jpeg 2x?s=452&#038;d=mm&#038;r=g 2x' class='avatar avatar-226 photo' height='226' width='226' loading='lazy'>			</a>
+		</div>
+		<!-- end .author-img -->
+		
+		<div class="span10 author-info">
+			<h4 class="author-name">david@prothero.com</h4>
+			
+			<p>
+				I have been providing technical leadership for companies for over 15 years. However, my software engineering experience extends back over 25 years. Currently, I am a Developer Educator for Twilio. Prior to that, I served as both IT Director and Software Engineering Director for Therapeutic Research Center (TRC). I guided the company from a print-based newsletter company to an online information services company.			</p>
+		</div>
+		<!-- end .author-info -->
+	</div>
+	<!-- end .author-bio -->
+</aside>
+<!-- end .about-author -->							
+							<nav class="row-fluid nav-single">
+								<div class="span6 nav-previous">
+									<h4>PREVIOUS POST</h4><a href="../../../2014/11/masstransit-versus-nservicebus-fight/index.htm" rel="prev"><span class="meta-nav">&#8592;</span> MassTransit versus NServiceBus: FIGHT!</a>								</div>
+								<!-- end .nav-previous -->
+								
+								<div class="span6 nav-next">
+									<h4>NEXT POST</h4><a href="../../../2016/03/meet-your-friendly-neighborhood-net-twilion/index.htm" rel="next">Meet Your Friendly, Neighborhood .NET Twilion <span class="meta-nav">&#8594;</span></a>								</div>
+								<!-- end .nav-next -->
+							</nav>
+							<!-- end .nav-single -->
+							
+							
+<div id="comments" class="comments-area">
+					<h2 class="comments-title">
+					9 Comments <span class="on">&#8594;</span> <span>MassTransit 3 Update: A Simple Publish/Subscribe Example</span>				</h2>
+				<!-- end .comments-title -->
+				
+				<ol class="commentlist">
+											<li class="pingback even thread-even depth-1" id="comment-56">
+							<p>
+								Pingback: <a href='../../../2014/06/masstransit-publish-subscribe-example/index.htm' rel='external nofollow ugc' class='url'>A Simple MassTransit Publish/Subscribe Example | Loosely Coupled Labs</a> 							</p>
+					</li><!-- #comment-## -->
+					
+					<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-59">
+						<article id="comment-59" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/94f43d26a68df4bc9cbd2355f3188304.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/94f43d26a68df4bc9cbd2355f3188304-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Michael Rose </cite><a href="index.htm#comment-59"><time datetime="2015-08-03T19:46:00+00:00">August 3, 2015 at 7:46 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Hi David,<br>
+Great article. I followed the previous one as well for the previous Mass Transit version. I&#8217;m struggling slightly with one part of this &#8211; when I stop the consumer my messages are automatically moved to a queuename_error queue whenever they are published. Is there any way to prevent &#8220;undelivered&#8221; messages being moved to the error queue and simply being queued in the main queue until the subscriber/consumer starts up again?</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+					
+					<li class="comment even thread-even depth-1" id="li-comment-62">
+						<article id="comment-62" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/03313e833cd307127c048a707aea1212.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/03313e833cd307127c048a707aea1212-1.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Nick Barrett </cite><a href="index.htm#comment-62"><time datetime="2015-11-11T23:29:00+00:00">November 11, 2015 at 11:29 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Hi David,<br>
+Great post. Thanks for taking the time to update your original post to v3. I used this post as my first attempt at MassTransit. It worked really well. I hope you are able to find time to update some of your other posts to v3 as well.</p>
+<p>Thanks again =)</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+					
+					<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-63">
+						<article id="comment-63" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/ccfdfac90829efc3098806395ea83f5e.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/ccfdfac90829efc3098806395ea83f5e-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Jovan Racic </cite><a href="index.htm#comment-63"><time datetime="2015-12-10T11:59:00+00:00">December 10, 2015 at 11:59 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>The received messages after subscriber restart are not in correct order?  Probably it&#8217;s multi-threading issue because queue is FIFO. Could You give me some explanation about.Thank&#8217;s.</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+					
+					<li class="comment even thread-even depth-1" id="li-comment-77">
+						<article id="comment-77" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/319f6a39fa554caa25e4f1e0badf582c.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/319f6a39fa554caa25e4f1e0badf582c-1.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Ananth Eswar </cite><a href="index.htm#comment-77"><time datetime="2016-03-22T10:42:00+00:00">March 22, 2016 at 10:42 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>How do I create a temporary queue with MassTrasit 3.0. I know how to do it with 2.0 but the same is not working for 3,0. Thanks for the help!</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					<ol class="children">
+					
+					<li class="comment odd alt depth-2" id="li-comment-78">
+						<article id="comment-78" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-2.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-3.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">dprothero </cite><a href="index.htm#comment-78"><time datetime="2016-03-24T15:39:00+00:00">March 24, 2016 at 3:39 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Please take a look at this post: <a href="http://stackoverflow.com/questions/30760108/masstransit-temporary-queue" rel="nofollow ugc">http://stackoverflow.com/questions/30760108/masstransit-temporary-queue</a></p>
+<p>I&#8217;ll add a question for Chris on that thread.</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+					
+					<li class="comment even thread-odd thread-alt depth-1" id="li-comment-95">
+						<article id="comment-95" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/9bf8df6314d11820890496b4d958603b.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/9bf8df6314d11820890496b4d958603b-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">miguel </cite><a href="index.htm#comment-95"><time datetime="2016-06-10T03:14:00+00:00">June 10, 2016 at 3:14 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Hi, tanks for the post.  I am looking for the ServiceBusConfigurator in masstransit 3. thanks very much.</p>
+<p>your masstransit 2 version &#8211;&gt;  public static IServiceBus CreateBus(string queueName, Action moreInitialization)</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					<ol class="children">
+					
+					<li class="comment odd alt depth-2" id="li-comment-96">
+						<article id="comment-96" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/9bf8df6314d11820890496b4d958603b.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/9bf8df6314d11820890496b4d958603b-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">miguel </cite><a href="index.htm#comment-96"><time datetime="2016-06-14T07:13:00+00:00">June 14, 2016 at 7:13 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>updated to mass transit 3&#8212;&gt;  public static IBusControl CreateBus(Action registrationAction = null)</p>
+<p>publisher &#8212;&gt;    Bus = BusInitializer.CreateBus((x, host) =&gt; { });<br>
+consumer&#8212;&gt;BusInitializer.CreateBus((cfg, host) =&gt;<br>
+            {<br>
+                cfg.ReceiveEndpoint(host, &#8220;StringQueUeName&#8221;,e =&gt;<br>
+                {<br>
+                    e.Consumer();<br>
+                });</p>
+<p>            });</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+					
+					<li class="comment even thread-even depth-1" id="li-comment-97">
+						<article id="comment-97" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/9bf8df6314d11820890496b4d958603b.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/9bf8df6314d11820890496b4d958603b-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">miguel </cite><a href="index.htm#comment-97"><time datetime="2016-06-14T07:18:00+00:00">June 14, 2016 at 7:18 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Hi dprothero,<br>
+I need your help, I am studying from your real world example. I updated this version to mass transit 3.<br>
+loosely coupled example not run with separate solution.<br>
+I separated the console project and run both (solution1&#8211; console and solution2&#8211;web) but the console not found new messages.</p>
+<p>can you guide to me.</p>
+<p>thanks<br>
+Miguel</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+				</ol>
+				<!-- end .commentlist -->
+				
+								
+											<p class="nocomments">Comments are closed.</p>
+										
+	</div>
+<!-- end #comments -->								</div>
+		<!-- end .blog-single -->
+	</div>
+	<!-- end #content -->
+</div>
+<!-- end #primary -->
+
+			</div>
+			<!-- end .row .row-fluid -->
+        </section>
+        <!-- end #main -->
+		
+        <footer class="site-footer wrapper" role="contentinfo">
+			<div class="row">
+				<div id="supplementary" class="row-fluid">
+									</div>
+				<!-- end #supplementary -->
+				
+				<div class="site-info">
+					Copyright © 2014 by David Prothero
+All rights reserved.				</div>
+				<!-- end .site-info -->
+			</div>
+			<!-- end .row -->
+        </footer>
+        <!-- end .site-footer -->
+    </div>
+    <!-- end #PAGE -->
+	
+	<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1922425-8', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script type="text/javascript">
+  SyntaxHighlighter.all();
+</script><script type='text/javascript' src='../../../wp-includes/js/comment-reply.min.js?ver=5.8.6' id='comment-reply-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/detectmobilebrowser.js' id='detectmobilebrowser-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/modernizr.js' id='modernizr-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/imagesloaded.min.js?ver=4.1.4' id='imagesloaded-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fitvids.js' id='fitvids-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.js' id='google-code-prettify-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.uniform.min.js' id='uniform-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.flexslider-min.js' id='flexslider-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelement-and-player.min.js' id='mediaelement-and-player-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.isotope.min.js' id='isotope-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fancybox-1.3.4.pack.js' id='fancybox-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.masonry.min.js' id='masonry-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.history.js' id='history-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/js-url.min.js' id='js-url-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquerypp.custom.js' id='jquerypp-custom-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/gamma.js' id='gamma-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/main.js' id='main-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.validate.min.js' id='validate-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/send-mail.js' id='send-mail-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/wp-embed.min.js?ver=5.8.6' id='wp-embed-js'></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	Comments on: Scaling Out Subscribers With MassTransit	</title>
+	<atom:link href="https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/feed/" rel="self" type="application/rss+xml" />
+	<link>https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/</link>
+	<description>**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**</description>
+	<lastBuildDate>Mon, 04 May 2020 08:03:00 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.8.6</generator>
+	<item>
+		<title>
+		By: Rebecca Powell		</title>
+		<link>https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-297</link>
+
+		<dc:creator><![CDATA[Rebecca Powell]]></dc:creator>
+		<pubDate>Mon, 04 May 2020 08:03:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=150#comment-297</guid>
+
+					<description><![CDATA[I&#039;m really confused by this line:
+
+&lt;blockquote&gt;If we use our current example code, however, we will get duplicate messages because each machine is connecting to localhost for its RabbitMQ instance.&lt;/blockquote&gt;
+
+Assuming we have two app servers and one RMQ server, and both competing consumers are connecting to the same queue name on the single RMQ server, why do we need a cluster?]]></description>
+			<content:encoded><![CDATA[<p>I&#8217;m really confused by this line:</p>
+<blockquote><p>If we use our current example code, however, we will get duplicate messages because each machine is connecting to localhost for its RabbitMQ instance.</p></blockquote>
+<p>Assuming we have two app servers and one RMQ server, and both competing consumers are connecting to the same queue name on the single RMQ server, why do we need a cluster?</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Niklas Gåfvels		</title>
+		<link>https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-60</link>
+
+		<dc:creator><![CDATA[Niklas Gåfvels]]></dc:creator>
+		<pubDate>Tue, 01 Sep 2015 10:08:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=150#comment-60</guid>
+
+					<description><![CDATA[I don&#039;t thing that you have to connect to the same RabbitMQ instance when using competing consumers. The two subscriber processes can be connected to different RabbitMQ instances in the cluster using the same queue name.]]></description>
+			<content:encoded><![CDATA[<p>I don&#8217;t thing that you have to connect to the same RabbitMQ instance when using competing consumers. The two subscriber processes can be connected to different RabbitMQ instances in the cluster using the same queue name.</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Faisal Nadeem		</title>
+		<link>https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-36</link>
+
+		<dc:creator><![CDATA[Faisal Nadeem]]></dc:creator>
+		<pubDate>Sun, 11 Jan 2015 16:24:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=150#comment-36</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-35&quot;&gt;dprothero&lt;/a&gt;.
+
+Thanks David, actually i have setup the health services with help of your post &quot;RabbirMQ Monitoring&quot;.]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-35">dprothero</a>.</p>
+<p>Thanks David, actually i have setup the health services with help of your post &#8220;RabbirMQ Monitoring&#8221;.</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: dprothero		</title>
+		<link>https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-35</link>
+
+		<dc:creator><![CDATA[dprothero]]></dc:creator>
+		<pubDate>Sun, 11 Jan 2015 13:56:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=150#comment-35</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-34&quot;&gt;Faisal Nadeem&lt;/a&gt;.
+
+Again, I haven&#039;t used any of MT&#039;s runtime services, including the health service. Personally, I use Nagios for infrastructure monitoring (http://www.nagios.org/). Perhaps more important than the health of an individual node is the health of your queues. Take a look at http://looselycoupledlabs.com/2014/08/monitoring-rabbitmq/ for how to keep an eye on your queues. For services, I usually setup in Nagios what are called &quot;passive checks&quot;... Nagios doesn&#039;t actively ping the services, but expects the services to &quot;report in&quot; on a set interval.
+
+
+You could roll your own simple variation of this. Have each note report in to a database to say &quot;I&#039;m still alive as of this timestamp&quot; and then write a centralized script  or program that monitors that database for stale report times (the assumption being if a report time is over X minutes old, then the node is having problems).
+
+
+Good luck!]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-34">Faisal Nadeem</a>.</p>
+<p>Again, I haven&#8217;t used any of MT&#8217;s runtime services, including the health service. Personally, I use Nagios for infrastructure monitoring (<a href="http://www.nagios.org/" rel="nofollow ugc">http://www.nagios.org/</a>). Perhaps more important than the health of an individual node is the health of your queues. Take a look at <a href="http://looselycoupledlabs.com/2014/08/monitoring-rabbitmq/" rel="nofollow ugc">http://looselycoupledlabs.com/2014/08/monitoring-rabbitmq/</a> for how to keep an eye on your queues. For services, I usually setup in Nagios what are called &#8220;passive checks&#8221;&#8230; Nagios doesn&#8217;t actively ping the services, but expects the services to &#8220;report in&#8221; on a set interval.</p>
+<p>You could roll your own simple variation of this. Have each note report in to a database to say &#8220;I&#8217;m still alive as of this timestamp&#8221; and then write a centralized script  or program that monitors that database for stale report times (the assumption being if a report time is over X minutes old, then the node is having problems).</p>
+<p>Good luck!</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Faisal Nadeem		</title>
+		<link>https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-34</link>
+
+		<dc:creator><![CDATA[Faisal Nadeem]]></dc:creator>
+		<pubDate>Sun, 11 Jan 2015 07:41:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=150#comment-34</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-33&quot;&gt;dprothero&lt;/a&gt;.
+
+Thanks David. Actually i need to check nodes health and show to client. For that i was using Health Services, and Health Services can only be used with Runtime Services (Subscription Services).
+
+
+Any idea how can i store nodes health in database?]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-33">dprothero</a>.</p>
+<p>Thanks David. Actually i need to check nodes health and show to client. For that i was using Health Services, and Health Services can only be used with Runtime Services (Subscription Services).</p>
+<p>Any idea how can i store nodes health in database?</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: dprothero		</title>
+		<link>https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-33</link>
+
+		<dc:creator><![CDATA[dprothero]]></dc:creator>
+		<pubDate>Sun, 11 Jan 2015 05:21:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=150#comment-33</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-32&quot;&gt;Faisal Nadeem&lt;/a&gt;.
+
+Runtime Services are only necessary for MSMQ. I do not have any experience using MassTransit with MSMQ. When using RabbitMQ, there&#039;s no need for the Runtime Services because RabbitMQ handles all of the subscription persistence for you. Also, FYI, MSMQ support is being dropped in MassTransit 3.]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-32">Faisal Nadeem</a>.</p>
+<p>Runtime Services are only necessary for MSMQ. I do not have any experience using MassTransit with MSMQ. When using RabbitMQ, there&#8217;s no need for the Runtime Services because RabbitMQ handles all of the subscription persistence for you. Also, FYI, MSMQ support is being dropped in MassTransit 3.</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Faisal Nadeem		</title>
+		<link>https://looselycoupledlabs.com/2014/08/scaling-out-subscribers-with-masstransit/#comment-32</link>
+
+		<dc:creator><![CDATA[Faisal Nadeem]]></dc:creator>
+		<pubDate>Sun, 11 Jan 2015 00:16:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=150#comment-32</guid>
+
+					<description><![CDATA[Great tutorial David, it helped me a lot. 
+
+Though i have one question about Runtime Services. 
+
+My Runtime Services are also running on &quot;submaster&quot;, how can i use credientials for this server while using Subscription Service from Publisher.
+When i call UseSubscriptionService, how can i authenticate?]]></description>
+			<content:encoded><![CDATA[<p>Great tutorial David, it helped me a lot. </p>
+<p>Though i have one question about Runtime Services. </p>
+<p>My Runtime Services are also running on &#8220;submaster&#8221;, how can i use credientials for this server while using Subscription Service from Publisher.<br />
+When i call UseSubscriptionService, how can i authenticate?</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

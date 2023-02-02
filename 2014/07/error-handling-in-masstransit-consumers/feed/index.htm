@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	Comments on: Error Handling in MassTransit Consumers	</title>
+	<atom:link href="https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/feed/" rel="self" type="application/rss+xml" />
+	<link>https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/</link>
+	<description>**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**</description>
+	<lastBuildDate>Sat, 29 Jun 2019 14:03:00 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.8.6</generator>
+	<item>
+		<title>
+		By: Tristan Hen		</title>
+		<link>https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-283</link>
+
+		<dc:creator><![CDATA[Tristan Hen]]></dc:creator>
+		<pubDate>Sat, 29 Jun 2019 14:03:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=115#comment-283</guid>
+
+					<description><![CDATA[In a publish / subscribe scenario: if I have 2 consumers and the message is poison: how many error queues will I have ? One per consumer ?]]></description>
+			<content:encoded><![CDATA[<p>In a publish / subscribe scenario: if I have 2 consumers and the message is poison: how many error queues will I have ? One per consumer ?</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Marcus Widblom		</title>
+		<link>https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-65</link>
+
+		<dc:creator><![CDATA[Marcus Widblom]]></dc:creator>
+		<pubDate>Thu, 17 Dec 2015 11:11:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=115#comment-65</guid>
+
+					<description><![CDATA[Great post David, this works like a charm.
+
+I took the opportunity and wrote an extension method to MassTransit IConsumeContext:
+
+
+  &lt;code&gt;
+    public static void ConsumeWithRetry(this IConsumeContext envelope, Dictionary retryPolicy, Action action, ILog logger = null, string exceptionLogMessage = &quot;&quot;) where TMessage : class, new() where TException : Exception
+		{
+			var retryDelay = 0;
+			int.TryParse(envelope.Headers[&quot;retry-delay-seconds&quot;], out retryDelay);
+			var nextRetryDelay = retryPolicy[retryDelay];
+			var sleepAndRepublish = false;
+
+			try
+			{
+				action();
+			}
+			catch (TException ex)
+			{
+				if (logger != null &#038;&#038; !string.IsNullOrEmpty(exceptionLogMessage))
+					logger.Error(exceptionLogMessage + &quot; Exception message: &quot; + ex.Message);
+
+				if (nextRetryDelay &#062; -1)
+				{
+					if (logger != null)
+						logger.Info(string.Format(&quot;Sleeping consumer for {0} seconds and retrying...&quot;, nextRetryDelay));
+
+					sleepAndRepublish = true;
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			if (sleepAndRepublish)
+			{
+				Thread.Sleep(nextRetryDelay * 1000);
+				envelope.Bus.Publish(envelope.Message, x =&#062;
+				{
+					x.SetHeader(&quot;retry-delay-seconds&quot;, nextRetryDelay.ToString());
+					x.SetDeliveryMode(MassTransit.DeliveryMode.Persistent);
+				});
+			}
+		}
+  &lt;/code&gt;
+
+
+Cheers!]]></description>
+			<content:encoded><![CDATA[<p>Great post David, this works like a charm.</p>
+<p>I took the opportunity and wrote an extension method to MassTransit IConsumeContext:</p>
+<p>  <code><br />
+    public static void ConsumeWithRetry(this IConsumeContext envelope, Dictionary retryPolicy, Action action, ILog logger = null, string exceptionLogMessage = "") where TMessage : class, new() where TException : Exception<br />
+		{<br />
+			var retryDelay = 0;<br />
+			int.TryParse(envelope.Headers["retry-delay-seconds"], out retryDelay);<br />
+			var nextRetryDelay = retryPolicy[retryDelay];<br />
+			var sleepAndRepublish = false;</p>
+<p>			try<br />
+			{<br />
+				action();<br />
+			}<br />
+			catch (TException ex)<br />
+			{<br />
+				if (logger != null &amp;&amp; !string.IsNullOrEmpty(exceptionLogMessage))<br />
+					logger.Error(exceptionLogMessage + " Exception message: " + ex.Message);</p>
+<p>				if (nextRetryDelay &gt; -1)<br />
+				{<br />
+					if (logger != null)<br />
+						logger.Info(string.Format("Sleeping consumer for {0} seconds and retrying...", nextRetryDelay));</p>
+<p>					sleepAndRepublish = true;<br />
+				}<br />
+				else<br />
+				{<br />
+					throw;<br />
+				}<br />
+			}</p>
+<p>			if (sleepAndRepublish)<br />
+			{<br />
+				Thread.Sleep(nextRetryDelay * 1000);<br />
+				envelope.Bus.Publish(envelope.Message, x =&gt;<br />
+				{<br />
+					x.SetHeader("retry-delay-seconds", nextRetryDelay.ToString());<br />
+					x.SetDeliveryMode(MassTransit.DeliveryMode.Persistent);<br />
+				});<br />
+			}<br />
+		}<br />
+  </code></p>
+<p>Cheers!</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Rafal Gwizdala		</title>
+		<link>https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-14</link>
+
+		<dc:creator><![CDATA[Rafal Gwizdala]]></dc:creator>
+		<pubDate>Wed, 06 Aug 2014 07:34:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=115#comment-14</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-13&quot;&gt;dprothero&lt;/a&gt;.
+
+Of course, everything that works is good.]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-13">dprothero</a>.</p>
+<p>Of course, everything that works is good.</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: dprothero		</title>
+		<link>https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-13</link>
+
+		<dc:creator><![CDATA[dprothero]]></dc:creator>
+		<pubDate>Tue, 05 Aug 2014 22:59:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=115#comment-13</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-12&quot;&gt;Rafal Gwizdala&lt;/a&gt;.
+
+&quot;otherwise you&#039;ll quickly run out of available threads and processing will stop&quot;
+
+Of course it will. That&#039;s why I discuss this in the section &quot;Did You Seriously Just Block the Consumer Thread?&quot;
+
+It all depends on your use case. If you have a service dedicated to processing one type of message and the inability to process those messages because of an external dependency being down occurs, there&#039;s no reason to be concerned that it will stop all processing. That&#039;s a good thing. No processing can occur anyway, why let the process spin its wheels?
+
+There will be cases where it&#039;s not a good thing, of course.
+
+If you&#039;ve got an error that will occur with only a few messages, but most will be OK, then this is definitely not the way to handle it. You will want to use a scheduler like Quartz and the MassTransit.Quartz integration project. Or you can roll your own and use a database or perhaps another queue in RabbitMQ.
+
+I just don&#039;t believe in adding the additional complexity if it isn&#039;t necessary. I also don&#039;t believe there&#039;s a &quot;one right way&quot; to do anything... it always depends on your use case and related factors. &quot;Only a Sith deals in absolutes.&quot; :P
+
+Thanks for the comment!]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-12">Rafal Gwizdala</a>.</p>
+<p>&#8220;otherwise you&#8217;ll quickly run out of available threads and processing will stop&#8221;</p>
+<p>Of course it will. That&#8217;s why I discuss this in the section &#8220;Did You Seriously Just Block the Consumer Thread?&#8221;</p>
+<p>It all depends on your use case. If you have a service dedicated to processing one type of message and the inability to process those messages because of an external dependency being down occurs, there&#8217;s no reason to be concerned that it will stop all processing. That&#8217;s a good thing. No processing can occur anyway, why let the process spin its wheels?</p>
+<p>There will be cases where it&#8217;s not a good thing, of course.</p>
+<p>If you&#8217;ve got an error that will occur with only a few messages, but most will be OK, then this is definitely not the way to handle it. You will want to use a scheduler like Quartz and the MassTransit.Quartz integration project. Or you can roll your own and use a database or perhaps another queue in RabbitMQ.</p>
+<p>I just don&#8217;t believe in adding the additional complexity if it isn&#8217;t necessary. I also don&#8217;t believe there&#8217;s a &#8220;one right way&#8221; to do anything&#8230; it always depends on your use case and related factors. &#8220;Only a Sith deals in absolutes.&#8221; 😛</p>
+<p>Thanks for the comment!</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: Rafal Gwizdala		</title>
+		<link>https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-12</link>
+
+		<dc:creator><![CDATA[Rafal Gwizdala]]></dc:creator>
+		<pubDate>Tue, 05 Aug 2014 20:19:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=115#comment-12</guid>
+
+					<description><![CDATA[Hi there,
+You touched an interesting subject
+However, blocking the consumer thread for the duration of retry delay is imho unacceptable. This is only good if
+a) the delay is no more than few seconds
+b) you don&#039;t have too many failing messages
+otherwise you&#039;ll quickly run out of available threads and processing will stop
+This is basically re-scheduling message to be processed later and it&#039;s imho better to do it using a database - put the message into a database, specify the delivery time and let some daemon publish it when the time comes. This way you can schedule an unlimited number of messages without performance penalty. And this functionality has many other uses beyond retrying failed messages - for example, you can implement all kinds of timeouts with it.]]></description>
+			<content:encoded><![CDATA[<p>Hi there,<br />
+You touched an interesting subject<br />
+However, blocking the consumer thread for the duration of retry delay is imho unacceptable. This is only good if<br />
+a) the delay is no more than few seconds<br />
+b) you don&#8217;t have too many failing messages<br />
+otherwise you&#8217;ll quickly run out of available threads and processing will stop<br />
+This is basically re-scheduling message to be processed later and it&#8217;s imho better to do it using a database &#8211; put the message into a database, specify the delivery time and let some daemon publish it when the time comes. This way you can schedule an unlimited number of messages without performance penalty. And this functionality has many other uses beyond retrying failed messages &#8211; for example, you can implement all kinds of timeouts with it.</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: dprothero		</title>
+		<link>https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-10</link>
+
+		<dc:creator><![CDATA[dprothero]]></dc:creator>
+		<pubDate>Tue, 29 Jul 2014 13:34:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=115#comment-10</guid>
+
+					<description><![CDATA[In reply to &lt;a href=&quot;https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-9&quot;&gt;udidahan&lt;/a&gt;.
+
+Thanks Udi! Great to see the contrasts between NServiceBus and MT. Keep em&#039; coming!]]></description>
+			<content:encoded><![CDATA[<p>In reply to <a href="https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-9">udidahan</a>.</p>
+<p>Thanks Udi! Great to see the contrasts between NServiceBus and MT. Keep em&#8217; coming!</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		By: udidahan		</title>
+		<link>https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/#comment-9</link>
+
+		<dc:creator><![CDATA[udidahan]]></dc:creator>
+		<pubDate>Tue, 29 Jul 2014 05:32:00 +0000</pubDate>
+		<guid isPermaLink="false">http://looselycoupledlabs.com/?p=115#comment-9</guid>
+
+					<description><![CDATA[Thanks for the NServiceBus call-out.
+
+
+BTW - we also have a graphical tool for monitoring the error queue and sending a message back to be reprocessed.
+
+
+Incidentally, the approach we recommend is having a single error queue for the entire system as it simplifies monitoring. I can understand why MT went with the approach of having the error queue be &quot;under&quot; the source queue (so that it is clear from which queue it came), but we deal with that by appending a header to the message when we put it in the error queue.
+
+
+In any case, great blog post!]]></description>
+			<content:encoded><![CDATA[<p>Thanks for the NServiceBus call-out.</p>
+<p>BTW &#8211; we also have a graphical tool for monitoring the error queue and sending a message back to be reprocessed.</p>
+<p>Incidentally, the approach we recommend is having a single error queue for the entire system as it simplifies monitoring. I can understand why MT went with the approach of having the error queue be &#8220;under&#8221; the source queue (so that it is clear from which queue it came), but we deal with that by appending a header to the message when we put it in the error queue.</p>
+<p>In any case, great blog post!</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

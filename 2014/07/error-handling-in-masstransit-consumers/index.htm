@@ -1,0 +1,834 @@
+﻿<!doctype html>
+
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	
+	
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+			    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+	<title>Error Handling in MassTransit Consumers | Loosely Coupled Labs</title>
+    
+    <!--[if lte IE 9]>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/html5shiv.js"></script>
+        <script src="https://looselycoupledlabs.com/wp-content/themes/read-v4-2-4/js/selectivizr-min.js"></script>
+    <![endif]-->
+	
+		
+	<meta name='robots' content='max-image-preview:large'>
+<link rel='dns-prefetch' href='//fonts.googleapis.com'>
+<link rel='dns-prefetch' href='//s.w.org'>
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Feed" href="../../../feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Comments Feed" href="../../../comments/feed/index.htm">
+<link rel="alternate" type="application/rss+xml" title="Loosely Coupled Labs &raquo; Error Handling in MassTransit Consumers Comments Feed" href="feed/index.htm">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/looselycoupledlabs.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.8.6"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([10084,65039,8205,55357,56613],[10084,65039,8203,55357,56613])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='../../../wp-includes/css/dist/block-library/style.min.css?ver=5.8.6' type='text/css' media='all'>
+<link rel='stylesheet' id='unifrakturmaguntia-css' href='../../../css?family=UnifrakturMaguntia&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='coustard-css' href='../../../css-1?family=Coustard&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='lora-css' href='../../../css-2?family=Lora:400,700,400italic,700italic&#038;subset=latin' type='text/css' media='all'>
+<link rel='stylesheet' id='print-css' href='../../../wp-content/themes/read-v4-2-4/css/print.css' type='text/css' media='print'>
+<link rel='stylesheet' id='grid-css' href='../../../wp-content/themes/read-v4-2-4/css/grid.css' type='text/css' media='all'>
+<link rel='stylesheet' id='normalize-css' href='../../../wp-content/themes/read-v4-2-4/css/normalize.css' type='text/css' media='all'>
+<link rel='stylesheet' id='font-awesome-css' href='../../../wp-content/themes/read-v4-2-4/css/font-awesome.css' type='text/css' media='all'>
+<link rel='stylesheet' id='google-code-prettify-css' href='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.css' type='text/css' media='all'>
+<link rel='stylesheet' id='uniform-css' href='../../../wp-content/themes/read-v4-2-4/css/uniform.default.css' type='text/css' media='all'>
+<link rel='stylesheet' id='flexslider-css' href='../../../wp-content/themes/read-v4-2-4/css/flexslider.css' type='text/css' media='all'>
+<link rel='stylesheet' id='mediaelementplayer-css' href='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelementplayer.css' type='text/css' media='all'>
+<link rel='stylesheet' id='gamma-gallery-css' href='../../../wp-content/themes/read-v4-2-4/css/gamma-gallery.css' type='text/css' media='all'>
+<link rel='stylesheet' id='main-css' href='../../../wp-content/themes/read-v4-2-4/css/main.css' type='text/css' media='all'>
+<link rel='stylesheet' id='fancybox-css' href='../../../wp-content/themes/read-v4-2-4/css/jquery.fancybox-1.3.4.css' type='text/css' media='all'>
+<link rel='stylesheet' id='wp-fix-css' href='../../../wp-content/themes/read-v4-2-4/css/wp-fix.css' type='text/css' media='all'>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery.min.js?ver=3.6.0' id='jquery-core-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
+<link rel="https://api.w.org/" href="../../../wp-json/index.htm"><link rel="alternate" type="application/json" href="../../../wp-json/wp/v2/posts/115"><link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../../xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../../wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.8.6">
+<link rel="canonical" href="index.htm">
+<link rel='shortlink' href='index.htm?p=115'>
+<link rel="alternate" type="application/json+oembed" href="../../../wp-json/oembed/1.0/embed-18?url=https%3A%2F%2Flooselycoupledlabs.com%2F2014%2F07%2Ferror-handling-in-masstransit-consumers%2F">
+<link rel="alternate" type="text/xml+oembed" href="../../../wp-json/oembed/1.0/embed-19?url=https%3A%2F%2Flooselycoupledlabs.com%2F2014%2F07%2Ferror-handling-in-masstransit-consumers%2F&#038;format=xml">
+
+<link rel="stylesheet" type="text/css" href="../../../wp-content/themes/read-v4-2-4/style.css">
+
+		
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-1?family=Coustard&subset=latin">
+<link rel="stylesheet" type="text/css" href="../../../css-3?family=Lora&subset=latin">
+<style type="text/css">
+a { color: #4488ff; }
+
+a:hover { color: #3377ee; }
+
+.main-navigation ul .current_page_item > a, .main-navigation ul .current-menu-item > a { color: #69be28; }
+
+h1.site-title, h1.site-title a { font-family: "Coustard", Georgia, serif; }
+
+h1, h2, h3, h4, h5, h6 { font-family: "Coustard", Georgia, serif; }
+
+.main-navigation ul li { font-family: "Coustard", Georgia, serif; }
+
+html { font-family: "Lora", Georgia, serif; }
+</style>
+		<style type="text/css">
+.site-header hgroup {
+  padding: 0;
+}
+
+h1.site-title {
+  font-size: 2.20em;
+}
+
+.site-header {
+  padding-bottom: 0;
+}
+
+table {
+  border-collapse: collapse;     
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+}
+
+code {
+  box-shadow: none;
+}
+</style>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPowerShell.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="../../../syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<link href="../../../syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css">
+<link href="../../../syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="post-template-default single single-post postid-115 single-format-standard">
+
+    <div id="page" class="hfeed site"> 
+        <header class="site-header wrapper" role="banner">
+			<div class="row">
+			    <hgroup>
+					<h1 class="site-title">
+															<a rel="home" href="../../../index.htm">
+										<img alt="Loosely Coupled Labs" src="../../../wp-content/uploads/2014/06/loosely600-300x105.png">
+									</a>
+													</h1>
+					<!-- end .site-title -->
+					
+					<h2 class="site-description">
+						**ARCHIVED** A Blog Loosely Related to System Architecture by David Prothero **ARCHIVED**					</h2>
+					<!-- end .site-description -->
+			    </hgroup>
+				
+								
+			    <nav id="site-navigation" class="main-navigation" role="navigation">
+					<ul class="menu-default"><li class="page_item page-item-39"><a href="../../../about-me/index.htm">About Me</a></li><li class="page_item page-item-226"><a href="../../../subscribe/index.htm">Subscribe</a></li></ul>
+			    </nav>
+			    <!-- end #site-navigation -->
+			</div>
+			<!-- end .row -->
+        </header>
+        <!-- end .site-header -->
+		
+				
+        <section id="main" class="middle wrapper">
+			<div class="row row-fluid ">
+<div id="primary" class="site-content">
+	<div id="content" role="main">
+		<div class="readable-content blog-single">
+										<article id="post-115" class="clearfix post-115 post type-post status-publish format-standard has-post-thumbnail hentry category-tutorial tag-masstransit tag-rabbitmq tag-service-bus tag-soa">
+								<header class="entry-header">
+																		<h1 class="entry-title">Error Handling in MassTransit Consumers</h1>
+								</header>
+								<!-- end .entry-header -->
+								
+								<div class="entry-meta">
+									<span class="post-category">
+										posted in <a href="../../../category/tutorial/index.htm" rel="category tag">Tutorial</a>									</span>
+									<!-- end .post-category -->
+									
+									<span class="post-date">
+										on <a rel="bookmark" title="2:18 am" href="index.htm"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">July 27, 2014</time></a>
+									</span>
+									<!-- end .post-date -->
+									
+									<span class="by-author"> by										<span class="author vcard">
+											<a class="url fn n" rel="author" title="View all posts by david@prothero.com" href="../../../author/davidprothero-com/index.htm">david@prothero.com</a>
+										</span>
+										<!-- end .author -->
+									</span>
+									<!-- end .by-author -->
+									
+									<div class="share-links">
+	<a>SHARE</a>
+	
+	<div class="share-wrap">
+		<div class="facebook-wrap">
+			<div id="fb-root"></div>
+			
+			<script>
+				(function(d, s, id)
+				{
+					var js, fjs = d.getElementsByTagName(s)[0];
+					if (d.getElementById(id)) return;
+					js = d.createElement(s); js.id = id;
+					js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+					fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));
+			</script>
+			
+			<div class="fb-like" data-send="false" data-layout="button_count" data-width="400" data-show-faces="false" data-colorscheme="light" data-action="like"></div>
+		</div>
+		<!-- end .facebook-wrap -->
+		
+		<div class="twitter-wrap">
+						<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+			
+			<script>
+				!function(d, s, id)
+				{
+					var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}
+				}(document, "script", "twitter-wjs");
+			</script>
+		</div>
+		<!-- end .twitter-wrap -->
+		
+		<div class="google-wrap">
+			<!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium"></div>
+			
+			<!-- Place this tag after the last +1 button tag. -->
+			<script type="text/javascript">
+			  (function()
+			  {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			  })();
+			</script>
+		</div>
+		<!-- end .google-wrap -->
+		
+		<div class="pinterest-wrap">
+						
+			<a href="http://pinterest.com/pin/create/button/?url=https://looselycoupledlabs.com/2014/07/error-handling-in-masstransit-consumers/&media=https://looselycoupledlabs.com/wp-content/uploads/2014/07/errors.png&description=Error Handling in MassTransit Consumers" class="pin-it-button" count-layout="horizontal"><img src="../../../images/PinExt.png" alt="Pin It" title="Pin It"></a>
+			
+			<script type="text/javascript" src="../../../js/pinit.js"></script>
+		</div>
+		<!-- end .pinterest-wrap -->
+	</div>
+	<!-- end .share-wrap -->
+</div>	
+<!-- end .share-links -->									
+																	</div>
+								<!-- end .entry-meta -->
+								
+																			<div class="featured-image">
+												<img width="300" height="192" src="../../../wp-content/uploads/2014/07/errors.png" class="attachment-full size-full wp-post-image" alt="Error Handling in MassTransit Consumers" loading="lazy" title="" srcset="../../../wp-content/uploads/2014/07/errors.png 300w, ../../../wp-content/uploads/2014/07/errors-150x96.png 150w, ../../../wp-content/uploads/2014/07/errors-200x128.png 200w" sizes="(max-width: 300px) 100vw, 300px">											</div>
+											<!-- end .featured-image -->
+																		
+								<div class="entry-content clearfix">
+									<p><a href="../a-real-world-masstransit-customer-portal-example/index.htm">Previously</a>, we built a simple Customer Portal application where a user could use an ASP.NET MVC app to open a new customer service ticket. The website created a TicketOpened message and published it to the <a href="http://masstransit-project.com/" target="_blank">MassTransit</a> service bus. Then, we built a Windows Service, using the <a href="http://topshelf-project.com/" target="_blank">TopShelf</a> library, that subscribed to TicketOpened messages and handled creating the ticket and emailing the customer a confirmation email. (I recommend you review the <a href="../a-real-world-masstransit-customer-portal-example/index.htm">blog post</a> if you aren’t familiar with it as we are going to build on that application here.)</p>
+<p>But what happens when something goes wrong? Blog posts usually assume the happy path when showing code examples in order to keep them easily digestible. We all know, however, things can and will go wrong. Let’s look at how we can leverage the message queuing infrastructure to handle what may be transient errors as well as perhaps more permanent failures.</p>
+<h1>When It All Goes Horribly Wrong</h1>
+<p>So what will happen to our TicketOpened messages if there’s an error in the TicketOpenedConsumer? In our example, we’re only sending an email, but the email server could be down. If we were persisting to a data store, that could be down, or maybe there was a SQL deadlock. As you know, there’s a number of things that could go wrong. Let’s start by looking at what the default MassTransit behavior is when an exception occurs in your consumer.</p>
+<h2>MassTransit Default Error Handling</h2>
+<p>To see what MassTransit does, let’s inject a way to get the consumer to throw an exception. Start by cloning the <a title="https://github.com/dprothero/Loosely.CustomerPortal" href="https://github.com/dprothero/Loosely.CustomerPortal" target="_blank">https://github.com/dprothero/Loosely.CustomerPortal</a> repository (master branch) or by building the application in my <a href="../a-real-world-masstransit-customer-portal-example/index.htm">previous blog post</a>. The final code is in the same repository, but in the error-handling branch.</p>
+<p>Here’s the new Consume method in our Loosely.CustomerPortal.Backend.TicketOpenedConsumer class:</p>
+<pre class="brush: csharp; highlight: [19, 20]; toolbar: false;">using Loosely.Bus.Contracts;
+using MassTransit;
+using System;
+using System.Diagnostics;
+
+namespace Loosely.CustomerPortal.Backend
+{
+  class TicketOpenedConsumer : Consumes&lt;TicketOpened&gt;.Context
+  {
+    public void Consume(IConsumeContext&lt;TicketOpened&gt; envelope)
+    {
+      // Here is where you would persist the ticket to a data store of some kind.
+      // For this example, we'll just write it to the trace log.
+      Trace.WriteLine("=========== NEW TICKET ===========\r\n" +
+                      "Id: " + envelope.Message.Id + "\r\n" +
+                      "Email: " + envelope.Message.CustomerEmail + "\r\n" + 
+                      "Message: " + envelope.Message.Message);
+
+      if (envelope.Message.Message.Contains("poison"))
+        throw (new Exception("Something bad has happened!"));
+
+      // Send email confirmation to the customer.
+      var messageBody = "Ticket ID " + envelope.Message.Id + " has been opened for you! " +
+                        "We will respond to your inquiry ASAP.\n\n" + 
+                        "Your Message:\n" + envelope.Message.Message;
+
+      EmailHelper.Send(envelope.Message.CustomerEmail, "Ticket Opened", messageBody);
+    }
+  }
+}
+</pre>
+<p>We just check to see if the text of the message contains the word “poison” and, if it does, throw an exception. Now we can run the app, open a ticket, and type “poison” into the message field to get our consumer to throw the exception:</p>
+<p><a href="../../../wp-content/uploads/2014/07/image6.png"><img loading="lazy" style="margin: 0px; display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb6.png" alt="image" width="207" height="241" border="0"></a></p>
+<p>Take a look at the log file (<strong>C:\Logs\Loosely.CustomerPortal.Backend.log</strong>) and you’ll see these entries:</p>
+<p><a href="../../../wp-content/uploads/2014/07/image7.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb7.png" alt="image" width="320" height="347" border="0"></a></p>
+<p>What’s going on here? What MassTransit does, by default, is retry any message that causes an exception to be thrown in its consumer exactly 4 more times. There’s no delay between retries (we’ll look at that later). Since our exception isn’t really transient, then it’s going to try 5 times without success. Next question… where’s the TicketOpened message now?</p>
+<p>Go into the <a href="https://www.rabbitmq.com/" target="_blank">RabbitMQ</a> management interface (see <a href="../../06/masstransit-publish-subscribe-example/index.htm">this post</a> for instructions – should be at <a href="http://localhost:15672">http://localhost:15672</a>) and click on the Queues tab. Notice we have our normal Loosely_CustomerPortal_Backend queue, but we also have a Loosely_CustomerPortal_Backend_error queue, and it should have 1 message in it:</p>
+<p><a href="../../../wp-content/uploads/2014/07/image8.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb8.png" alt="image" width="730" height="158" border="0"></a></p>
+<p>Click on the error queue and scroll down to the “Get messages” section. Set Requeue to ‘No’ and click “Get Message(s).” This will remove the message from the queue and display it to us. You can see our poison message in JSON format:</p>
+<p><a href="../../../wp-content/uploads/2014/07/image9.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb9.png" alt="image" width="703" height="691" border="0"></a></p>
+<h2></h2>
+<h3>Sidebar: Changing Default Retry Limit</h3>
+<p>If you want to change MassTransit’s default retry limit of 5 to something else, put the highlighted line below in the Loosely.CustomerPortal.Backend.TicketService class, within your bus initializer code.</p>
+<pre class="brush: csharp; toolbar: false; highlight: [16];">using Loosely.Bus.Configuration;
+using MassTransit;
+
+namespace Loosely.CustomerPortal.Backend
+{
+  class TicketService
+  {
+    IServiceBus _bus;
+
+    public TicketService()  {  }
+
+    public void Start()
+    {
+      _bus = BusInitializer.CreateBus("CustomerPortal_Backend", x =&gt;
+      {
+        x.SetDefaultRetryLimit(1);
+        x.Subscribe(subs =&gt;
+        {
+          subs.Consumer&lt;TicketOpenedConsumer&gt;().Permanent();
+        });
+      });
+    }
+
+    public void Stop()
+    {
+      _bus.Dispose();
+    }
+  }
+}
+</pre>
+<p>That will set the retry limit to 1.</p>
+<h2>Requeuing Error Messages</h2>
+<p>If you end up with messages in the error queue, you may want to move them back to the primary queue to be processed. In RabbitMQ this can be accomplished using the <a href="https://www.rabbitmq.com/shovel.html" target="_blank">Shovel</a> plugin. First, make sure your consumer process isn’t running. Then, open up the “RabbitMQ Command Prompt (sbin dir)” item from your Start menu and run the following two commands to install the Shovel and corresponding management plugins:</p>
+<pre class="brush: ps; toolbar: false;">&gt; rabbitmq-plugins enable rabbitmq_shovel
+&gt; rabbitmq-plugins enable rabbitmq_shovel_management
+</pre>
+<p>After restarting the RabbitMQ Windows Service, take a look in the RabbitMQ management interface. Navigate to the Admin tab and go into “Shovel Management.” Click “Add a new shovel” and name it something like “Temporary Error Move.” Set the Source Queue to “Loosely_CustomerPortal_Backend_error” and the Destination Queue to “Loosely_CustomerPortal_Backend.” Click “Add shovel.”</p>
+<p>This starts a shovel that runs in the background and will move all messages in the error queue back to the primary queue:</p>
+<p><a href="../../../wp-content/uploads/2014/07/image10.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb10.png" alt="image" width="739" height="157" border="0"></a></p>
+<p>Now go back to the Admin tab, Shovel Management, and click on your “Temporary Error Move” shovel. From there, click on the “Delete this shovel” button. If you don’t delete the shovel, it will continue to move messages from the error queue back into the primary queue… essentially creating an infinite retry loop.</p>
+<p>Obviously, when we start up our consumer again, it will try 5 times and fail again, moving it back to the error queue. What we have with our “poison” message is really a <span style="text-decoration: underline;">permanent</span> failure.</p>
+<h1></h1>
+<h1>Transient Versus Permanent Failures</h1>
+<p>With a permanent failure, we’re talking about a message that just can’t be processed – at least not with the code written the way it currently is. Perhaps there’s a message that invokes a code path that throws an exception due to a coding error. In this case, these messages would end up in the error queue and should probably stay there until the error is corrected.</p>
+<p>Perhaps the error is such an edge case that we won’t fix it and so we’re ok with the occasional message going to the error queue (we should write something to periodically clean up the error queue). It just depends on your business requirements. If, however, the message is mission critical, then the likely scenario would be to fix the bug, redeploy the new code, move the error messages back into the primary queue, and then let them get processed.</p>
+<h2>Transient Failures</h2>
+<p>What about the examples of failures mentioned earlier? A down email or database server? A deadlock condition in the SQL Server? These could be considered <em>transient</em> failures – meaning, if we just were to retry later, the message could likely be processed just fine with no modifications to the message or the consumer code.</p>
+<p>As we saw, MassTransit has a bit of a blunt method to try to account for transient failures… it tries the message 5 times. Perhaps in a deadlock situation, this would work great, but probably not in a network or server outage situation. You’d likely expect those to last a little longer. What would be ideal is if we could have the message retry after some timeout delay. Perhaps we could even escalate the delay if subsequent retries fail. For example, try 1 minute later on the first retry, then 5 minutes later on the second retry, and then perhaps fail.</p>
+<p><a href="http://particular.net/NServiceBus" target="_blank">NServiceBus</a>, a commercial analog to MassTransit, has this retry delay ability built into it (called “<a href="http://docs.particular.net/nservicebus/second-level-retries" target="_blank">second-level retries</a>”). However, MassTransit does not. We will have to roll our own, but it won’t be difficult.</p>
+<h2>Roll Your Own Retry Delay Logic</h2>
+<p>Assuming this is a pattern you want to implement for a larger application with multiple message types, you will probably want to build the retry delay logic into a common helper class. However, for this example, let’s just build the logic into our TicketOpenedConsumer class.</p>
+<p>Here’s the new TicketOpenedConsumer class with progressive retry delay logic:</p>
+<pre class="brush: csharp; toolbar: false;">using Loosely.Bus.Contracts;
+using MassTransit;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+
+namespace Loosely.CustomerPortal.Backend
+{
+  class TicketOpenedConsumer : Consumes&lt;TicketOpened&gt;.Context
+  {
+    static private Dictionary&lt;int, int&gt; DelayProgression = new Dictionary&lt;int, int&gt;()
+      {
+        {0, 60}, {60, 300}, {300, -1}
+      };
+
+    public void Consume(IConsumeContext&lt;TicketOpened&gt; envelope)
+    {
+      int retryDelay = 0;
+      int.TryParse(envelope.Headers["loosely.retry-delay-seconds"], out retryDelay);
+      var nextRetryDelay = DelayProgression[retryDelay];
+      bool sleepAndRepublish = false;
+      
+      try
+      {
+        // Here is where you would persist the ticket to a data store of some kind.
+        // For this example, we'll just write it to the trace log.
+        Trace.WriteLine("=========== NEW TICKET ===========\r\n" +
+                        "Id: " + envelope.Message.Id + "\r\n" +
+                        "Email: " + envelope.Message.CustomerEmail + "\r\n" +
+                        "Message: " + envelope.Message.Message + "\r\n" +
+                        "Current/Next Retry Delay: " + retryDelay.ToString() + "/" + 
+                          nextRetryDelay.ToString() + "\r\n" +
+                        "Current Time: " + DateTime.Now.ToString());
+
+        CheckForContrivedErrorConditions(envelope);
+
+        // Send email confirmation to the customer.
+        var messageBody = "Ticket ID " + envelope.Message.Id + " has been opened for you! " +
+                          "We will respond to your inquiry ASAP.\n\n" +
+                          "Your Message:\n" + envelope.Message.Message;
+
+        EmailHelper.Send(envelope.Message.CustomerEmail, "Ticket Opened", messageBody);
+
+        // Here is where you would commit any open database transaction
+        Trace.WriteLine("Message committed.");
+      }
+      catch (Exception ex)
+      {
+        Trace.WriteLine("Exception caught.");
+        if (ex.Message.Contains("server is down") &amp;&amp; nextRetryDelay &gt; -1)
+          sleepAndRepublish = true;
+        else throw;
+      }
+
+      if(sleepAndRepublish)
+      {
+        Thread.Sleep(nextRetryDelay * 1000);
+        envelope.Bus.Publish&lt;TicketOpened&gt;(envelope.Message, x =&gt; {
+          x.SetHeader("loosely.retry-delay-seconds", nextRetryDelay.ToString());
+          x.SetDeliveryMode(MassTransit.DeliveryMode.Persistent);
+        });
+      }
+    }
+
+    private void CheckForContrivedErrorConditions(IConsumeContext&lt;TicketOpened&gt; envelope)
+    {
+      if (envelope.Message.Message.Contains("poison"))
+        throw (new Exception("Something bad has happened!"));
+
+      if (envelope.Message.Message.Contains("server-blip"))
+      {
+        envelope.Message.Message = envelope.Message.Message.Replace("server-blip", 
+          "server-online(blipped)");
+        throw (new Exception("The mail server is down."));
+      }
+
+      if (envelope.Message.Message.Contains("server-down"))
+      {
+        envelope.Message.Message = envelope.Message.Message.Replace("server-down",
+            "server-blip(downed)");
+        throw (new Exception("The mail server is down."));
+      }
+
+      if (envelope.Message.Message.Contains("server-disaster"))
+        throw (new Exception("The mail server is down."));
+
+    }
+  }
+}
+</pre>
+<p>So let’s take a look at a few lines of code in isolation and discuss what’s happening. First, we setup a dictionary to indicate what we’d like the progression of delays to be.</p>
+<pre class="brush: csharp; toolbar: false;">static private Dictionary&lt;int, int&gt; DelayProgression = new Dictionary&lt;int, int&gt;()
+  {
+    {0, 60}, {60, 300}, {300, -1}
+  };
+</pre>
+<p>The key is the last number of seconds delayed and the value is the next delay value to use. We start with 0 as you can see in the initialization code:</p>
+<pre class="brush: csharp; toolbar: false;">int retryDelay = 0;
+int.TryParse(envelope.Headers["loosely.retry-delay-seconds"], out retryDelay);
+var nextRetryDelay = DelayProgression[retryDelay];
+</pre>
+<p>Then we check for a header on the message called “loosely.retry-delay-seconds.” Yes, I just made that up. Headers are meta-data you can attach to a message and can contain whatever string data you’d like. When we want to retry a message later, we’ll add a header with the number of seconds we just delayed so the next time through the code can know the next delay value to use if the message fails again.</p>
+<p>Now we just have a method that can check for some magic strings in our message to see if it should trigger a contrived exception:</p>
+<pre class="brush: csharp; toolbar: false;">CheckForContrivedErrorConditions(envelope);
+</pre>
+<p>Within that function, we define three strings (in addition to the original “poison” string) for which we will scan.</p>
+<table>
+<tbody>
+<tr>
+<td><strong>“server-disaster”</strong></td>
+<td>Simulate mail server down for a very long time.</td>
+</tr>
+<tr>
+<td><strong>“server-down”</strong></td>
+<td>Simulate mail server down for less than 5 minutes.</td>
+</tr>
+<tr>
+<td><strong>“server-blip”</strong></td>
+<td>Simulate the mail server down for less than 30 seconds.</td>
+</tr>
+</tbody>
+</table>
+<p>Finally, we wrap all of the actual message processing in a try…catch block. If an exception occurs, we check the message to see if it’s a message we know to be a transient condition <em>and</em> if the next retry delay value is <em>not</em> negative one (-1). Negative one will be our trigger to tell us we need to give up on retrying.</p>
+<pre class="brush: csharp; toolbar: false;">Trace.WriteLine("Exception caught.");
+if (ex.Message.Contains("server is down") &amp;&amp; nextRetryDelay &gt; -1)
+  sleepAndRepublish = true;
+else throw;
+</pre>
+<p>If the condition is met, we set a flag to indicate we want to sleep (delay) for a bit and then republish the message so it will be retried later. If the condition is not met, we re-throw the exception and MassTransit will handle it per normal message processing rules (default being to retry 4 more times and then move to the error queue).</p>
+<p>If we do want to sleep and republish, that code is simple:</p>
+<pre class="brush: csharp; toolbar: false;">if(sleepAndRepublish)
+{
+  Thread.Sleep(nextRetryDelay * 1000);
+  envelope.Bus.Publish&lt;TicketOpened&gt;(envelope.Message, x =&gt; {
+    x.SetHeader("loosely.retry-delay-seconds", nextRetryDelay.ToString());
+    x.SetDeliveryMode(MassTransit.DeliveryMode.Persistent);
+  });
+}
+</pre>
+<p>We put the thread to sleep for the prescribed number of seconds (more on that later) and then, after the time has elapsed, we republish the message to the bus with a “loosely.retry-delay-seconds” header value of the amount of time we delayed before republishing the message. That will put the message back on the bus and our consumer will get called again with it. This time, the message will have the special header on it and we’ll know to move onto the next delay value (or stop retrying if that value is –1).</p>
+<h2>Did You Seriously Just Block the Consumer Thread?</h2>
+<p>Good catch. Yes, this can have performance implications. MassTransit has a setting called ConcurrentConsumerLimit, which is set to the number of CPU’s times 4 (so 16 on a 4 processor machine). We’re essentially “killing” one of these 16 (or however many) threads while we sleep, thus limiting the number of messages we can process while we’re waiting.</p>
+<p>But is this really a problem? In this example, our service is only responsible for processing TicketOpened messages. Every TicketOpened message needs to trigger an email to be sent. If the email server is down, then <em>none</em> of the TicketOpened messages are going to be able to successfully be processed. In this case, it probably makes sense for the entire service to slow down and wait until the mail server is back online.</p>
+<p>If the service were responsible for processing many different types of messages, then this would certainly be an issue. However, it begs the question whether it makes sense for a single service to handle different types of messages. In some cases it might, particularly if they all need to be handled in much the same way. But in a lot of cases, it will make more sense to create separate services for your different message types.</p>
+<h2>What If the Service Crashes While Sleeping?</h2>
+<p>So we have our consumer sleeping on the consumer thread and the message is “in limbo” while we’re waiting. What happens to the message if the service crashes during the Thread.Sleep? If you send a “server-down” message to get the message to go through the retry logic, take a look at the queue in RabbitMQ:</p>
+<p><a href="../../../wp-content/uploads/2014/07/image11.png"><img loading="lazy" style="display: inline; background-image: none;" title="image" src="../../../wp-content/uploads/2014/07/image_thumb11.png" alt="image" width="738" height="108" border="0"></a></p>
+<p>It shows one message in the “Unacked” (unacknowledged) column. This means two things: 1) it won’t deliver the message to any other consumer threads or processes, and 2) it won’t remove the message <em>unless</em> it is acknowledged. If the process hosting our consumer service dies before acknowledging the message, RabbitMQ will move the message back to the “Ready” state.</p>
+<h1>Caveats and Disclaimers</h1>
+<p>These bloggers, sheesh. Always cutting corners in the code for the “sake of brevity.” It’s difficult to balance a good, crisp article with well crafted code. First, you don’t see any unit tests. Bad programmer. Next, with a good suite of tests watching your back, the code in this example could be refactored into shorter methods and perhaps a helper class for the retry delay progression. Finally, the call to Thread.Sleep should probably be refactored into a loop to wake up every couple of seconds to see if the service needs to stop.</p>
+<h2>Other Options</h2>
+<p>Of course there are other ways to build delayed retry logic into your services. The method used in this post is just the simplest to illustrate, but you can take this further. For example, take a look at the <a href="https://github.com/MassTransit/MassTransit-Quartz" target="_blank">MassTransit-Quartz</a> project. This uses the open source <a href="http://www.quartz-scheduler.net/" target="_blank">Quartz.NET</a> scheduler to enable delayed publishing of messages. It does, however, require an ADO.NET database to persist the scheduled jobs so you don’t lose your delayed messages. If you need scheduling and visibility into messages that were delayed, then this is your ticket.</p>
+<p>Another pattern that could be implemented is that of moving the delayed messages to another RabbitMQ queue. Then you could write something that periodically polled that queue and moved the messages back into the primary queue after the desired delay.</p>
+<h1>Next Stop…</h1>
+<p>Let’s take a look at how we can implement multiple consumers in a couple different use cases. In one case, we might want to spin up multiple. identical consumers on different machines to scale out message processing. In another case, we may want to have completely different consumers subscribing to the same message type but intending to do different things with the messages. After that, we’ll probably take a look at Sagas (chaining multiple messaging processing steps together) and then… who knows? Send me your thoughts and questions regarding anything you’d like to see here.</p>
+									
+																	</div>
+								<!-- end .entry-content -->
+								
+																			<footer class="entry-meta post-tags">
+												<a href="../../../tag/masstransit/index.htm" rel="tag">MassTransit</a>, <a href="../../../tag/rabbitmq/index.htm" rel="tag">RabbitMQ</a>, <a href="../../../tag/service-bus/index.htm" rel="tag">Service Bus</a>, <a href="../../../tag/soa/index.htm" rel="tag">SOA</a>											</footer>
+											<!-- end .entry-meta -->
+																	</article>
+							<!-- end .hentry -->
+							
+							<aside class="about-author">
+	<h3>ABOUT THE AUTHOR</h3>
+	
+	<div class="row-fluid author-bio">
+		<div class="span2 author-img">
+			<a href="../../../author/davidprothero-com/index.htm">
+				<img alt='david@prothero.com' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b.jpeg?s=226&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-1.jpeg 2x?s=452&#038;d=mm&#038;r=g 2x' class='avatar avatar-226 photo' height='226' width='226' loading='lazy'>			</a>
+		</div>
+		<!-- end .author-img -->
+		
+		<div class="span10 author-info">
+			<h4 class="author-name">david@prothero.com</h4>
+			
+			<p>
+				I have been providing technical leadership for companies for over 15 years. However, my software engineering experience extends back over 25 years. Currently, I am a Developer Educator for Twilio. Prior to that, I served as both IT Director and Software Engineering Director for Therapeutic Research Center (TRC). I guided the company from a print-based newsletter company to an online information services company.			</p>
+		</div>
+		<!-- end .author-info -->
+	</div>
+	<!-- end .author-bio -->
+</aside>
+<!-- end .about-author -->							
+							<nav class="row-fluid nav-single">
+								<div class="span6 nav-previous">
+									<h4>PREVIOUS POST</h4><a href="../a-real-world-masstransit-customer-portal-example/index.htm" rel="prev"><span class="meta-nav">&#8592;</span> A Real-World MassTransit Customer Portal Example</a>								</div>
+								<!-- end .nav-previous -->
+								
+								<div class="span6 nav-next">
+									<h4>NEXT POST</h4><a href="../../08/scaling-out-subscribers-with-masstransit/index.htm" rel="next">Scaling Out Subscribers With MassTransit <span class="meta-nav">&#8594;</span></a>								</div>
+								<!-- end .nav-next -->
+							</nav>
+							<!-- end .nav-single -->
+							
+							
+<div id="comments" class="comments-area">
+					<h2 class="comments-title">
+					7 Comments <span class="on">&#8594;</span> <span>Error Handling in MassTransit Consumers</span>				</h2>
+				<!-- end .comments-title -->
+				
+				<ol class="commentlist">
+										
+					<li class="comment even thread-even depth-1" id="li-comment-9">
+						<article id="comment-9" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/00484500d77bb31fed48daad77259e58.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/00484500d77bb31fed48daad77259e58-1.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">udidahan </cite><a href="index.htm#comment-9"><time datetime="2014-07-29T05:32:00+00:00">July 29, 2014 at 5:32 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Thanks for the NServiceBus call-out.</p>
+<p>BTW &#8211; we also have a graphical tool for monitoring the error queue and sending a message back to be reprocessed.</p>
+<p>Incidentally, the approach we recommend is having a single error queue for the entire system as it simplifies monitoring. I can understand why MT went with the approach of having the error queue be &#8220;under&#8221; the source queue (so that it is clear from which queue it came), but we deal with that by appending a header to the message when we put it in the error queue.</p>
+<p>In any case, great blog post!</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					<ol class="children">
+					
+					<li class="comment odd alt depth-2" id="li-comment-10">
+						<article id="comment-10" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-2.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-3.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">dprothero </cite><a href="index.htm#comment-10"><time datetime="2014-07-29T13:34:00+00:00">July 29, 2014 at 1:34 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Thanks Udi! Great to see the contrasts between NServiceBus and MT. Keep em&#8217; coming!</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+					
+					<li class="comment even thread-odd thread-alt depth-1" id="li-comment-12">
+						<article id="comment-12" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/4b8403c2887f8550fb50b98de2915560.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/4b8403c2887f8550fb50b98de2915560-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Rafal Gwizdala </cite><a href="index.htm#comment-12"><time datetime="2014-08-05T20:19:00+00:00">August 5, 2014 at 8:19 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Hi there,<br>
+You touched an interesting subject<br>
+However, blocking the consumer thread for the duration of retry delay is imho unacceptable. This is only good if<br>
+a) the delay is no more than few seconds<br>
+b) you don&#8217;t have too many failing messages<br>
+otherwise you&#8217;ll quickly run out of available threads and processing will stop<br>
+This is basically re-scheduling message to be processed later and it&#8217;s imho better to do it using a database &#8211; put the message into a database, specify the delivery time and let some daemon publish it when the time comes. This way you can schedule an unlimited number of messages without performance penalty. And this functionality has many other uses beyond retrying failed messages &#8211; for example, you can implement all kinds of timeouts with it.</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					<ol class="children">
+					
+					<li class="comment odd alt depth-2" id="li-comment-13">
+						<article id="comment-13" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-2.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/a0c880ad31c66856b29f53e6c32d688b-3.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">dprothero </cite><a href="index.htm#comment-13"><time datetime="2014-08-05T22:59:00+00:00">August 5, 2014 at 10:59 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>&#8220;otherwise you&#8217;ll quickly run out of available threads and processing will stop&#8221;</p>
+<p>Of course it will. That&#8217;s why I discuss this in the section &#8220;Did You Seriously Just Block the Consumer Thread?&#8221;</p>
+<p>It all depends on your use case. If you have a service dedicated to processing one type of message and the inability to process those messages because of an external dependency being down occurs, there&#8217;s no reason to be concerned that it will stop all processing. That&#8217;s a good thing. No processing can occur anyway, why let the process spin its wheels?</p>
+<p>There will be cases where it&#8217;s not a good thing, of course.</p>
+<p>If you&#8217;ve got an error that will occur with only a few messages, but most will be OK, then this is definitely not the way to handle it. You will want to use a scheduler like Quartz and the MassTransit.Quartz integration project. Or you can roll your own and use a database or perhaps another queue in RabbitMQ.</p>
+<p>I just don&#8217;t believe in adding the additional complexity if it isn&#8217;t necessary. I also don&#8217;t believe there&#8217;s a &#8220;one right way&#8221; to do anything&#8230; it always depends on your use case and related factors. &#8220;Only a Sith deals in absolutes.&#8221; 😛</p>
+<p>Thanks for the comment!</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					<ol class="children">
+					
+					<li class="comment even depth-3" id="li-comment-14">
+						<article id="comment-14" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/4b8403c2887f8550fb50b98de2915560.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/4b8403c2887f8550fb50b98de2915560-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Rafal Gwizdala </cite><a href="index.htm#comment-14"><time datetime="2014-08-06T07:34:00+00:00">August 6, 2014 at 7:34 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Of course, everything that works is good.</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+					
+					<li class="comment odd alt thread-even depth-1" id="li-comment-65">
+						<article id="comment-65" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/3fa9ba9acf089b0ed3de9c219400f08d.jpeg?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/3fa9ba9acf089b0ed3de9c219400f08d-1.jpeg 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Marcus Widblom </cite><a href="index.htm#comment-65"><time datetime="2015-12-17T11:11:00+00:00">December 17, 2015 at 11:11 am</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>Great post David, this works like a charm.</p>
+<p>I took the opportunity and wrote an extension method to MassTransit IConsumeContext:</p>
+<p>  <code><br>
+    public static void ConsumeWithRetry(this IConsumeContext envelope, Dictionary retryPolicy, Action action, ILog logger = null, string exceptionLogMessage = "") where TMessage : class, new() where TException : Exception<br>
+		{<br>
+			var retryDelay = 0;<br>
+			int.TryParse(envelope.Headers["retry-delay-seconds"], out retryDelay);<br>
+			var nextRetryDelay = retryPolicy[retryDelay];<br>
+			var sleepAndRepublish = false;</code></p>
+<p>			try<br>
+			{<br>
+				action();<br>
+			}<br>
+			catch (TException ex)<br>
+			{<br>
+				if (logger != null &amp;&amp; !string.IsNullOrEmpty(exceptionLogMessage))<br>
+					logger.Error(exceptionLogMessage + " Exception message: " + ex.Message);</p>
+<p>				if (nextRetryDelay &gt; -1)<br>
+				{<br>
+					if (logger != null)<br>
+						logger.Info(string.Format("Sleeping consumer for {0} seconds and retrying...", nextRetryDelay));</p>
+<p>					sleepAndRepublish = true;<br>
+				}<br>
+				else<br>
+				{<br>
+					throw;<br>
+				}<br>
+			}</p>
+<p>			if (sleepAndRepublish)<br>
+			{<br>
+				Thread.Sleep(nextRetryDelay * 1000);<br>
+				envelope.Bus.Publish(envelope.Message, x =&gt;<br>
+				{<br>
+					x.SetHeader("retry-delay-seconds", nextRetryDelay.ToString());<br>
+					x.SetDeliveryMode(MassTransit.DeliveryMode.Persistent);<br>
+				});<br>
+			}<br>
+		}<br>
+  </p>
+<p>Cheers!</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+					
+					<li class="comment even thread-odd thread-alt depth-1" id="li-comment-283">
+						<article id="comment-283" class="comment">
+							<header class="comment-meta comment-author vcard">
+								<img alt='' src='../../../avatar/42e1599ff13835fca92ef8702f28cf47.png?s=75&#038;d=mm&#038;r=g' srcset='../../../avatar/42e1599ff13835fca92ef8702f28cf47-1.png 2x?s=150&#038;d=mm&#038;r=g 2x' class='avatar avatar-75 photo' height='75' width='75' loading='lazy'><cite class="fn">Tristan Hen </cite><a href="index.htm#comment-283"><time datetime="2019-06-29T14:03:00+00:00">June 29, 2019 at 2:03 pm</time></a>							</header>
+							<!-- end .comment-meta -->
+							
+														
+							<section class="comment-content comment">
+								<p>In a publish / subscribe scenario: if I have 2 consumers and the message is poison: how many error queues will I have ? One per consumer ?</p>
+								
+															</section>
+							<!-- end .comment-content -->
+							
+							<div class="reply">
+															</div>
+							<!-- end .reply -->
+						</article>
+						<!-- end #comment-## -->
+					</li><!-- #comment-## -->
+				</ol>
+				<!-- end .commentlist -->
+				
+								
+											<p class="nocomments">Comments are closed.</p>
+										
+	</div>
+<!-- end #comments -->								</div>
+		<!-- end .blog-single -->
+	</div>
+	<!-- end #content -->
+</div>
+<!-- end #primary -->
+
+			</div>
+			<!-- end .row .row-fluid -->
+        </section>
+        <!-- end #main -->
+		
+        <footer class="site-footer wrapper" role="contentinfo">
+			<div class="row">
+				<div id="supplementary" class="row-fluid">
+									</div>
+				<!-- end #supplementary -->
+				
+				<div class="site-info">
+					Copyright © 2014 by David Prothero
+All rights reserved.				</div>
+				<!-- end .site-info -->
+			</div>
+			<!-- end .row -->
+        </footer>
+        <!-- end .site-footer -->
+    </div>
+    <!-- end #PAGE -->
+	
+	<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1922425-8', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script type="text/javascript">
+  SyntaxHighlighter.all();
+</script><script type='text/javascript' src='../../../wp-includes/js/comment-reply.min.js?ver=5.8.6' id='comment-reply-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/detectmobilebrowser.js' id='detectmobilebrowser-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/modernizr.js' id='modernizr-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/imagesloaded.min.js?ver=4.1.4' id='imagesloaded-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fitvids.js' id='fitvids-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/google-code-prettify/prettify.js' id='google-code-prettify-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.uniform.min.js' id='uniform-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.flexslider-min.js' id='flexslider-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/mediaelement/mediaelement-and-player.min.js' id='mediaelement-and-player-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.isotope.min.js' id='isotope-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.fancybox-1.3.4.pack.js' id='fancybox-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.masonry.min.js' id='masonry-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.history.js' id='history-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/js-url.min.js' id='js-url-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquerypp.custom.js' id='jquerypp-custom-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/gamma.js' id='gamma-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/main.js' id='main-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/jquery.validate.min.js' id='validate-js'></script>
+<script type='text/javascript' src='../../../wp-content/themes/read-v4-2-4/js/send-mail.js' id='send-mail-js'></script>
+<script type='text/javascript' src='../../../wp-includes/js/wp-embed.min.js?ver=5.8.6' id='wp-embed-js'></script>
+</body>
+</html>
